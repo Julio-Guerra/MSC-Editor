@@ -24,7 +24,7 @@ namespace msc
       Label             dot_label_;
 
       message_kind_e    message_kind_;
-  }
+  };
 } // namespace msc
 
 #endif /* !INCOMPLETE_MESSAGE_HH_ */

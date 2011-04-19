@@ -9,7 +9,7 @@ namespace msc
   class StrictEvent : public Event
   {
     public:
-      virtual accept(Visitor&);
+      virtual void accept(Visitor&);
 
     private:
       StrictEvent*      successor_;
