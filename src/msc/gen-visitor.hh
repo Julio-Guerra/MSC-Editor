@@ -17,6 +17,8 @@ namespace msc
       /// Entry point of the visitor.
       void operator()(MscElement&);
 
+      /** Low Level MSC visitor's abstract methods.
+       * \{ */
       virtual void operator()(EventArea&) = 0;
       virtual void operator()(Instance&) = 0;
       virtual void operator()(MscMessage&) = 0;
@@ -31,6 +33,10 @@ namespace msc
       virtual void operator()(CoregionEvent&) = 0;
       virtual void operator()(CoregionEventRelation&) = 0;
 
+      /** High Level MSC visitor's abstract methods.
+       * \} */
+      virtual void operator()(ConnectionNode&) = 0;
+      /** \} */
     protected:
       /** A shortcut for recurring code like this:
        *  \code

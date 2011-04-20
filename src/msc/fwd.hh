@@ -18,6 +18,13 @@ namespace msc
   class StrictEvent;
   class CoregionEvent;
   class CoregionEventRelation;
+  class HighMsc;
+  class NodeRelation;
+  class PredecessorNode;
+  class SuccessorNode;
+  class HighMscNode;
+  class ReferenceNode;
+  class ConnectionNode;
 } // namespace msc
 
 #endif /* !FWD_HH_ */
