@@ -1,0 +1,17 @@
+msc TSD; 
+inst Initiator;
+inst Responder; 
+gate out ICONreq to Initiator;
+gate in ICONind from Responder;
+gate in IDISind from Initiator;
+gate out ICONresp to Responder;
+
+instance Initiator;
+in ICONreq from env before Label1;
+out IDISind to env;
+endinstance;
+instance Responder;
+label Label1; out ICONind to env;
+in ICONresp from env;
+endinstance;
+endmsc; 

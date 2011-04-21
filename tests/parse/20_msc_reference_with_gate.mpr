@@ -1,0 +1,25 @@
+msc flop; 
+inst User_Ini;
+inst Initiator;
+inst Responder; 
+gate in ICONind from failed;
+
+User_Ini: instance;
+Initiator:instance;
+Responder:instance;
+all:loop begin;
+User_Ini: out ICONreq to reference failed;
+Initiator,
+Responder:reference failed: message_lost alt time_out;
+gate in ICONreq from User_Ini;
+gate out ICONind to env;
+
+
+Initiator:out IDISind to User_Ini;
+User_Ini: in IDISind from Initiator;
+loop end;
+User_Ini: endinstance;
+Initiator:endinstance;
+Responder:endinstance;
+endmsc;
+

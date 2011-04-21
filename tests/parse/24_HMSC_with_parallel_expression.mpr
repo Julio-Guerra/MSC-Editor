@@ -1,0 +1,46 @@
+msc par_HMSC;
+expr L1;
+L1:expr L2; 
+L2: (CR) seq ( L3 );
+L3: end;
+endexpr
+par 
+expr L4; 
+L4: (DR) seq ( L5 );
+L5: end;
+endexpr
+seq ( L6 );
+L6: end;
+endmsc;
+
+msc CR; 
+inst Station_Ini;
+inst Station_Res; 
+gate out ICONreq to Station_Ini;
+gate in ICONind from Station_Res;
+
+Station_Ini: instance;
+in ICONreq from env;
+out MDAT(CR) to Station_Res;
+endinstance;
+Station_Res:instance;
+in MDAT(CR) from Station_Ini;
+out ICONind to env;
+endinstance;
+endmsc; 
+
+msc DR; 
+inst Station_Ini;
+inst Station_Res; 
+gate out IDISreq to Station_Res;
+gate in IDISind from Station_Ini;
+
+Station_Res:instance;
+in IDISreq from env;
+out MDAT(DR) to Station_Ini;
+endinstance;
+Station_Ini: instance;
+in MDAT(DR) from Station_Res;
+out IDISind to env;
+endinstance;
+endmsc; 

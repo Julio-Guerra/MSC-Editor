@@ -1,0 +1,49 @@
+msc alternative;
+expr L1;
+L1: condition disconnected seq ( L2 alt L3 );
+L2: (message_lost) seq ( L4 ); 
+L3: (time_out) seq ( L4 ); 
+L4: (disconnection) seq ( L1 ); 
+endmsc;
+msc message_lost; 
+inst Initiator;
+inst Responder; 
+gate out ICONreq to Initiator;
+
+Initiator: instance;
+in ICONreq from env;
+starttimer T;
+out ICON to lost Responder;
+timeout T;
+endinstance;
+Responder: instance;
+in ICON from Initiator;
+endinstance;
+endmsc; 
+
+msc time_out; 
+inst Initiator;
+inst Responder; 
+gate out ICONreq to Initiator;
+gate in ICONind from Responder;
+
+Initiator: instance;
+in ICONreq from env;
+starttimer T;
+out ICON to Responder;
+timeout T;
+endinstance;
+Responder: instance;
+in ICON from Initiator;
+out ICONind to env;
+endinstance;
+endmsc; 
+
+msc disconnection; 
+inst Initiator; 
+gate in IDISind from Initiator;
+
+Initiator: instance;
+out IDISind to env;
+endinstance;
+endmsc; 

@@ -1,0 +1,45 @@
+/* testing inline expressions with time constraints */
+/* Using Z.120 rev 1 syntax! */
+
+mscdocument sharedtest;
+utilities reference foo
+
+msc sharedtestmsc;
+inst newinstance;
+
+newinstance: 
+instance;
+
+loop <inf> begin loopexpression shared;
+gate out new_msg to instance_foo;
+
+opt begin optexpression shared;
+out new_msg1 to lost;
+opt end;
+
+loop end;
+
+par begin foo shared;
+in new_msg1 from somewhere;
+par;
+in new_msg2 from somewhere;
+in new_msg3 from somewhere;
+par;
+in new_msg4 from somewhere;
+par end;
+
+alt begin altexpression shared;
+in new_msg1 from somewhere;
+out new_msg1 to lost;
+alt; 
+label foo_event; in new_msg2 from somewhere; 
+out new_msg2 to lost;
+alt end; time [2ms] ; /* Duration of this inline expression */
+
+exc begin foo shared;
+out new_msg2 to lost;
+exc end; top foo_event [2ms] ; /* time between occurence of event label foo_event (in previous alt inline expression) and begin (first event) of this inline expression */
+
+endinstance;
+
+endmsc;

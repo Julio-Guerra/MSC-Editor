@@ -1,0 +1,37 @@
+mscdocument time_constraint_alternatives2;
+msc time_constraint_alternatives2;
+MTCType: instance IUT;
+PCO: instance;
+text 'This MSC described the followin time constraint:
+the time between receiving either message m1 or m2
+and receiving either message m3 or m4 is between
+10 and 20 seconds.';
+PCO: out m0
+,1 to MTCType;
+MTCType: in m0
+,1 from PCO;
+all: alt begin altId1 comment 'altId1';
+MTCType: out m1,2 to PCO;
+PCO: in m1,2 from MTCType;
+PCO: out m1ack,3 to MTCType;
+MTCType: in m1ack,3 from PCO;
+alt;
+MTCType: out m2,4 to PCO;
+PCO: in m2,4 from MTCType;
+PCO: out m2ack,5 to MTCType;
+MTCType: in m2ack,5 from PCO;
+alt end;
+all: alt begin comment 'top bottom altId1 [10,20];';
+MTCType: out m3,6 to PCO;
+PCO: in m3,6 from MTCType;
+PCO: out m3ack,7 to MTCType;
+MTCType: in m3ack,7 from PCO;
+alt;
+MTCType: out m4,8 to PCO;
+PCO: in m4,8 from MTCType;
+PCO: out m4ack,9 to MTCType;
+MTCType: in m4ack,9 from PCO;
+alt end; top bottom altId1 [10,20];
+PCO: endinstance;
+MTCType: endinstance;
+endmsc;

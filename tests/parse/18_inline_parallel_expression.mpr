@@ -1,0 +1,27 @@
+msc parallel; 
+inst Station_Ini;
+inst Station_Res; 
+gate out ICONreq to Station_Ini;
+gate in ICONind from Station_Res;
+gate out IDISreq to Station_Res;
+gate in IDISind from Station_Ini;
+
+Station_Ini: instance;
+in ICONreq from env;
+starttimer T;
+Station_Res:instance;
+all:par begin;
+Station_Ini:out MDAT(CR) to Station_Res;
+Station_Res:in MDAT(CR) from Station_Ini;
+out ICONind to env;
+par;
+Station_Res:in IDISreq from env;
+out MDAT(DR) to Station_Ini;
+Station_Ini: in MDAT(DR) from Station_Res;
+par end;
+Station_Res:endinstance;
+Station_Ini:stoptimer T;
+out IDISind to env;
+endinstance;
+endmsc; 
+

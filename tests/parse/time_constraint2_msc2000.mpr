@@ -1,0 +1,21 @@
+mscdocument time_constraint2;
+msc time_constraint2;
+PCO2: instance;
+PCO1: instance;
+MTCType: instance IUT;
+text 'This MSC describes three time constraints:
+1) first signal, m1, is sent at absolute time of 10 seconds
+2) 5s after m0 has been sent, m1 is sent.
+3) the time between sending m1 at PCO1
+and receiving m2 at PCO2 has to be 
+between 8 (inclusive) and 10 (inclusive) seconds';
+PCO2: label PCO2_out_m0_1; out m0,1 to MTCType comment 'label PCO2_out_m0_1; time [@10];'; time [@10];
+MTCType: in m0,1 from PCO2;
+PCO1: label PCO1_out_m1_2; out m1,2 to MTCType comment 'label PCO1_out_m1_2; time PCO2_out_m0_1 [5];'; time PCO2_out_m0_1 [5];
+MTCType: in m1,2 from PCO1;
+MTCType: out m2,3 to PCO2;
+PCO2: in m2,3 from MTCType comment 'time PCO1_out_m1_2 [8,10];'; time PCO1_out_m1_2 [8,10];
+PCO1: endinstance;
+PCO2: endinstance;
+MTCType: endinstance;
+endmsc;
