@@ -133,15 +133,14 @@ NOTE_II:
 
 // ----- Message Sequence Chart Document
 
-// non-standard: Z.120 doesn't define top-level nonterminal
-textual_msc_file [struct s_Z120* my_z120] returns [struct s_Msc** my_msc]:
-   {
-     context = new_context();
-     printer = my_z120;
+textual_msc_file returns [msc::MscElement* msc]:
+  {
+    context = new_context();
+    printer = my_z120;
 
-     if(my_z120 != NULL)
-       add_z_fun(context, $my_z120);
-   }
+    if(my_z120 != NULL)
+      add_z_fun(context, $my_z120);
+  }
    (document_head)? (message_sequence_chart)*
    {
      check_references_fun(context);
