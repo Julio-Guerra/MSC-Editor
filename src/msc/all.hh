@@ -28,5 +28,6 @@
 # include "msc/incomplete-message.hh"
 # include "msc/node-relation.hh"
 # include "msc/high-msc.hh"
+# include "msc/comment.hh"
 
 #endif /* !MSC_ALL_HH_ */

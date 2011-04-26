@@ -1,9 +1,9 @@
-grammar z120;
+grammar MSCParser;
 
 options
 {
   language = C;
-  k = 2; // 3 ?
+  k = 3;
 }
 
 @parser::includes
@@ -27,9 +27,9 @@ National:
   '`' | '\\' | '{' | '|' | '}' | '~' | '^'
 ;
 
-Character_String:
+Character_String returns [std::wstring result = '']:
   '\''
-  (
+  str = ((
     Letter
     | Decimal_Digit
     | Other_Character
@@ -38,8 +38,11 @@ Character_String:
     | '_'
     | ' '
     | '\'\''
-  )*
+  )*)
   '\''
+  {
+    $result = $str.text;
+  }
 ;
 
 fragment
@@ -67,8 +70,11 @@ Qualifier:
   '>>'
 ;
 
-Name:
-  (Letter | Decimal_Digit | National | '_' | '.')+
+Name returns [std::wstring result = '']:
+  str = ((Letter | Decimal_Digit | National | '_' | '.')+)
+  {
+    $result = $str.text;
+  }
 ;
 
 string:
@@ -93,13 +99,13 @@ non_parenthesis:
   non_par_non_escape | escapechar (escapechar | Character_String)
 ;
 
-non_par_non_escape:
-  Character_String | Name
+non_par_non_escape returns [std::wstring result]:
+  Character_String | Name { $result = $$.result; }
 ;
 
 non_nestable_par:
-   '(' (Letter | Decimal_Digit | Other_Character | Special | '.' | '_' | '\'')* ')'
-   '<' (Letter | Decimal_Digit | Other_Character | Special | '.' | '_' | '\'')* '>'
+  '(' (Letter | Decimal_Digit | Other_Character | Special | '.' | '_' | '\'')* ')'
+  '<' (Letter | Decimal_Digit | Other_Character | Special | '.' | '_' | '\'')* '>'
    '{' (Letter | Decimal_Digit | Other_Character | Special | '.' | '_' | '\'')* '}'
 ;
 
@@ -113,14 +119,18 @@ end:
    (comment)? ';'
 ;
 
-comment:
-   'comment' Character_String
-   {add_element_comment(context, (char*) $Character_String.text->chars);}
+comment returns [msc::Comment* result]:
+  'comment' Character_String
+  {
+    $result = new msc::Comment($Character_String.result);
+  }
 ;
 
-text_definition:
-   'text' Character_String end
-   {add_global_comment(context, (char*) $Character_String.text->chars);}
+text_definition returns [msc::Comment* result]:
+  'text' Character_String end
+  {
+    $result = new msc::Comment($Character_String.result);
+  }
 ;
 
 NOTE:
@@ -135,17 +145,9 @@ NOTE_II:
 
 textual_msc_file returns [msc::MscElement* msc]:
   {
-    context = new_context();
-    printer = my_z120;
-
-    if(my_z120 != NULL)
-      add_z_fun(context, $my_z120);
   }
    (document_head)? (message_sequence_chart)*
    {
-     check_references_fun(context);
-     $my_msc = get_total_msc_fun(context);
-     delete_context(context);
    }
 ;
 
@@ -218,25 +220,27 @@ identifier:
 
 // ----- Basic MSC
 
-
-//add nonstrict endmsc "(endmac end)?" for better error message handling
 message_sequence_chart:
-   {
-      init(context);
-   }
-   (virtuality)? 'msc' msc_head ( ('expr' | (hmsc_statement_without_initial)* initial_node)=> hmsc | msc )
-   ('endmsc' end { set_end_msc_fun(context);})?
-   {
-      check_collections_fun(context);
-      msc_was_read_fun(context);
-   }
+//    {
+//       init(context);
+//    }
+// //   (virtuality)? 'msc' msc_head ( ('expr' | (hmsc_statement_without_initial)* initial_node)=> hmsc | msc )
+//    ('endmsc' end { set_end_msc_fun(context);})?
+//    {
+//       check_collections_fun(context);
+//       msc_was_read_fun(context);
+//    }
+  (virtuality)? 'msc' msc_head (msc | hmsc) 'endmsc' end
+  {
+     // FIXME
+  }
 ;
 
-msc:
-   {
-      new_bmsc_fun(context);
-   }
-   msc_body
+msc returns [msc::BasicMsc* result]:
+  msc_body
+  {
+    $result = new msc::BasicMsc();
+  }
 ;
 
 msc_head:
@@ -245,7 +249,7 @@ msc_head:
       set_msc_name_fun(context, (char*) $Name.text->chars);
    }
    (msc_parameter_decl)? (time_offset)? end
-   (msc_inst_interface)? msc_gate_interfacez
+   (msc_inst_interface)? msc_gate_interface
 ;
 
 msc_parameter_decl:
