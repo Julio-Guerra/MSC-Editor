@@ -2,7 +2,7 @@
 # define GEN_VISITOR_HXX_
 
 # include "msc/gen-visitor.hh"
-# include "msc/msc-element.hh"
+# include "msc/ast.hh"
 
 namespace msc
 {

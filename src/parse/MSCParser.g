@@ -27,7 +27,7 @@ National:
   '`' | '\\' | '{' | '|' | '}' | '~' | '^'
 ;
 
-Character_String returns [std::wstring result = '']:
+Character_String returns [std::wstring result = ""]:
   '\''
   str = ((
     Letter
@@ -1108,14 +1108,6 @@ time_interval:
    | singular_time )
 ;
 
-/*
-time_interval:
-   (interval_label)? singular_time
- | (interval_label)? bounded_time
-   (measurement)?
-;
-*/
-
 /* Where an interval label is used, the keyword int_boundary must appear in the programming
 representation, and must be absent in the graphical representation.
 */
@@ -1552,7 +1544,7 @@ node:
 ;
 
 par_expression:
-   'expr' msc_expression 'endexpr' ('par' 'expr' msc_expression 'endexpr')*
+   'expr' msc_expression 'endexpr' ('par' 'expr' mscExpression 'endexpr')*
 ;
 
 hmsc_connection_node:

@@ -5,7 +5,8 @@
 
 namespace msc
 {
-  typedef std::wstring Label;
+  typedef std::wstring  String;
+  typedef String        Label;
 };
 
 #endif /* !TYPES_HH_ */
