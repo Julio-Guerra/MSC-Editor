@@ -578,56 +578,65 @@ defCreateInGate
         { ## = #( #[DefCreateInGate], ## ) ; }
 	;
 
-defCreateOutGate
-	: CREATE! IN! createGateIdentification
-        { ## = #( #[DefCreateOutGate], ## ) ; }
-	;
+defCreateOutGate:
+  'create' 'in' createGateIdentification
+  { // code
+    // ## = #( #[DefCreateOutGate], ## ) ;
+  } // !code
+;
 
-inlineOutGate
-	: defOutGate
-		( EXTERNAL! OUT! msgIdentification TO! inputDest )?
-        { ## = #( #[InlineOutGate], ## ) ; }
-	;
+inlineOutGate:
+  defOutGate ('external' 'out' msgIdentification 'to' inputDest)?
+  { // code
+    // ## = #( #[InlineOutGate], ## ) ;
+  } // !code
+;
 
-inlineInGate
-	: defInGate
-		( EXTERNAL! IN! msgIdentification FROM! outputDest )?
-        { ## = #( #[InlineInGate], ## ) ; }
-	;
+inlineInGate:
+  defInGate	('external' 'in' msgIdentification  outputDest)?
+  { // code
+    // ## = #( #[InlineInGate], ## ) ;
+  } // !code
+;
 
-inlineOutCallGate
-	: defOutCallGate
-		( EXTERNAL! CALL! msgIdentification TO! inputDest )?
-        { ## = #( #[InlineOutCallGate], ## ) ; }
-	;
+inlineOutCallGate:
+  defOutCallGate ('external' 'call' msgIdentification 'to' inputDest)?
+  { // code
+    // ## = #( #[InlineOutCallGate], ## );
+  } // !code
+;
 
-inlineInCallGate
-	: defInCallGate
-		( EXTERNAL! RECEIVE! msgIdentification FROM! outputDest )?
-        { ## = #( #[InlineInCallGate], ## ) ; }
-	;
+inlineInCallGate:
+  defInCallGate ('external' 'receive' msgIdentification 'from' outputDest)?
+  { // code
+    // ## = #( #[InlineInCallGate], ## );
+  } // !code
+;
 
-inlineOutReplyGate
-	: defOutReplyGate
-		( EXTERNAL! REPLYOUT! msgIdentification TO! inputDest )?
-        { ## = #( #[InlineOutReplyGate], ## ) ; }
-	;
+inlineOutReplyGate:
+  defOutReplyGate ('external' 'replyout' msgIdentification 'to' inputDest)?
+  { // code
+    // ## = #( #[InlineOutReplyGate], ## );
+  } // !code
+;
 
-inlineInReplyGate
-	: defInReplyGate
-		( EXTERNAL! REPLYIN! msgIdentification FROM! outputDest )?
-        { ## = #( #[InlineInReplyGate], ## ) ; }
-	;
+inlineInReplyGate:
+  defInReplyGate ('external' 'replyin' msgIdentification 'from' outputDest)?
+  { // code
+    // ## = #( #[InlineInReplyGate], ## );
+  } // !code
+;
 
-inlineCreateOutGate
-	: defCreateOutGate
-        ( EXTERNAL! create )?
-        { ## = #( #[InlineCreateOutGate], ## ) ; }
-	;
+inlineCreateOutGate:
+  defCreateOutGate ('external' create)?
+  { // code
+    // ## = #( #[InlineCreateOutGate], ## );
+  } // !code
+;
 
 inlineCreateInGate:
   defCreateInGate
-  ('external' 'create' 'fromt' createSource )?
+  ('external' 'create' 'fromt' createSource)?
   { // code
     // ## = #( #[InlineCreateInGate], ## ) ;
   } // !code

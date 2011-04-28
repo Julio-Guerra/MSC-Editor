@@ -260,11 +260,6 @@ msc_parm_decl_list:
    msc_parm_decl_block_first (end msc_parm_decl_block)*
 ;
 
-/*
- * add call methods for syntax regulation
- * each rewrite rule can be occured only once
- */
-msc_parm_decl_block:
    data_parameter_decl {set_data_parameter_decl(context);}
  | instance_parameter_decl {set_instance_parameter_decl(context);}
  | message_parameter_decl {set_message_parameter_decl(context);}
