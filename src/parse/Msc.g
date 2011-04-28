@@ -13,19 +13,19 @@ options
   # include "msc/all.hh"
 }
 
-mscTextualFile returns [msc::MscTextualFile* n = new msc::MscTextualFile()]:
+mscTextualFile /* returns [msc::MscTextualFile* n = new msc::MscTextualFile()] */:
   (
     textualMSCDocument
     (
-      msc = messageSequenceChart
+      messageSequenceChart
       { // code
-        $n.push_back($msc.n);
-        mscs.push_back($msc.n);
+        // n.push_back($msc.n);
+        // mscs.push_back($msc.n);
       } // !code
     )*
   )+
   { // code
-    $n = new msc::MscTexutalFile($textualMSCDocument.n);
+    // n = new msc::MscTexutalFile($textualMSCDocument.n);
   } // !code
 ;
 
@@ -34,14 +34,15 @@ mscTextualFile returns [msc::MscTextualFile* n = new msc::MscTextualFile()]:
    [Z.120] 1.4.3	-- Comment */
 
 end:
-  (comment)? ";"! ;
+  (comment)? ';'
+;
 
 comment returns [msc::String str = ""]:
-  'comment' CharacterString { $str = $CharacterString.str; }
+  'comment' CharacterString { /*$str = $CharacterString.str;*/ }
 ;
 
 textDefinition returns [msc::String str = ""]:
-  'text' CharacterString end { $str = $CharacterString.str); }
+  'text' CharacterString end { /*$str = $CharacterString.str);*/ }
 ;
 
 /* [Z.120] 1.4.4	-- Drawing Rules
@@ -50,533 +51,621 @@ textDefinition returns [msc::String str = ""]:
 
 textualMSCDocument returns [msc::TextualMscDocument* n]:
   documentHead textualDefiningPart textualUtilityPart
-  {
-    $n = new msc::TextualMscDocument($documentHead.n
-                                     $textualDefiningPart.n,
-                                     $textualUtilityPart.n);
-  }
+  { // code
+    // n = new msc::TextualMscDocument(documentHead.n
+    //                                  textualDefiningPart.n,
+    //                                  textualUtilityPart.n);
+  } // !code
 ;
 
-/*x Several changes, details see below */
-documentHead
-	:   MSCDOCUMENT! instanceKind ( RELATED! TO! sdlReference )?
-		(
-			{ msc96==true }? ";"! /*x <end> -> ";", D3 F */
-		|   ( inheritance )? ";"! /*x <end> -> ";", D3 F */
-			( parenthesisDeclaration )? /*x D3 C */
-			dataDefinition  /*x D3 C */
-			/*x In MSC2000 this is optional, but dataDefinition can already be empty */
-			usingClause
-			containingClause
-			messageDeclClause
-			timerDeclClause
-		)
-		{ ## = #([DocumentHead], ##); }
-	;
+documentHead:
+  'mscdocument' instanceKind ('related' 'to' sdlReference)?
+  ((inheritance)? ';'
+  (parenthesisDeclaration)?
+  dataDefinition
+  usingClause
+  containingClause
+  messageDeclClause
+  timerDeclClause)?
+  { // code
+    // ## = #([DocumentHead], ##);
+  } // !code
+;
+
+textualDefiningPart:
+  (definingMscReference)*
+;
+
+textualUtilityPart:
+  'utilities' (containingClause)? (definingMscReference)*
+  { // code
+    // ## = #([TextualUtilityPart], ##);
+  } // !code
+;
 
 
-textualDefiningPart
-	: ( definingMscReference )* ;
+definingMscReference:
+  'reference' (virtuality)? mscName
+  { // code
+    // ## = #([DefiningMscReference], ##);
+  } // !code
+;
 
-textualUtilityPart
-	: UTILITIES! ( containingClause )? ( definingMscReference )*
-        { ## = #([TextualUtilityPart], ##); }
-    ;
+virtuality:
+  'virtual' | 'redefined' | 'finalized' ;
 
+usingClause:
+  ('using' instanceKind ';')*
+  { // code
+    // ## = #([UsingClause], ##);
+  } // !code
+;
 
-definingMscReference
-	: REFERENCE! ( virtuality )? mscName
-        { ## = #([DefiningMscReference], ##); }
-    ;
+containingClause:
+  ('inst' instanceItem)+
+  { // code
+    // ## = #([ContainingClause], ## );
+  } // !code
+;
 
+instanceItem:
+  instanceName (':' instanceKind)? (inheritance)?
+  (decomposition)?
+  (dynamicDeclList | ';')
+  { // code
+    // ## = #( in, ik, i, d, ddl );
+  } // !code
+;
 
-virtuality
-	: VIRTUAL | REDEFINED | FINALIZED ;
+inheritance:
+  'inherits' instanceKind
+  { // code
+    // ## = #([Inheritance], ## );
+  } // !code
+;
 
-/*x <end>->";", D3 F */
-usingClause
-	: ( USING! instanceKind ";"! )*
-        { ## = #([UsingClause], ##); }
-    ;
+messageDeclClause:
+  ('msg' messageDecl ';')*
+  { // code
+    // ## = #([MessageDeclClause], ##);
+  } // !code
+;
 
+timerDeclClause:
+  ('timer' timerDecl ';')*
+  { // code
+    // ## = #([TimerDeclClause], ##);
+  } // !code
+;
 
-containingClause
-	: ( INST! instanceItem )+
-		{ ## = #([ContainingClause], ## ); }
-	;
+sdlReference:
+  sdlDocumentIdentifier
+;
 
-/*x <end>->";", D3 F */
-instanceItem!
-	: in:instanceName ( ":" ik:instanceKind )? ( i:inheritance )?
-		( d:decomposition )?
-		( ddl:dynamicDeclList | ";"! )
-		{ ## = #( in, ik, i, d, ddl ); }
-	;
+identifier:
+  (Qualifier)? Name
+;
 
-inheritance
-	: INHERITS! instanceKind
-        { ## = #([Inheritance], ## ); }
-    ;
+Qualifier:
+  '<<'
+  (
+    Letter
+    | Decimal_Digit
+    | OtherCharacter
+    | Special
+    | '.'
+    | '_'
+    | ' '
+    | '\''
+  )*
+  '>>'
+;
 
-/*x <end>->";", D3 F */
-messageDeclClause
-	: ( MSG! messageDecl ";"! )*
-        { ## = #([MessageDeclClause], ##); }
-    ;
+fragment
+Letter:
+  'a'..'z' | 'A'..'Z'
+;
 
-/*x <end>->";", D3 F */
-timerDeclClause
-	: ( TIMER! timerDecl ";"! )*
-        { ## = #([TimerDeclClause], ##); }
-    ;
+fragment
+Decimal_Digit:
+   '0'..'9'
+;
 
-sdlReference
-	: sdlDocumentIdentifier ;
-
-identifier
-	: ( Qualifier )? Name ;
-
-/*x rule qualifier moved to Lexer, because Lexer needs "<<"-context
-  information
-qualifier
-	: QualifierLeft Text QualifierRight ;
-*/
+fragment
+Special:
+  '@' | '&' | '(' | ')' | '[' | ']' | '<' | '>' | '#' | ',' | ';' | ':'
+;
 
 /* [Z.120] 1.6		-- Basic MSC
    [Z.120] 1.6.1	-- Message Sequence Chart */
 
-/*x Note: D3 F suggests to replace the <end> by ";" */
-messageSequenceChart
-	: ( virtuality )? MSC! mscHead ( msc | hmsc ) ENDMSC! end!
-		{ ## = #( #[MessageSequenceChart], ## ) ; }
-	;
+messageSequenceChart:
+  (virtuality)? 'msc' mscHead (msc | hmsc) 'endmsc' end
+  { // code
+    // ## = #( #[MessageSequenceChart], ## ) ;
+  } // !code
+;
 
-msc	: mscBody ;
+msc:
+  mscBody
+;
 
-mscHead
-	: mscName ( mscParameterDecl )? ( timeOffset )? end
-		( mscInstInterface )? mscGateInterface
-		{ ## = #( #[MscHead], ## ) ; }
-	;
+mscHead:
+  mscName mscParameterDecl? timeOffset? end
+  mscInstInterface? mscGateInterface
+  { // code
+    // ## = #( #[MscHead], ## ) ;
+  } // !code
+;
 
-/*x rev 1 */
-/* XXX Helmut: old rule allowed to have an empty mscParmDeclList, check this */
-mscParameterDecl
-    : "("! mscParmDeclList ")"!
-    ;
+mscParameterDecl:
+  '(' mscParmDeclList ')'
+;
 
-/*x rev 1 */
-/*x Note: D3 F suggests to replace the <end> by ";" */
-mscParmDeclList
-    : mscParmDeclBlock ( end mscParmDeclList )?
-    ;
+mscParmDeclList:
+  mscParmDeclBlock (end mscParmDeclList)?
+;
 
-/*x rev 1 */
-mscParmDeclBlock
-    : dataParameterDecl
-    | instanceParameterDecl
-    | messageParameterDecl
-    | timerParameterDecl
-    ;
+mscParmDeclBlock:
+  dataParameterDecl
+  | instanceParameterDecl
+  | messageParameterDecl
+  | timerParameterDecl
+;
 
-/*x <end> removed, D3 E */
-instanceParameterDecl
-	: INST! instanceParmDeclList
-		{ ## = #( #[InstanceParameterDeclaration], ## ) ; }
-	;
+instanceParameterDecl:
+  'inst' instanceParmDeclList
+  { // code
+    // ## = #( #[InstanceParameterDeclaration], ## ) ;
+  } // !code
+;
 
-instanceParmDeclList
-	: instanceParameterName ( ":"! instanceKind )?
-		( ","! instanceParmDeclList )?
-	;
+instanceParmDeclList:
+  instanceParameterName (':' instanceKind)?
+  (',' instanceParmDeclList)?
+;
 
-/*x rev 1 */
-instanceParameterName
-	: instanceName ;
+instanceParameterName:
+  instanceName
+;
 
+messageParameterDecl:
+  'msg' messageParmDeclList
+  { // code
+    // ## = #( #[MessapeParameterDeclaration], ## ) ;
+  } // !code
+;
 
-messageParameterDecl
-	: MSG! messageParmDeclList
-		{ ## = #( #[MessapeParameterDeclaration], ## ) ; }
-	;
+messageParmDeclList:
+  messageDeclList
+;
 
-messageParmDeclList
-	: messageDeclList ;
+timerParameterDecl:
+  'timer' timerParmDeclList
+  { // code
+    // ## = #( #[TimerParameterDeclaration], ## ) ;
+  } // !code
+;
 
-timerParameterDecl
-	: TIMER! timerParmDeclList
-		{ ## = #( #[TimerParameterDeclaration], ## ) ; }
-	;
+timerParmDeclList:
+  timerDeclList
+;
 
-timerParmDeclList
-	: timerDeclList ;
+mscInstInterface:
+  containingClause
+;
 
-mscInstInterface
-	: containingClause ;
+instanceKind:
+  (kindDenominator)? identifier
+  { // code
+    // ## = #( #[InstanceKind], i, kd ) ;
+  } // !code
+;
 
-instanceKind!
-	: ( ( kindDenominator identifier ) => kd:kindDenominator )? i:identifier
-		{ ## = #( #[InstanceKind], i, kd ) ; }
-	;
+kindDenominator:
+  kindName
+;
 
-/*x rev 1*/
-kindDenominator
-	: kindName ;
+mscGateInterface:
+  (mscGateDef)*
+;
 
-mscGateInterface
-	: ( mscGateDef )* ;
+mscGateDef:
+  'gate' (mscGate | methodCallGate | replyGate | createGate | orderGate) end
+;
 
-mscGateDef
-	: GATE! /*X Helmut: Check AST for this */
-		( ( ( gateName )? ( IN | OUT ) ) => mscGate
-		| ( ( gateName )? ( CALL | RECEIVE ) ) => methodCallGate
-		| replyGate
-		| createGate | orderGate ) end
-	;
+mscGate:
+  defInGate | defOutGate
+;
 
-mscGate	: ( ( gateName )? OUT ) => defInGate
-	| ( ( gateName )? IN ) => defOutGate
-	;
+methodCallGate:
+  defOutCallGate | defInCallGate
+;
 
-methodCallGate
-	: ( ( gateName )? RECEIVE ) => defOutCallGate
-	| ( ( gateName )? CALL ) => defInCallGate
-	;
+replyGate:
+  defOutReplyGate
+  | defInReplyGate
+;
 
-replyGate
-	: ( ( gateName )? REPLYIN ) => defOutReplyGate
-	| ( ( gateName )? REPLYOUT ) => defInReplyGate
-	;
+createGate:
+  defCreateInGate | defCreateOutGate
+;
 
-createGate
-	: defCreateInGate | defCreateOutGate ;
+orderGate:
+  defOrderInGate | defOrderOutGate
+;
 
-orderGate
-	: defOrderInGate | defOrderOutGate ;
+mscBody:
+  (mscStatement)*
+  { // code
+    // ## = #( #[MscBody], ## ) ;
+  } // !code
+;
 
-mscBody
-	: ( mscStatement )*
-		{ ## = #( #[MscBody], ## ) ; }
-	;
+mscStatement:
+  textDefinition | eventDefinition
+;
 
-/*x added msc92InstanceHeadStatement for MSC92/96 backward compat. */
-mscStatement
-	: textDefinition | eventDefinition
-    | {msc96==true}? msc92EventDefinition
-    ;
+eventDefinition:
+  instanceName ':' instanceEventList
+  { // code
+    // #(#[EventDefinition],#(#[InstanceNames],in),#(#[InstanceEvents],iel));
+  } // !code
+  | instanceNameList ':' multiInstanceEventList
+  { // code
+    //#(#[EventDefition],#( #[InstanceNames], inl),#(#[InstanceEvents],miel))
+  } // !code
+;
 
-/*x added msc92EventDefinition for MSC92/96 backward compat. */
-msc92EventDefinition!
-    : INSTANCE in:instanceName
-        ieh:msc92InstanceHeadStatement iel:instanceEventList
-        { ## = #( #[EventDefinition] , #( #[InstanceNames], in),
-            #( #[InstanceEvents], ieh, iel) ) ; }
-    ;
+instanceEventList:
+  instanceEvent (instanceEvent)*
+;
 
-/*x added msc92InstanceHeadStatement for MSC92/96 backward compat. */
-msc92InstanceHeadStatement
-    :   ( ( ":"! )? instanceKind )? ( decomposition )? end
-        { ## = #( #[InstanceHead], ## ) ; }
-    ;
+instanceEvent:
+  orderableEvent | nonOrderableEvent
+;
 
-eventDefinition!
- 	: ( instanceName ":" instanceEventList ) =>
-		in:instanceName ":" iel:instanceEventList
-		{ ## = #( #[EventDefinition], #( #[InstanceNames], in ),
-            #( #[InstanceEvents], iel ) ) ; }
-	| inl:instanceNameList ":" miel:multiInstanceEventList
-		{ ## = #( #[EventDefinition],
-            #( #[InstanceNames], inl ),
-            #( #[InstanceEvents], miel ) ) ; }
-	;
+orderableEvent:
+  ('label' (eventName { /*#lbl = #([Label], evn); */ }) end)?
+  (
+    (messageEvent) => messageEvent { /*## = #r1;*/ }
+    | incompleteMessageEvent { /*## = #ime;*/}
+    | (methodCallEvent) => methodCallEvent { /*## = #mce;*/ }
+    | incompleteMethodCallEvent { /*## = #imce;*/ }
+    | create { /*## = #c;*/ }
+    | timerStatement { /*## = #t;*/ }
+    | action  { /*## = #a;*/ }
+  )
+  ('before' orderDestList { /*#bodl->setText("before"); */ })?
+  ('after' orderDestList  { /*#bodl->setText("after"); */ })?
+  end
+  ('time' timeDestList ';')?
+  { // code
+    // astFactory.addASTChild(currentAST, #lbl);
+    // astFactory.addASTChild(currentAST, #bodl);
+    // astFactory.addASTChild(currentAST, #aodl);
+    // astFactory.addASTChild(currentAST, #tdl);
+    // astFactory.addASTChild(currentAST, #en);
+  } // ! code
+;
 
-/*x syntactic predicate needed due to nondeterminism of Z.120 11/99 rule */
-instanceEventList
- 	: instanceEvent ( ( instanceEvent ) => instanceEventList )? ;
+orderDestList:
+  orderDest (',' orderDest)*
+  { /*## = #([OrderDestList], ##);*/ }
+;
 
-instanceEvent
-	: orderableEvent | nonOrderableEvent ;
+timeDestList:
+  timeDestination (',' timeDestination)*
+;
 
-/*x <end>->";", D3 F */
-orderableEvent!
-    :
-		( ( {msc96==true}? |  LABEL )
-			lbl:( evn: eventName { #lbl = #([Label], evn); } )
-			( {msc96==true}? |  end ) )?
-		/*x MSC2000 has 'LABEL' and 'end', while MSC96 has not */
-        (
-			(messageEvent) => r1:messageEvent { ## = #r1;}
-		| ime:incompleteMessageEvent {## = #ime; }
-		| ( methodCallEvent ) => mce:methodCallEvent {## = #mce; }
-		| imce:incompleteMethodCallEvent {## = #imce; }
-		| c:create {## = #c; }
-		| t:timerStatement {## = #t; }
-		| a:action  {## = #a; }
-		)
-        ( BEFORE bodl:orderDestList { #bodl->setText("before"); })? /*XXX Better add an AST node for this */
-        ( AFTER aodl:orderDestList  { #bodl->setText("after"); } )? /*XXX Better add an AST node for this */
-        en:end
-        time:( TIME! tdl:timeDestList ";"! )? /*XXX Better add an AST node for this */
-        {
-            astFactory.addASTChild(currentAST, #lbl);
-            astFactory.addASTChild(currentAST, #bodl);
-            astFactory.addASTChild(currentAST, #aodl);
-            astFactory.addASTChild(currentAST, #tdl);
-            astFactory.addASTChild(currentAST, #en);
-        }
-    ;
+timeDestination:
+  (timeDest)? timeInterval
+  { // code
+    // ## = #([TimeDest], ##);
+  } // !code
+;
 
-orderDestList
-	: orderDest ( ","! orderDestList )?
-		{ ## = #([OrderDestList], ##); }
-    ;
+timeDest:
+  eventName |
+  (
+    'top' { /*## = #[Top];*/ }
+    | 'bottom' { /*## = #[Bottom];*/ }
+  )
+  (referenceIdentification | labelName)
+;
 
-/*x rule differs from Z.120 rev 1 for separate AST-Nodes on the same level */
-timeDestList
-	: timeDestination (","! timeDestList )?
+nonOrderableEvent:
+  startMethod | endMethod | startSuspension | endSuspension
+  | startCoregion | endCoregion | sharedCondition
+  | sharedMSCReference | sharedInlineExpr
+  | instanceHeadStatement | instanceEndStatement | stop
+;
 
-	;
+instanceNameList:
+  instanceName (',' instanceName)*
+  | 'all' { /*## = #[Name,"all"] ;*/ }
+;
 
-timeDestination
-	: ( timeDest )? timeInterval
-		{ ## = #([TimeDest], ##); }
-		/*x rule differs from Z.120 11/99, (timeDest)? and */
-		/*x timeInterval are transposed. D3 */
-	;
+multiInstanceEventList:
+  multiInstanceEvent
+  ((multiInstanceEvent) => multiInstanceEventList)?
+;
 
-/*x rev. 1 */
-timeDest /*X Helmut: Check AST for this */
-	: eventName |  ( TOP { ## = #[Top]; } | BOTTOM { ## = #[Bottom]; } ) (  referenceIdentification | labelName );
-
-/* orderableEvents are terminated in rule orderableEvents by and end or ";", nonOrderableEvents are terminated in later rules */
-nonOrderableEvent
-	: startMethod | endMethod | startSuspension | endSuspension
-	| startCoregion | endCoregion | sharedCondition
-	| sharedMSCReference | sharedInlineExpr
-	| instanceHeadStatement | instanceEndStatement | stop
-	;
-
-instanceNameList
-	: instanceName ( ","! instanceName )*
-	| ALL { ## = #[Name,"all"] ; }
-	;
-
-// original Z.120 11/99 rule:
-// multiInstanceEventList
-//	: ( multiInstanceEvent )+ ;
-/*x syntactic predicate needed due to nondeterminism of Z.120 11/99 rule above*/
-multiInstanceEventList
- 	: multiInstanceEvent
-		( ( multiInstanceEvent ) => multiInstanceEventList )?
-	;
-
-multiInstanceEvent
-	: condition | mscReference | inlineExpr ;
+multiInstanceEvent:
+  condition | mscReference | inlineExpr
+;
 
 /* [Z.120] 1.6.2	-- Instance */
 
-instanceHeadStatement
-	: INSTANCE! ( instanceKind )? ( decomposition )? end
-		{ ## = #( #[InstanceHead], ## ) ; }
-	;
+instanceHeadStatement:
+  'instance' (instanceKind)? (decomposition)? end
+  { // code
+    // ## = #( #[InstanceHead], ## ) ;
+  } // !code
+;
 
-instanceEndStatement
-	: ENDINSTANCE! end
-		{ ## = #( #[InstanceEnd], ## ) ; }
-	;
+instanceEndStatement:
+  'endinstance' end
+  { // code
+    // ## = #( #[InstanceEnd], ## ) ;
+  } // !code
+;
 
 /* [Z.120] 1.6.3	-- Message */
 
-messageEvent
-	: messageOutput | messageInput ;
+messageEvent:
+  messageOutput | messageInput
+;
 
-messageOutput
-	: OUT! msgIdentification TO! inputAddress
-		{ ## = #( #[MessageOutput], ## ) ; }
-	;
+messageOutput:
+  'out' msgIdentification 'to' inputAddress
+  { // code
+    // ## = #( #[MessageOutput], ## ) ;
+  } // !code
+;
 
-messageInput
-	: IN! msgIdentification FROM! outputAddress
-		{ ## = #( [MessageInput], ## ) ; }
-	;
+messageInput:
+  'in' msgIdentification 'from' outputAddress
+  { // code
+    // ## = #( [MessageInput], ## ) ;
+  } // !code
+;
 
-incompleteMessageEvent
-	: incompleteMessageOutput | incompleteMessageInput ;
+incompleteMessageEvent:
+  incompleteMessageOutput | incompleteMessageInput
+;
 
-incompleteMessageOutput
-	: OUT! msgIdentification TO! LOST! ( inputAddress )?
-		{ ## = #( [IncompleteMessageOutput], ## ) ; }
-	;
+incompleteMessageOutput:
+  'out' msgIdentification 'to' 'lost' (inputAddress)?
+  { // code
+    // ## = #( [IncompleteMessageOutput], ## ) ;
+  } // !code
+;
 
-incompleteMessageInput
-	: IN! msgIdentification FROM! FOUND! ( outputAddress )?
-		{ ## = #( [IncompleteMessageInput], ## ) ; }
-	;
+incompleteMessageInput:
+  'in' msgIdentification 'from' 'found' (outputAddress)?
+  { // code
+    // ## = #( [IncompleteMessageInput], ## ) ;
+  } // !code
+;
 
-msgIdentification
-	: messageName ( ","! messageInstanceName )?
-		( "("! parameterList ")"! )?
-		{ ## = #( #[Message], ## ) ; }
-	;
+msgIdentification:
+  messageName (',' messageInstanceName)?
+  ('(' parameterList ')')?
+  { // code
+    // ## = #( #[Message], ## ) ;
+  } // !code
+;
 
-outputAddress
-	: ( instanceName
-		| ( ENV | referenceIdentification ) ( VIA gateName )? )
-		{ ## = #( #[OutputAddress], ## ) ; }
-	;
+outputAddress:
+  (instanceName	| ('env' | referenceIdentification) ('via' gateName)?)
+  { // code
+    // ## = #( #[OutputAddress], ## ) ;
+  } // !code
+;
 
-referenceIdentification
-	: REFERENCE! mscReferenceIdentification /*x Helmut: Check AST for this */
-	| INLINE! inlineExprIdentification
-	;
+referenceIdentification:
+  'reference' mscReferenceIdentification
+  | 'inline' inlineExprIdentification
+;
 
-inputAddress
-	: ( instanceName
-		| ( ENV | referenceIdentification ) ( VIA gateName )? )
-		{ ## = #( #[InputAddress], ## ) ; }
-	;
+inputAddress:
+  (instanceName
+  | ('env' | referenceIdentification) ('via' gateName)?)
+  { // code
+    // ## = #( #[InputAddress], ## ) ;
+  } // !code
+;
 
 /* [Z.120] 1.6.4	-- Control Flow */
 
-methodCallEvent
-	: callOut | callIn | replyOut | replyIn ;
+methodCallEvent:
+  callOut | callIn | replyOut | replyIn
+;
 
-callOut
-	: CALL! msgIdentification TO! inputAddress
-		{ ## = #( #[CallOut], ## ) ; }
-	;
+callOut:
+  'call' msgIdentification 'to' inputAddress
+  { // code
+    // ## = #( #[CallOut], ## ) ;
+  } // !code
+;
 
-callIn
-	: RECEIVE! msgIdentification FROM! outputAddress
-		{ ## = #( #[CallIn], ## ) ; }
-	;
+callIn:
+  'receive' msgIdentification 'from' outputAddress
+  { // code
+    // ## = #( #[CallIn], ## ) ;
+  } // !code
+;
 
-replyOut
-	: REPLYOUT! msgIdentification TO! inputAddress
-		{ ## = #( #[ReplyOut], ## ) ; }
-	;
+replyOut:
+  'replyout' msgIdentification 'to' inputAddress
+  { // code
+    // ## = #( #[ReplyOut], ## ) ;
+  } // !code
+;
 
-replyIn
-	: REPLYIN! msgIdentification FROM! outputAddress
-		{ ## = #( #[ReplyIn], ## ) ; }
-	;
+replyIn:
+  'replyin' msgIdentification 'from' outputAddress
+  { // code
+    // ## = #( #[ReplyIn], ## ) ;
+  } // !code
+;
 
-incompleteMethodCallEvent
-	: incompleteCallOut | incompleteCallIn |
-		incompleteReplyOut | incompleteReplyIn
-	;
+incompleteMethodCallEvent:
+  incompleteCallOut | incompleteCallIn | incompleteReplyOut | incompleteReplyIn
+;
 
-incompleteCallOut
-	: CALL! msgIdentification TO! LOST! ( inputAddress )?
-		{ ## = #( #[IncompleteCallOut], ## ) ; }
-	;
+incompleteCallOut:
+  'call' msgIdentification 'to' 'lost' (inputAddress)?
+  { // code
+    // ## = #( #[IncompleteCallOut], ## ) ;
+  } // !code
+;
 
-incompleteCallIn
-	: RECEIVE! msgIdentification FROM! FOUND! ( outputAddress )?
-		{ ## = #( #[IncompleteCallIn], ## ) ; }
-	;
+incompleteCallIn:
+  'receive' msgIdentification 'from' 'found' (outputAddress)?
+  { // code
+    // ## = #( #[IncompleteCallIn], ## ) ;
+  } // !code
+;
 
-incompleteReplyOut
-	: REPLYOUT! msgIdentification TO! LOST! ( inputAddress )?
-		{ ## = #( #[IncompleteReplyOut], ## ) ; }
-	;
+incompleteReplyOut:
+  'replyout' msgIdentification 'to' 'lost' (inputAddress)?
+  { // code
+    // ## = #( #[IncompleteReplyOut], ## ) ;
+  } // !code
+;
 
-incompleteReplyIn
-	: REPLYIN! msgIdentification FROM! FOUND! ( outputAddress )?
-		{ ## = #( #[IncompleteReplyIn], ## ) ; }
-	;
+incompleteReplyIn:
+  'replyin' msgIdentification 'from' 'found' (outputAddress)?
+  { // code
+    // ## = #( #[IncompleteReplyIn], ## ) ;
+  } // !code
+;
 
-startMethod
-	: METHOD! end
-		{ ## = #( #[StartMethod], ## ) ; }
-	;
+startMethod:
+  'method' end
+  { // code
+    //  ## = #( #[StartMethod], ## ) ;
+  } // !code
+;
 
-endMethod
-	: ENDMETHOD! end
-		{ ## = #( #[EndMethod], ## ) ; }
-	;
+endMethod:
+  'endmethod' end
+  { // code
+    // ## = #( #[EndMethod], ## ) ;
+  } // !code
+;
 
-startSuspension
-	: SUSPENSION! end
-		{ ## = #( #[StartSuspension], ## ) ; }
-	;
+startSuspension:
+  'suspension' end
+  { // code
+    //## = #( #[StartSuspension], ## ) ;
+  } // !code
+;
 
-endSuspension
-	: ENDSUSPENSION! end
-		{ ## = #( #[EndSuspension], ## ) ; }
-	;
+endSuspension:
+  'endsuspension' end
+  { // code
+    // ## = #( #[EndSuspension], ## ) ;
+  } // code
+;
 
 /* [Z.120] 1.6.5	-- Environment and Gates */
 
-actualOutGate
-	: ( gateName )? OUT! msgIdentification TO! inputDest
-		{ ## = #( #[OutGate], ## ) ; }
-	;
+actualOutGate:
+  (gateName)? 'out' msgIdentification 'to' inputDest
+  { // code
+    // ## = #( #[OutGate], ## ) ;
+  } // !code
+;
 
-actualInGate
-	: ( gateName )? IN! msgIdentification FROM! outputDest
-		{ ## = #( #[InGate], ## ) ; }
-	;
+actualInGate:
+  (gateName)? 'in' msgIdentification 'from' outputDest
+  { // code
+    // ## = #( #[InGate], ## ) ;
+  } // !code
+;
 
-inputDest
-	: LOST! ( ( inputAddress ) => inputAddress )? | inputAddress ;
+inputDest:
+  'lost' ((inputAddress) => inputAddress)? | inputAddress
+;
 
-outputDest
-	: FOUND! ( ( outputAddress ) => outputAddress )? | outputAddress ;
+outputDest:
+  'found' ((outputAddress) => outputAddress)? | outputAddress
+;
 
-defInGate
-	: ( gateName )? OUT! msgIdentification TO! inputDest
-		{ ## = #( #[DefInGate], ## ) ; }
-	;
+defInGate:
+  (gateName)? 'out' msgIdentification 'to' inputDest
+  { // code
+    // ## = #( #[DefInGate], ## ) ;
+  } // !code
+;
 
-defOutGate
-	: ( gateName )? IN! msgIdentification FROM! outputDest
-		{ ## = #( #[DefOutGate], ## ) ; }
-	;
+defOutGate:
+  (gateName)? 'in' msgIdentification 'from' outputDest
+  { // code
+    // ## = #( #[DefOutGate], ## ) ;
+  } // !code
+;
 
-actualOrderOutGate
-	: gateName BEFORE! orderDest
-		{ ## = #( #[OrderOutGate], ## ) ; }
-	;
+actualOrderOutGate:
+  gateName 'before' orderDest
+  { // code
+    // ## = #( #[OrderOutGate], ## ) ;
+  } // !
+;
 
-orderDest
-	: eventName | ( ENV | referenceIdentification ) VIA gateName ;
+orderDest:
+  eventName | ('env' | referenceIdentification) 'via' gateName
+;
 
-actualOrderInGate
-	: gateName
-		( AFTER! orderDest )?
-		{ ## = #( #[OrderInGate], ## ) ; }
-	;
+actualOrderInGate:
+  gateName ('after' orderDest)?
+  { // code
+    // ## = #( #[OrderInGate], ## ) ;
+  } // code
+;
 
-defOrderInGate
-	: gateName BEFORE! orderDest
-		{ ## = #( #[DefOrderInGate], ## ) ; }
-	;
+defOrderInGate:
+  gateName 'before' orderDest
+  { // code
+    // ## = #( #[DefOrderInGate], ## ) ;
+  } // !code
+;
 
-defOrderOutGate
-	: gateName
-		( AFTER! orderDestList )?
-		{ ## = #( #[DefOrderOutGate], ## ) ; }
-	;
+defOrderOutGate:
+  gateName ('after' orderDestList)?
+  { // code
+    // ## = #( #[DefOrderOutGate], ## ) ;
+  } // !code
+;
 
-actualCreateOutGate
-	: CREATE! OUT! createGateIdentification CREATE! createTarget
-		{ ## = #( #[CreateOutGate], ## ) ; }
-	;
+actualCreateOutGate:
+  'create' 'out' createGateIdentification 'create' createTarget
+  { // code
+    // ## = #( #[CreateOutGate], ## ) ;
+  } // !code
+;
 
-actualCreateInGate
-	: CREATE! IN! createGateIdentification
-		{ ## = #( #[CreateInGate], ## ) ; }
-	;
+actualCreateInGate:
+  'create' 'in' createGateIdentification
+  { //code
+    // ## = #( #[CreateInGate], ## ) ;
+  } // !code
+;
 
-createTarget
-	: instanceName | ( ENV | referenceIdentification ) ( VIA gateName )? ;
+createTarget:
+  instanceName | ('env' | referenceIdentification) ('via' gateName)?
+;
 
-defCreateInGate
-	: CREATE! OUT! ( createGateIdentification )?
-		CREATE! createTarget
-        { ## = #( #[DefCreateInGate], ## ) ; }
-	;
+defCreateInGate:
+  'create' 'out' (createGateIdentification)?
+  'create' createTarget
+  { // code
+    // ## = #( #[DefCreateInGate], ## ) ;
+  } // !code
+;
 
 defCreateOutGate:
   'create' 'in' createGateIdentification
@@ -818,7 +907,7 @@ actionStatement:
   { // code
     // ##->setType(ActionName);
   } // !code
-
+;
 
 informalAction:
   CharacterString
@@ -1107,7 +1196,7 @@ timeOffset:
    [Z.120] 1.8.8	-- Time Points */
 
 timePoint:
-  (AbsTimeMark)? timeExpression
+  ('@')? timeExpression
   { // code
     // ## = #( #[TimePoint], ## ) ;
   } // !code
@@ -1155,12 +1244,12 @@ singularTime:
 ;
 
 boundedTime:
-  (AbsTimeMark)?
-  (LeftOpen { /*#l = #lo ;*/ } | LeftClosed { /*#l = #lc ;*/ })
+  '@'?
+  ('(' { /*#l = #lo ;*/ } | '[' { /*#l = #lc ;*/ })
   (timePoint  { /* #lb = #([LowerBound], tp1 );*/ })?
   ','
   (timePoint  { /*#ub = #([UpperBound], tp2 );*/ })?
-  (RightOpen { /*#r = #ro ;*/ } | rc:RightClosed { /*#r = #rc ;*/ } )
+  (')' { /*#r = #ro ;*/ } | ']' { /*#r = #rc ;*/ } )
   { // code
     // ## = #(#[BoundedTime], atm, l, lb, ub, r );
   } // !code
@@ -1640,19 +1729,19 @@ timeableNode:
 ;
 
 node returns [msc::Node* n]:
-  conditionIdentification { $n = $conditionIdentification.n; }
-  | 'connect' { /* FIXME $n = new msc::Node(); */ }
+  conditionIdentification { /*n = conditionIdentification.n;*/ }
+  | 'connect' { /* FIXME n = new msc::Node(); */ }
 ;
 
 parExpression returns [msc::ParExpression* n = new msc::ParExpression()]:
   'expr' me1 = mscExpression 'endexpr'
   { // code
-    $n->push_back($me1.n);
+    // n->push_back(me1.n);
   } // !code
   (
     'par' 'expr' me2 = mscExpression 'endexpr'
     { // code
-      $n->push_back($me2.n);
+      // n->push_back(me2.n);
     } // !code
   )*
 ;
@@ -1790,10 +1879,93 @@ dataDefinitionString
     ;
 
 wildcardString returns [msc::String str = ""]:
-  s = (CharacterString | Name) { $str = $s.str; }
+  s = (CharacterString | Name) { /*str = s.str;*/ }
 ;
 
-/* CreateGateIdentification : */
+Name:
+  (Letter | DecimalDigit | Underline | FullStop)+
+;
+
+fragment
+Space:
+  (' ' | '\t' | '\r' | '\n' {/*newline();*/})
+;
+
+fragment
+Underline:
+  '_'
+;
+
+fragment
+DecimalDigit:
+  '0' .. '9'
+;
+
+National:
+  '`' | '\\'
+  | LeftCurlyBracket
+  | VerticalLine
+  | RightCurlyBracket
+  | Overline
+  | UpwardArrowHead
+;
+
+fragment
+FullStop:
+  '.'
+;
+
+fragment
+UpwardArrowHead:
+  '^'
+;
+
+Alphanumeric:
+  Letter | DecimalDigit	| National
+;
+
+CharacterString:
+  Apostrophe
+  (Alphanumeric
+  | OtherCharacter
+  | Special
+  | FullStop
+  | Underline
+  | Space
+  | Apostrophe Apostrophe
+  )* Apostrophe
+;
+
+Apostrophe:
+  '\''
+;
+
+OtherCharacter:
+  '?' | '%' | '+' | '-' | '!' | '/' | '*' | '"' | '='
+;
+
+fragment
+Overline:
+  '~'
+;
+
+VerticalLine:
+  '|'
+;
+
+fragment
+LeftCurlyBracket:
+  '{'
+;
+
+fragment
+RightCurlyBracket:
+  '}'
+;
+
+Misc:
+  OtherCharacter | Apostrophe
+;
 
 createGateIdentification:
   msgIdentification
