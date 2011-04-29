@@ -307,7 +307,7 @@ mscStatement:
 ;
 
 eventDefinition:
-  instanceName ':' instanceEventList
+  (instanceName ':' instanceEventList) => instanceName ':' instanceEventList
   { // code
     // #(#[EventDefinition],#(#[InstanceNames],in),#(#[InstanceEvents],iel));
   } // !code
@@ -1137,7 +1137,8 @@ expression:
 ;
 
 pattern:
-  variableString | wildcard
+  (variableString) => variableString
+  | wildcard
 ;
 
 wildcard:
@@ -1147,14 +1148,14 @@ wildcard:
 /* [Z.120] 1.7.8	-- Data in message and timer parameters */
 
 parameterList:
-  parameterDefn (',' parameterList)*
+  parameterDefn (',' parameterDefn)*
   { // code
     // ## = #( #[ParameterList], ## );
   } // !code
 ;
 
 parameterDefn:
-  (binding | expression | pattern)
+  binding | (expression) => expression | pattern
 ;
 
 /* [Z.120] 1.7.9	-- Data in instance creation parameters
@@ -1226,7 +1227,7 @@ absMeasurement:
 /* [Z.120] 1.8.10	-- Time Interval */
 
 timeInterval:
-  (intervalLabel)? singularTime
+  ((intervalLabel)? singularTime) => (intervalLabel)? singularTime
   | (intervalLabel)? boundedTime
   (measurement)?
 ;
@@ -1622,7 +1623,7 @@ actualMessageParameters:
 ;
 
 actualMessageList:
-  messageName (';' messageName)*
+  messageName ((';' messageName) => ';' messageName)*
 ;
 
 actualTimerParameters:
@@ -1920,10 +1921,6 @@ UpwardArrowHead:
   '^'
 ;
 
-Alphanumeric:
-  Letter | DecimalDigit	| National
-;
-
 CharacterString:
   Apostrophe
   (Alphanumeric
@@ -1949,6 +1946,7 @@ Overline:
   '~'
 ;
 
+fragment
 VerticalLine:
   '|'
 ;
@@ -1963,11 +1961,16 @@ RightCurlyBracket:
   '}'
 ;
 
+fragment
 Misc:
   OtherCharacter | Apostrophe
+;
+
+fragment
+Alphanumeric:
+  Letter | DecimalDigit	| National
 ;
 
 createGateIdentification:
   msgIdentification
 ;
-
