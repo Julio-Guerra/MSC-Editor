@@ -1,6 +1,4 @@
-ADD_LIBRARY(msc
+add_library(libmsc STATIC msc)
 
-)
-
-INCLUDE_DIRECTORIES("${PROJECT_SOURCE_DIR}")
+include_directories(${PROJECT_SOURCE_DIR})
 

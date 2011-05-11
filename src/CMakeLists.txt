@@ -1,1 +1,1 @@
-ADD_SUBDIRECTORY(msc)
+add_subdirectory(msc)
