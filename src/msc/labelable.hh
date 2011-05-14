@@ -1,7 +1,7 @@
 #ifndef LABELABLE_HH_
 # define LABELABLE_HH_
 
-# include "msc/types.hh"
+# include <string>
 
 namespace msc
 {
@@ -10,6 +10,8 @@ namespace msc
   class Labelable
   {
     public:
+      typedef std::wstring Label;
+
       /// Set the label property.
       void                label_set(const Label&);
 

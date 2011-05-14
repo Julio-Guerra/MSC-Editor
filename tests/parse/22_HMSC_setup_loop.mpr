@@ -1,0 +1,17 @@
+msc setup_loop1;
+expr L1;
+L1: condition when disconnected seq (L2 alt L3);
+L2: (failure) seq (L2 alt L3); 
+L3: (connection) seq (L4); 
+L4: condition connected seq (L5); 
+L5: end;
+endmsc;
+
+msc setup_loop2;
+expr L1;
+L1: condition when disconnected seq (L2);
+L2: (loop <0,inf> failure) seq (L3);
+L3: (connection) seq (L4);
+L4: condition connected seq (L5);
+L5: end;
+endmsc;

@@ -1,0 +1,34 @@
+msc alternative; 
+inst Initiator;
+inst Responder; 
+gate out ICONreq to Initiator;
+gate in ICONind from Responder;
+gate in IDISind from Initiator;
+gate out ICONresp to Responder;
+gate in ICONconf from Initiator;
+
+Initiator: instance;
+Responder:instance;
+all:condition when Disconnected;
+Initiator: in ICONreq from env;
+out ICON to Responder;
+starttimer T;
+Responder:in ICON from Initiator;
+out ICONind to env;
+all:condition Wait_for_Resp;
+alt begin;
+Initiator: timeout T;
+out IDISind to env;
+all:condition Disconnected;
+alt;
+Responder:in ICONresp from env;
+out ICONF to Initiator;
+Initiator: in ICONF from Responder;
+stoptimer T;
+out ICONconf to env;
+all:condition Connected;
+alt end;
+Initiator: endinstance;
+Responder:endinstance;
+endmsc; 
+

@@ -1,0 +1,42 @@
+mscdocument connection96document related to <<c:/quali/djfhasd/dsafsd>> someSDLdocument;
+
+msc connection;
+inst calling_party: process digite;
+inst called_party: process digite; 
+gate out off_hook to calling_party;
+gate in dial_tone_on from calling_party;
+gate out digit to calling_party;
+gate in dial_tone_off from calling_party;
+gate out digit to calling_party;
+gate in ring_back_tone_on from calling_party;
+gate in internal_ringing_on from called_party;
+gate out off_hook to called_party;
+gate in connection from calling_party;
+
+calling_party: instance process digite;
+condition when Idle shared all;
+in off_hook from env;
+out dial_tone_on to env;
+in digit from env;
+out dial_tone_off to env;
+in digit from env;
+out seizure_int to called_party;
+in ack from called_party;
+out ring_back_tone_on to env before answer_in;
+condition Seizure shared all;
+in answer from called_party;
+answer_in out connection to env;
+condition Talking shared all;
+endinstance;
+
+called_party: instance process digite;
+condition when Idle shared all;
+in seizure_int from calling_party;
+out ack to calling_party;
+out internal_ringing_on to env;
+condition Seizure shared all;
+in off_hook from env;
+out answer to calling_party;
+condition Talking shared all;
+endinstance;
+endmsc;

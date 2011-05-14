@@ -1,8 +1,8 @@
-#include "gen-visitor.hh"
+#include "msc/gen-visitor.hh"
 
 namespace msc
 {
-  void GenVisitor::operator()(MscElement& e)
+  void GenVisitor::operator()(Ast& e)
   {
     e.accept(*this);
   }

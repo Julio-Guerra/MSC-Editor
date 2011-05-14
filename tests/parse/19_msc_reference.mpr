@@ -1,0 +1,50 @@
+msc ref; 
+inst Initiator;
+inst Medium;
+inst Responder; 
+gate out L1 to reference data_trans1;
+gate in L2 from reference data_trans1;
+gate out L3 to reference data_trans2;
+gate in L4 from reference data_trans2;
+
+Initiator: instance;
+Medium:instance; 
+Responder:instance;
+all: reference data_trans1:data_transmission;
+gate in IDATreq, L1 from env;
+gate out IDATind, L2 to env;
+reference data_trans2:data_transmission;
+gate in IDATreq, L3 from env;
+gate out IDATind, L4 to env;
+Initiator: endinstance;
+Medium:endinstance; 
+Responder:endinstance;
+endmsc; 
+
+msc data_transmission; 
+inst Initiator;
+inst Medium;
+inst Responder; 
+gate out IDATreq(d) to Initiator;
+gate in IDATind(d) from Responder;
+
+Initiator: instance;
+Medium:instance; 
+Responder:instance;
+Initiator:in IDATreq(d) from env;
+out MDATreq(DT, mydata, num) to Medium;
+starttimer T;
+Medium:in MDATreq(DT, mydata, num) from Initiator;
+out MDATind(DT, mydata, num) to Responder;
+Responder:in MDATind(DT, mydata, num) from Medium;
+out IDATind(d) to env;
+out MDATreq(AK, num) to Medium;
+Medium:in MDATreq(AK, num) from Responder;
+out MDATind(AK, num) to Initiator;
+Initiator:in MDATind(AK, num) from Medium;
+stoptimer T;
+Initiator: endinstance;
+Medium:endinstance; 
+Responder:endinstance;
+endmsc; 
+

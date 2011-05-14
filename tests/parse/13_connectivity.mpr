@@ -1,0 +1,16 @@
+msc connectivity; 
+inst Inres_service; 
+gate out ICONreq to Inres_service;
+gate in ICONind from Inres_service;
+gate in IDISind from Inres_service;
+gate out ICONresp to Inres_service;
+
+Inres_service: instance;
+concurrent;
+in ICONreq from env before Label1, Label2;
+label Label1; out ICONind to env before Label3;
+label Label2; out IDISind to env;
+label Label3; in ICONresp from env;
+endconcurrent;
+endinstance;
+endmsc; 

@@ -1,0 +1,9 @@
+msc setup_attach;
+expr L1;
+L1: condition when disconnected seq ( L2 );
+L2 : connect seq ( L3 alt L4 ); 
+L3: (failure) seq ( L1 ); 
+L4: (connection) seq ( L5 ); 
+L5: condition connected seq ( L6 ); 
+L6: end;
+endmsc;

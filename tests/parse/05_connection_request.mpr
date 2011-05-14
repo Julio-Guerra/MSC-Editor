@@ -1,0 +1,20 @@
+msc connection_request; 
+inst Initiator;
+inst Responder; 
+gate out ICONreq to Initiator;
+gate in ICONind from Responder;
+
+instance Initiator;
+condition when Disconnected shared all;
+in ICONreq from env;
+starttimer T;
+out ICON to Responder;
+condition Wait_For_Resp shared all;
+endinstance;
+instance Responder;
+condition when Disconnected shared all;
+in ICON from Initiator;
+out ICONind to env;
+condition Wait_For_Resp shared all;
+endinstance;
+endmsc;

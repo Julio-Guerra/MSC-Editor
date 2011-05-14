@@ -1,0 +1,18 @@
+mscdocument time_constraint1;
+msc time_constraint1;
+PCO1: instance;
+PCO2: instance;
+MTCType: instance IUT;
+text 'This MSC describes a time constraint:
+the time between sending m1 at PCO1
+and receiving m2 at PCO2 has to be 
+between 8 (inclusive) and 10 (inclusive) seconds
+';
+PCO1: label PCO1_out_m1_1; out m1,1 to MTCType comment 'label PCO1_out_m1_1;';
+MTCType: in m1,1 from PCO1;
+MTCType: out m2,2 to PCO2;
+PCO2: in m2,2 from MTCType comment 'time PCO1_out_m1_1 [8,10];'; time PCO1_out_m1_1 [8,10]; 
+PCO1: endinstance;
+PCO2: endinstance;
+MTCType: endinstance;
+endmsc;

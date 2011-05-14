@@ -1,0 +1,24 @@
+msc basic_concepts; 
+inst Initiator: process ISAP_Manager_Ini;
+inst Responder; 
+gate out ICONreq to Initiator;
+gate in ICONind from Responder;
+gate in IDISind from Initiator;
+
+Initiator:instance process ISAP_Manager_Ini;
+Responder:instance;
+all:condition when Disconnected;
+Initiator:in ICONreq from env;
+out ICON to Responder;
+Responder:in ICON from Initiator;
+out ICONind to env;
+condition wait shared;
+endinstance;
+Initiator:action 'setting_counter';
+starttimer T ('5');
+condition wait shared;
+timeout T;
+out IDISind to env;
+condition disconnected shared;
+endinstance;
+endmsc;

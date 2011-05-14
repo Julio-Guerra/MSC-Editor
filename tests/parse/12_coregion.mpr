@@ -1,0 +1,17 @@
+msc coregion; 
+inst inst1;
+inst inst2; 
+gate out process_data1 to inst1;
+gate out process_data2 to inst1;
+
+inst1: instance process digite;
+concurrent;
+in process_data1 from env;
+in process_data2 from env;
+endconcurrent;
+out start to inst2;
+endinstance;
+inst2: instance process digite;
+in start from inst1;
+endinstance;
+endmsc; 

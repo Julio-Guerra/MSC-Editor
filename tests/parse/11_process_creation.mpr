@@ -1,0 +1,17 @@
+msc process_creation; 
+inst manager;
+inst subscriber; 
+gate out ICONreq to manager;
+gate out IDISind to manager;
+
+manager: instance;
+in ICONreq from env;
+create subscriber('data');
+in IDISind from env;
+out terminate to subscriber;
+endinstance;
+subscriber: instance;
+in terminate from manager;
+stop;
+endinstance;
+endmsc; 

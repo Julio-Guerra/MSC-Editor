@@ -1,0 +1,9 @@
+msc con_setup;
+expr L1;
+L1: condition Disconnected seq ( L2 );
+L2 : (connection_request) seq (L3); 
+L3: condition when Wait_For_Resp seq ( L4);
+L4: (connection_confirm) seq ( L5 ); 
+L5: condition when Connected seq ( L6 ); 
+L6: end;
+endmsc;
