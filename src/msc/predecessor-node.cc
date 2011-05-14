@@ -1,2 +1,0 @@
-#include "predecessor-node.hh"
-

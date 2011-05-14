@@ -7,7 +7,7 @@ namespace msc
     label_ = label;
   }
 
-  const Label&    Labelable::label_get() const
+  const Labelable::Label&    Labelable::label_get() const
   {
     return label_;
   }
