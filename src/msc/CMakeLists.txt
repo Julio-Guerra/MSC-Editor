@@ -1,4 +1,8 @@
-add_library(libmsc STATIC msc)
+add_library(libmsc gen-visitor.cc
+                   msc.cc
+                   labelable.cc
+                   message.cc
+                   instance.cc
+)
 
-include_directories(${PROJECT_SOURCE_DIR})
-
+include_directories(${PROJECT_SOURCE_DIR}/src)
