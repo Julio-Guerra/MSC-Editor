@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="69">
+  <logicalFolder name="root" displayName="root" projectFiles="true">
+    <df name="src" root=".">
+      <df name="CMakeFiles">
+        <df name="CMakeTmp" kind="SOURCE_LOGICAL_FOLDER">
+          <df name="CMakeFiles" kind="SOURCE_LOGICAL_FOLDER">
+            <df name="cmTryCompileExec.dir" kind="SOURCE_LOGICAL_FOLDER">
+            </df>
+          </df>
+        </df>
+        <df name="CompilerIdC" kind="SOURCE_LOGICAL_FOLDER">
+          <in>CMakeCCompilerId.c</in>
+          <in>a.out</in>
+        </df>
+        <df name="CompilerIdCXX" kind="SOURCE_LOGICAL_FOLDER">
+          <in>CMakeCXXCompilerId.cpp</in>
+          <in>a.out</in>
+        </df>
+        <df name="Progress" kind="SOURCE_LOGICAL_FOLDER">
+          <in>1</in>
+          <in>count.txt</in>
+        </df>
+        <in>CMakeCCompiler.cmake</in>
+        <in>CMakeCXXCompiler.cmake</in>
+        <in>CMakeDetermineCompilerABI_C.bin</in>
+        <in>CMakeDetermineCompilerABI_CXX.bin</in>
+        <in>CMakeDirectoryInformation.cmake</in>
+        <in>CMakeOutput.log</in>
+        <in>CMakeSystem.cmake</in>
+        <in>Makefile.cmake</in>
+        <in>Makefile2</in>
+        <in>TargetDirectories.txt</in>
+        <in>cmake.check_cache</in>
+        <in>progress.marks</in>
+      </df>
+      <df name="controller" kind="SOURCE_LOGICAL_FOLDER">
+        <df name="qt" kind="SOURCE_LOGICAL_FOLDER">
+        </df>
+      </df>
+      <df name="gui" kind="SOURCE_LOGICAL_FOLDER">
+      </df>
+      <df name="msc" kind="SOURCE_LOGICAL_FOLDER">
+        <df name="CMakeFiles">
+          <df name="libmsc.dir" kind="SOURCE_LOGICAL_FOLDER">
+            <in>CXX.includecache</in>
+            <in>DependInfo.cmake</in>
+            <in>build.make</in>
+            <in>cmake_clean.cmake</in>
+            <in>cmake_clean_target.cmake</in>
+            <in>depend.internal</in>
+            <in>depend.make</in>
+            <in>flags.make</in>
+            <in>link.txt</in>
+            <in>progress.make</in>
+          </df>
+          <in>CMakeDirectoryInformation.cmake</in>
+          <in>progress.marks</in>
+        </df>
+        <in>all.hh</in>
+        <in>ast.hh</in>
+        <in>basic-msc.cc</in>
+        <in>basic-msc.hh</in>
+        <in>comment.cc</in>
+        <in>comment.hh</in>
+        <in>comment.hxx</in>
+        <in>commentable.hh</in>
+        <in>commentable.hxx</in>
+        <in>complete-message.cc</in>
+        <in>complete-message.hh</in>
+        <in>connection-node.cc</in>
+        <in>connection-node.hh</in>
+        <in>coregion-area.cc</in>
+        <in>coregion-area.hh</in>
+        <in>coregion-event-relation.cc</in>
+        <in>coregion-event-relation.hh</in>
+        <in>coregion-event-relation.hxx</in>
+        <in>coregion-event.cc</in>
+        <in>coregion-event.hh</in>
+        <in>end-node.cc</in>
+        <in>end-node.hh</in>
+        <in>event-area.cc</in>
+        <in>event-area.hh</in>
+        <in>event.cc</in>
+        <in>event.hh</in>
+        <in>fwd.hh</in>
+        <in>gen-visitor.cc</in>
+        <in>gen-visitor.hh</in>
+        <in>gen-visitor.hxx</in>
+        <in>high-msc-node.cc</in>
+        <in>high-msc-node.hh</in>
+        <in>high-msc.cc</in>
+        <in>high-msc.hh</in>
+        <in>incomplete-message.cc</in>
+        <in>incomplete-message.hh</in>
+        <in>instance.cc</in>
+        <in>instance.hh</in>
+        <in>labelable.cc</in>
+        <in>labelable.hh</in>
+        <in>msc-message.cc</in>
+        <in>msc-message.hh</in>
+        <in>msc-textual-file.cc</in>
+        <in>msc-textual-file.hh</in>
+        <in>msc.cc</in>
+        <in>msc.hh</in>
+        <in>node-relation.cc</in>
+        <in>node-relation.hh</in>
+        <in>node.cc</in>
+        <in>node.hh</in>
+        <in>par-expression.cc</in>
+        <in>par-expression.hh</in>
+        <in>predecessor-node.cc</in>
+        <in>predecessor-node.hh</in>
+        <in>reference-node.cc</in>
+        <in>reference-node.hh</in>
+        <in>start-node.cc</in>
+        <in>start-node.hh</in>
+        <in>strict-event.cc</in>
+        <in>strict-event.hh</in>
+        <in>strict-order-area.cc</in>
+        <in>strict-order-area.hh</in>
+        <in>successor-node.cc</in>
+        <in>successor-node.hh</in>
+        <in>textual-msc-document.hh</in>
+        <in>types.hh</in>
+      </df>
+      <df name="parse" kind="SOURCE_LOGICAL_FOLDER">
+      </df>
+      <df name="view" kind="SOURCE_LOGICAL_FOLDER">
+        <df name="qt" kind="SOURCE_LOGICAL_FOLDER">
+          <df name="gmsc" kind="SOURCE_LOGICAL_FOLDER">
+            <in>graphical-extension.hh</in>
+            <in>graphical-extension.hxx</in>
+            <in>readme_then_delete_me.cc</in>
+            <in>readme_then_delete_me.hh</in>
+            <in>types.hh</in>
+          </df>
+          <in>graph-view.cc</in>
+          <in>graph-view.hh</in>
+        </df>
+      </df>
+      <in>msce.cc</in>
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>CMakeLists.txt</itemPath>
+      <itemPath>Makefile</itemPath>
+      <itemPath>Makefile-src.mk</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>.</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile-src.mk</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <compilerSet>GNU|GNU</compilerSet>
+        <platform>2</platform>
+      </toolsSet>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>$(MAKE) -f Makefile</buildCommand>
+          <cleanCommand>$(MAKE) -f Makefile clean</cleanCommand>
+          <executablePath></executablePath>
+          <ccTool>
+            <incDir>
+              <pElem>.</pElem>
+              <pElem>/usr/include/qt4/QtUiTools</pElem>
+              <pElem>/usr/include/qt4/QtTest</pElem>
+              <pElem>/usr/include/qt4/QtNetwork</pElem>
+              <pElem>/usr/include/qt4/QtMultimedia</pElem>
+              <pElem>/usr/include/qt4</pElem>
+              <pElem>/usr/include/qt4/QtOpenGL</pElem>
+              <pElem>/usr/include/qt4/QtAssistant</pElem>
+              <pElem>/usr/include/qt4/Qt3Support</pElem>
+              <pElem>/usr/include/qt4/QtXmlPatterns</pElem>
+              <pElem>/usr/include/qt4/QtGui</pElem>
+              <pElem>/usr/include/qt4/QtWebKit</pElem>
+              <pElem>/usr/include/qt4/QtSql</pElem>
+              <pElem>/usr/include/qt4/QtCore</pElem>
+              <pElem>/usr/include/qt4/QtSvg</pElem>
+              <pElem>/usr/include/qt4/QtScriptTools</pElem>
+              <pElem>/usr/include/qt4/QtCLucene</pElem>
+              <pElem>/usr/include/qt4/QtXml</pElem>
+              <pElem>/usr/include/qt4/QtDBus</pElem>
+              <pElem>/usr/include/qt4/QtDesignerComponents</pElem>
+              <pElem>/usr/include/qt4/QtHelp</pElem>
+              <pElem>/usr/include/qt4/QtDesigner</pElem>
+              <pElem>/usr/include/qt4/QtScript</pElem>
+            </incDir>
+          </ccTool>
+        </makeTool>
+      </makefileType>
+      <folder path="src/msc">
+        <ccTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+        </ccTool>
+      </folder>
+      <item path="msc/basic-msc.cc" ex="false" tool="1">
+        <ccTool>
+          <incDir>
+            <pElem>view/qt</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="msc/complete-message.cc" ex="false" tool="1">
+        <ccTool>
+          <incDir>
+            <pElem>view/qt</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="msc/coregion-area.cc" ex="false" tool="1">
+        <ccTool>
+          <incDir>
+            <pElem>view/qt</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="msc/coregion-event.cc" ex="false" tool="1">
+        <ccTool>
+          <incDir>
+            <pElem>view/qt</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="msc/event-area.cc" ex="false" tool="1">
+        <ccTool>
+          <incDir>
+            <pElem>view/qt</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="msc/event.cc" ex="false" tool="1">
+        <ccTool>
+          <incDir>
+            <pElem>view/qt</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="msc/high-msc.cc" ex="false" tool="1">
+        <ccTool>
+          <incDir>
+            <pElem>view/qt</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="msc/incomplete-message.cc" ex="false" tool="1">
+        <ccTool>
+          <incDir>
+            <pElem>view/qt</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="msc/instance.cc" ex="false" tool="1">
+        <ccTool>
+          <incDir>
+            <pElem>view/qt</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="msc/labelable.cc" ex="false" tool="1">
+        <ccTool>
+          <incDir>
+            <pElem>view/qt</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="msc/msc-message.cc" ex="false" tool="1">
+        <ccTool>
+          <incDir>
+            <pElem>view/qt</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="msc/msc-textual-file.cc" ex="false" tool="1">
+        <ccTool>
+          <incDir>
+            <pElem>view/qt</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="msc/msc.cc" ex="false" tool="1">
+        <ccTool>
+          <incDir>
+            <pElem>view/qt</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="msc/strict-event.cc" ex="false" tool="1">
+        <ccTool>
+          <incDir>
+            <pElem>view/qt</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="msc/strict-order-area.cc" ex="false" tool="1">
+        <ccTool>
+          <incDir>
+            <pElem>view/qt</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
