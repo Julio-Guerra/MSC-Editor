@@ -3,13 +3,20 @@
 
 #include <QtGui/QGraphicsView>
 
+#include "view/qt/gmsc/types.hh"
+
 namespace view
 {
-  class GraphView : public QGraphicsView
+  class GraphView : public QGraphicsView, public msc::Visitor
   {
-  public:
+    public:
+      GraphView(QWidget*&);
 
-  private:
+      virtual void operator()(msc::Msc&);
+      virtual void operator()(msc::Instance&);
+      virtual void operator()(msc::Message&);
+
+    private:
 
   };
 }
