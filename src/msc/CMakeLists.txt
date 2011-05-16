@@ -1,6 +1,7 @@
 add_library(msc gen-visitor.cc
                 msc.cc
                 labelable.cc
+                message.cc
                 instance.cc
 )
 

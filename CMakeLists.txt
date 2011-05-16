@@ -1,7 +1,13 @@
 cmake_minimum_required(VERSION 2.8)
 project(msc-editor)
 
-#set(CMAKE_VERBOSE_MAKEFILE on)
+set(CMAKE_C_COMPILER    g++)
+set(MAKE                make)
+set(CMAKE_C_FLAGS_DEBUG "-g -ggdb")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb")
+set(CMAKE_C_FLAGS "-Wall -Wextra -pedantic -std=c++98 -O3")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic -std=c++98 -O3")
+
 
 include(ExternalProject)
 externalproject_add(
@@ -13,10 +19,18 @@ externalproject_add(
   BUILD_IN_SOURCE 1
 )
 
-add_subdirectory(src)
+find_library(
+  antlr3c
+  libantlr3c.a
+  HINTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/libantlr3c-3.1.3/lib
+)
 
-add_definitions(-Wall -Wextra -pedantic -Werror -std=c++98)
+add_subdirectory(src)
+add_subdirectory(tests)
+
+add_definitions()
 
 # add the executable
 # add_executable (MscEditor main.cc)
+
 # target_link_libraries (msc-editor msc)

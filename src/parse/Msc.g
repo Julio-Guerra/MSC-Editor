@@ -10,23 +10,22 @@ options
 
 @parser::includes
 {
-  # include "msc/all.hh"
 }
 
-mscTextualFile /* returns [msc::MscTextualFile* n = new msc::MscTextualFile()] */:
+mscTextualFile :
   (
     textualMSCDocument
     (
       messageSequenceChart
-      { // code
-        // n.push_back($msc.n);
-        // mscs.push_back($msc.n);
-      } // !code
+      {
+
+
+      }
     )*
   )+
-  { // code
-    // n = new msc::MscTexutalFile($textualMSCDocument.n);
-  } // !code
+  {
+
+  }
 ;
 
 /* [Z.120] 1.4.1	-- Lexical Rules
@@ -37,25 +36,25 @@ end:
   (comment)? ';'
 ;
 
-comment returns [msc::String str = ""]:
-  'comment' CharacterString { /*$str = $CharacterString.str;*/ }
+comment:
+  'comment' CharacterString {  }
 ;
 
-textDefinition returns [msc::String str = ""]:
-  'text' CharacterString end { /*$str = $CharacterString.str);*/ }
+textDefinition:
+  'text' CharacterString end {  }
 ;
 
 /* [Z.120] 1.4.4	-- Drawing Rules
    [Z.120] 1.4.5	-- Paging of MSCs
    [Z.120] 1.5		-- Message Sequence Chart document */
 
-textualMSCDocument returns [msc::TextualMscDocument* n]:
+textualMSCDocument:
   documentHead textualDefiningPart textualUtilityPart
-  { // code
-    // n = new msc::TextualMscDocument(documentHead.n
-    //                                  textualDefiningPart.n,
-    //                                  textualUtilityPart.n);
-  } // !code
+  {
+
+
+
+  }
 ;
 
 documentHead:
@@ -67,9 +66,9 @@ documentHead:
   containingClause
   messageDeclClause
   timerDeclClause)?
-  { // code
-    // ## = #([DocumentHead], ##);
-  } // !code
+  {
+
+  }
 ;
 
 textualDefiningPart:
@@ -78,17 +77,16 @@ textualDefiningPart:
 
 textualUtilityPart:
   'utilities' (containingClause)? (definingMscReference)*
-  { // code
-    // ## = #([TextualUtilityPart], ##);
-  } // !code
+  {
+
+  }
 ;
 
 
 definingMscReference:
   'reference' (virtuality)? mscName
-  { // code
-    // ## = #([DefiningMscReference], ##);
-  } // !code
+  {
+  }
 ;
 
 virtuality:
@@ -96,46 +94,46 @@ virtuality:
 
 usingClause:
   ('using' instanceKind ';')*
-  { // code
-    // ## = #([UsingClause], ##);
-  } // !code
+  {
+
+  }
 ;
 
 containingClause:
   ('inst' instanceItem)+
-  { // code
-    // ## = #([ContainingClause], ## );
-  } // !code
+  {
+
+  }
 ;
 
 instanceItem:
   instanceName (':' instanceKind)? (inheritance)?
   (decomposition)?
   (dynamicDeclList | ';')
-  { // code
-    // ## = #( in, ik, i, d, ddl );
-  } // !code
+  {
+
+  }
 ;
 
 inheritance:
   'inherits' instanceKind
-  { // code
-    // ## = #([Inheritance], ## );
-  } // !code
+  {
+
+  }
 ;
 
 messageDeclClause:
   ('msg' messageDecl ';')*
-  { // code
-    // ## = #([MessageDeclClause], ##);
-  } // !code
+  {
+
+  }
 ;
 
 timerDeclClause:
   ('timer' timerDecl ';')*
-  { // code
-    // ## = #([TimerDeclClause], ##);
-  } // !code
+  {
+
+  }
 ;
 
 sdlReference:
@@ -161,17 +159,17 @@ Qualifier:
   '>>'
 ;
 
-fragment
+
 Letter:
   'a'..'z' | 'A'..'Z'
 ;
 
-fragment
+
 Decimal_Digit:
    '0'..'9'
 ;
 
-fragment
+
 Special:
   '@' | '&' | '(' | ')' | '[' | ']' | '<' | '>' | '#' | ',' | ';' | ':'
 ;
@@ -180,22 +178,22 @@ Special:
    [Z.120] 1.6.1	-- Message Sequence Chart */
 
 messageSequenceChart:
-  (virtuality)? 'msc' mscHead (msc | hmsc) 'endmsc' end
-  { // code
-    // ## = #( #[MessageSequenceChart], ## ) ;
-  } // !code
+  (virtuality)? 'msc' mscHead (bmsc | hmsc) 'endmsc' end
+  {
+
+  }
 ;
 
-msc:
+bmsc:
   mscBody
 ;
 
 mscHead:
   mscName mscParameterDecl? timeOffset? end
   mscInstInterface? mscGateInterface
-  { // code
-    // ## = #( #[MscHead], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 mscParameterDecl:
@@ -215,9 +213,9 @@ mscParmDeclBlock:
 
 instanceParameterDecl:
   'inst' instanceParmDeclList
-  { // code
-    // ## = #( #[InstanceParameterDeclaration], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 instanceParmDeclList:
@@ -231,9 +229,9 @@ instanceParameterName:
 
 messageParameterDecl:
   'msg' messageParmDeclList
-  { // code
-    // ## = #( #[MessapeParameterDeclaration], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 messageParmDeclList:
@@ -242,9 +240,9 @@ messageParmDeclList:
 
 timerParameterDecl:
   'timer' timerParmDeclList
-  { // code
-    // ## = #( #[TimerParameterDeclaration], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 timerParmDeclList:
@@ -257,9 +255,9 @@ mscInstInterface:
 
 instanceKind:
   (kindDenominator)? identifier
-  { // code
-    // ## = #( #[InstanceKind], i, kd ) ;
-  } // !code
+  {
+
+  }
 ;
 
 kindDenominator:
@@ -297,9 +295,9 @@ orderGate:
 
 mscBody:
   (mscStatement)*
-  { // code
-    // ## = #( #[MscBody], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 mscStatement:
@@ -308,13 +306,13 @@ mscStatement:
 
 eventDefinition:
   (instanceName ':' instanceEventList) => instanceName ':' instanceEventList
-  { // code
-    // #(#[EventDefinition],#(#[InstanceNames],in),#(#[InstanceEvents],iel));
-  } // !code
+  {
+
+  }
   | instanceNameList ':' multiInstanceEventList
-  { // code
+  {
     //#(#[EventDefition],#( #[InstanceNames], inl),#(#[InstanceEvents],miel))
-  } // !code
+  }
 ;
 
 instanceEventList:
@@ -326,32 +324,32 @@ instanceEvent:
 ;
 
 orderableEvent:
-  ('label' (eventName { /*#lbl = #([Label], evn); */ }) end)?
+  ('label' (eventName {  }) end)?
   (
-    (messageEvent) => messageEvent { /*## = #r1;*/ }
-    | incompleteMessageEvent { /*## = #ime;*/}
-    | (methodCallEvent) => methodCallEvent { /*## = #mce;*/ }
-    | incompleteMethodCallEvent { /*## = #imce;*/ }
-    | create { /*## = #c;*/ }
-    | timerStatement { /*## = #t;*/ }
-    | action  { /*## = #a;*/ }
+    (messageEvent) => messageEvent {  }
+    | incompleteMessageEvent { }
+    | (methodCallEvent) => methodCallEvent {  }
+    | incompleteMethodCallEvent {  }
+    | create {  }
+    | timerStatement {  }
+    | action  {  }
   )
-  ('before' orderDestList { /*#bodl->setText("before"); */ })?
-  ('after' orderDestList  { /*#bodl->setText("after"); */ })?
+  ('before' orderDestList {  })?
+  ('after' orderDestList  {  })?
   end
   ('time' timeDestList ';')?
-  { // code
-    // astFactory.addASTChild(currentAST, #lbl);
-    // astFactory.addASTChild(currentAST, #bodl);
-    // astFactory.addASTChild(currentAST, #aodl);
-    // astFactory.addASTChild(currentAST, #tdl);
-    // astFactory.addASTChild(currentAST, #en);
-  } // ! code
+  {
+
+
+
+
+
+  }
 ;
 
 orderDestList:
   orderDest (',' orderDest)*
-  { /*## = #([OrderDestList], ##);*/ }
+  {  }
 ;
 
 timeDestList:
@@ -360,16 +358,16 @@ timeDestList:
 
 timeDestination:
   (timeDest)? timeInterval
-  { // code
-    // ## = #([TimeDest], ##);
-  } // !code
+  {
+
+  }
 ;
 
 timeDest:
   eventName |
   (
-    'top' { /*## = #[Top];*/ }
-    | 'bottom' { /*## = #[Bottom];*/ }
+    'top' {  }
+    | 'bottom' {  }
   )
   (referenceIdentification | labelName)
 ;
@@ -383,7 +381,7 @@ nonOrderableEvent:
 
 instanceNameList:
   instanceName (',' instanceName)*
-  | 'all' { /*## = #[Name,"all"] ;*/ }
+  | 'all' {  }
 ;
 
 multiInstanceEventList:
@@ -395,23 +393,23 @@ multiInstanceEvent:
   condition | mscReference | inlineExpr
 ;
 
-/* [Z.120] 1.6.2	-- Instance */
+
 
 instanceHeadStatement:
   'instance' (instanceKind)? (decomposition)? end
-  { // code
-    // ## = #( #[InstanceHead], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 instanceEndStatement:
   'endinstance' end
-  { // code
-    // ## = #( #[InstanceEnd], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
-/* [Z.120] 1.6.3	-- Message */
+
 
 messageEvent:
   messageOutput | messageInput
@@ -419,16 +417,16 @@ messageEvent:
 
 messageOutput:
   'out' msgIdentification 'to' inputAddress
-  { // code
-    // ## = #( #[MessageOutput], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 messageInput:
   'in' msgIdentification 'from' outputAddress
-  { // code
-    // ## = #( [MessageInput], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 incompleteMessageEvent:
@@ -437,31 +435,31 @@ incompleteMessageEvent:
 
 incompleteMessageOutput:
   'out' msgIdentification 'to' 'lost' (inputAddress)?
-  { // code
-    // ## = #( [IncompleteMessageOutput], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 incompleteMessageInput:
   'in' msgIdentification 'from' 'found' (outputAddress)?
-  { // code
-    // ## = #( [IncompleteMessageInput], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 msgIdentification:
   messageName (',' messageInstanceName)?
   ('(' parameterList ')')?
-  { // code
-    // ## = #( #[Message], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 outputAddress:
   (instanceName	| ('env' | referenceIdentification) ('via' gateName)?)
-  { // code
-    // ## = #( #[OutputAddress], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 referenceIdentification:
@@ -472,12 +470,12 @@ referenceIdentification:
 inputAddress:
   (instanceName
   | ('env' | referenceIdentification) ('via' gateName)?)
-  { // code
-    // ## = #( #[InputAddress], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
-/* [Z.120] 1.6.4	-- Control Flow */
+
 
 methodCallEvent:
   callOut | callIn | replyOut | replyIn
@@ -485,30 +483,30 @@ methodCallEvent:
 
 callOut:
   'call' msgIdentification 'to' inputAddress
-  { // code
-    // ## = #( #[CallOut], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 callIn:
   'receive' msgIdentification 'from' outputAddress
-  { // code
-    // ## = #( #[CallIn], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 replyOut:
   'replyout' msgIdentification 'to' inputAddress
-  { // code
-    // ## = #( #[ReplyOut], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 replyIn:
   'replyin' msgIdentification 'from' outputAddress
-  { // code
-    // ## = #( #[ReplyIn], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 incompleteMethodCallEvent:
@@ -517,74 +515,74 @@ incompleteMethodCallEvent:
 
 incompleteCallOut:
   'call' msgIdentification 'to' 'lost' (inputAddress)?
-  { // code
-    // ## = #( #[IncompleteCallOut], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 incompleteCallIn:
   'receive' msgIdentification 'from' 'found' (outputAddress)?
-  { // code
-    // ## = #( #[IncompleteCallIn], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 incompleteReplyOut:
   'replyout' msgIdentification 'to' 'lost' (inputAddress)?
-  { // code
-    // ## = #( #[IncompleteReplyOut], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 incompleteReplyIn:
   'replyin' msgIdentification 'from' 'found' (outputAddress)?
-  { // code
-    // ## = #( #[IncompleteReplyIn], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 startMethod:
   'method' end
-  { // code
-    //  ## = #( #[StartMethod], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 endMethod:
   'endmethod' end
-  { // code
-    // ## = #( #[EndMethod], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 startSuspension:
   'suspension' end
-  { // code
-    //## = #( #[StartSuspension], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 endSuspension:
   'endsuspension' end
-  { // code
-    // ## = #( #[EndSuspension], ## ) ;
-  } // code
+  {
+
+  }
 ;
 
-/* [Z.120] 1.6.5	-- Environment and Gates */
+
 
 actualOutGate:
   (gateName)? 'out' msgIdentification 'to' inputDest
-  { // code
-    // ## = #( #[OutGate], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 actualInGate:
   (gateName)? 'in' msgIdentification 'from' outputDest
-  { // code
-    // ## = #( #[InGate], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 inputDest:
@@ -597,23 +595,23 @@ outputDest:
 
 defInGate:
   (gateName)? 'out' msgIdentification 'to' inputDest
-  { // code
-    // ## = #( #[DefInGate], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 defOutGate:
   (gateName)? 'in' msgIdentification 'from' outputDest
-  { // code
-    // ## = #( #[DefOutGate], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 actualOrderOutGate:
   gateName 'before' orderDest
-  { // code
-    // ## = #( #[OrderOutGate], ## ) ;
-  } // !
+  {
+
+  }
 ;
 
 orderDest:
@@ -622,37 +620,37 @@ orderDest:
 
 actualOrderInGate:
   gateName ('after' orderDest)?
-  { // code
-    // ## = #( #[OrderInGate], ## ) ;
-  } // code
+  {
+
+  }
 ;
 
 defOrderInGate:
   gateName 'before' orderDest
-  { // code
-    // ## = #( #[DefOrderInGate], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 defOrderOutGate:
   gateName ('after' orderDestList)?
-  { // code
-    // ## = #( #[DefOrderOutGate], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 actualCreateOutGate:
   'create' 'out' createGateIdentification 'create' createTarget
-  { // code
-    // ## = #( #[CreateOutGate], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 actualCreateInGate:
   'create' 'in' createGateIdentification
   { //code
-    // ## = #( #[CreateInGate], ## ) ;
-  } // !code
+
+  }
 ;
 
 createTarget:
@@ -662,73 +660,73 @@ createTarget:
 defCreateInGate:
   'create' 'out' (createGateIdentification)?
   'create' createTarget
-  { // code
-    // ## = #( #[DefCreateInGate], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 defCreateOutGate:
   'create' 'in' createGateIdentification
-  { // code
-    // ## = #( #[DefCreateOutGate], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 inlineOutGate:
   defOutGate ('external' 'out' msgIdentification 'to' inputDest)?
-  { // code
-    // ## = #( #[InlineOutGate], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 inlineInGate:
   defInGate	('external' 'in' msgIdentification  outputDest)?
-  { // code
-    // ## = #( #[InlineInGate], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 inlineOutCallGate:
   defOutCallGate ('external' 'call' msgIdentification 'to' inputDest)?
-  { // code
-    // ## = #( #[InlineOutCallGate], ## );
-  } // !code
+  {
+
+  }
 ;
 
 inlineInCallGate:
   defInCallGate ('external' 'receive' msgIdentification 'from' outputDest)?
-  { // code
-    // ## = #( #[InlineInCallGate], ## );
-  } // !code
+  {
+
+  }
 ;
 
 inlineOutReplyGate:
   defOutReplyGate ('external' 'replyout' msgIdentification 'to' inputDest)?
-  { // code
-    // ## = #( #[InlineOutReplyGate], ## );
-  } // !code
+  {
+
+  }
 ;
 
 inlineInReplyGate:
   defInReplyGate ('external' 'replyin' msgIdentification 'from' outputDest)?
-  { // code
-    // ## = #( #[InlineInReplyGate], ## );
-  } // !code
+  {
+
+  }
 ;
 
 inlineCreateOutGate:
   defCreateOutGate ('external' create)?
-  { // code
-    // ## = #( #[InlineCreateOutGate], ## );
-  } // !code
+  {
+
+  }
 ;
 
 inlineCreateInGate:
   defCreateInGate
   ('external' 'create' 'fromt' createSource)?
-  { // code
-    // ## = #( #[InlineCreateInGate], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 createSource:
@@ -738,73 +736,73 @@ createSource:
 
 inlineOrderOutGate:
   gateName (('after' orderDestList)? 'external' 'before' orderDest)?
-  { // code
-    // ## = #( #[InlineOrderOutGate], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 inlineOrderInGate:
   gateName 'before' orderDest
   ('external' ('after' orderDestList)?)?
-  { // code
-    // ## = #( #[InlineOrderInGate], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 actualOutCallGate:
   gateName? 'call' msgIdentification 'to' inputDest
-  { // code
-    // ## = #( #[ActualOutCallGate], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 actualInCallGate:
   gateName 'receive' msgIdentification 'from' outputDest
-  { // code
-    // ## = #( #[ActualInCallGate], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 defInCallGate:
   gateName? 'call' msgIdentification 'tp' inputDest
-  { // code
-    // ## = #([DefInCallGate], ## );
-  } // !code
+  {
+
+  }
 ;
 
 defOutCallGate:
   gateName? 'receive' msgIdentification 'from' outputDest
-  { // code
-    // ## = #([DefOutCallGate], ## );
-  } // !code
+  {
+
+  }
 ;
 
 actualOutReplyGate:
   gateName? 'replyout' msgIdentification 'to' inputDest
-  { // code
-    // ## = #([ActualOutReplyGate], ## );
-  } // !code
+  {
+
+  }
 ;
 
 actualInReplyGate:
   gateName? 'replyin' msgIdentification 'from' outputDest
-  { // code
-    // ## = #([ActualInReplyGate], ## );
-  } // !code
+  {
+
+  }
 ;
 
 defInReplyGate:
   gateName? 'replyout' msgIdentification 'to' inputDest
-  { // code
-    // ## = #([DefInReplyGate], ## );
-  } // !code
+  {
+
+  }
 ;
 
 defOutReplyGate:
   gateName? 'replyin' msgIdentification 'from' outputDest
-  { // code
-    // ## = #([DefOutReplyGate], ## );
-  } // !code
+  {
+
+  }
 ;
 
 /* [Z.120] 1.6.6	-- General ordering defined in 1.6.1
@@ -812,9 +810,9 @@ defOutReplyGate:
 
 sharedCondition:
   shared? conditionIdentification shared end
-  { // code
-    // ## = #( #[SharedCondition], ci, s1, s2, e ) ;
-  } // !code
+  {
+
+  }
 ;
 
 conditionIdentification:
@@ -822,13 +820,13 @@ conditionIdentification:
 
 conditionText:
   (
-    conditionNameList { /* ## = #( #[SettingConditionNameList], c1 ) ;*/ }
+    conditionNameList {  }
     | 'when'
     (
-      conditionNameList { /*## = #( #[GuardingConditionNameList], c2 ) ;*/ }
-      | '(' expression ')' { /*## = #( #[GuardingConditionExpression], e1 ) ;*/ }
+      conditionNameList {  }
+      | '(' expression ')' {  }
     )
-    | 'otherwise' { /*## = #( #[GuardingConditionNameList], #[Otherwise] ) ;*/ }
+    | 'otherwise' {  }
   )
 ;
 
@@ -846,12 +844,12 @@ sharedInstanceList:
 
 condition:
   (shared)? conditionIdentification end
-  { // code
-    // ## = #( #[Condition], ci, s, e ) ;
-  } // !code
+  {
+
+  }
 ;
 
-/* [Z.120] 1.6.8	-- Timer */
+
 
 timerStatement:
   starttimer | stoptimer | timeout
@@ -859,76 +857,76 @@ timerStatement:
 
 starttimer:
   'starttimer' timerName (',' timerInstanceName)? (duration)? ('(' parameterList ')')?
-  { // code
-    // ## = #( #[StartTimer], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 duration:
   '[' (minDurationlimit)? (',' maxDurationlimit)? ']'
-  { // code
-    // ## = #( #[Duration], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 durationlimit:
   (expressionString | 'inf')
-  { // code
-    // ##->setType(DurationLimit) ;
-  } // !code
+  {
+
+  }
 ;
 
 stoptimer:
   'stoptimer' timerName (',' timerInstanceName)?
-  { // code
-    // ## = #( #[StopTimer], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 timeout:
   'timeout' timerName (',' timerInstanceName)?
   ('(' parameterList ')')?
-  { // code
-    // ## = #( #[TimeOut], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
-/* [Z.120] 1.6.9	-- Action */
+
 
 action:
   'action' actionStatement
-  { // code
-    // ## = #( #[Action], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 actionStatement:
   (informalAction | dataStatementList)
-  { // code
-    // ##->setType(ActionName);
-  } // !code
+  {
+
+  }
 ;
 
 informalAction:
   CharacterString
 ;
 
-/* [Z.120] 1.6.10	-- Instance creation */
+
 
 create:
   'create' instanceName ('(' parameterList ')')?
-  { // code
-    // ## = #( #[InstanceCreation], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
-/* [Z.120] 1.6.11	-- Instance stop */
+
 
 stop:
   'stop' end
-  { // code
-    // ## = #( #[InstanceStop], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 /* [Z.120] 1.7		-- Data Concepts
@@ -937,9 +935,9 @@ stop:
 
 parenthesisDeclaration:
   'parenthesis' parDeclList end
-  { // code
-    // ## = #( #[ParenthesisDeclaration], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 parDeclList:
@@ -949,31 +947,31 @@ parDeclList:
 
 nestableParPair:
   'nestable' pairParList end
-  { // code
-    // ## = #( #[NestableParPair], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 nonNestableParPair:
   'nonnestable' pairParList end
-  { // code
-    // ## = #( #[NonNestableParPair], ## );
-  } // !code
+  {
+
+  }
 ;
 
-/*x rev 1 */
+
 equalParDecl:
   'equalpar' equalParList end
-  { // code
-    // ## = #( #[EqualParDelim], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 escapeDecl:
   'escape' escapechar
-  { // code
-    // ## = #( #[EscapeDecl], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 pairParList:
@@ -1008,21 +1006,21 @@ equalPar:
   par
 ;
 
-/*x CharacterString as in Z.120 11/99 & rev 1 is wrong,  because we have already */
-/*x the delims as apostrophe, so Text would be a solution. */
-/*x But Text doesn't work either, because it is not a LexicalUnit and */
-/*x thus no TokenType which can be matched in this Parser! */
-/*x Thus we use currently Name | National | Special | Misc ... */
+
+
+
+
+
 par:
   Name | National | Special | Misc
 ;
 
 
-/*x CharacterString as in Z.120 11/99 & rev 1 is wrong,  because we have already */
-/*x the delims as apostrophe, so Text would be a solution. */
-/*x But Text doesn't work either, because it is not a LexicalUnit and */
-/*x thus no TokenType which can be matched in this Parser! */
-/*x Thus we use currently Name | National | Special | Misc ... */
+
+
+
+
+
 escapechar:
   delim (Name | National | Special | Misc ) delim
 ;
@@ -1036,9 +1034,9 @@ messageDeclList:
 
 messageDecl:
   messageNameList (':' '(' typeRefList ')')?
-  { // code
-    // ## = #( mnl, trl );
-  } // !code
+  {
+
+  }
 ;
 
 messageNameList:
@@ -1051,9 +1049,9 @@ timerDeclList:
 
 timerDecl:
   timerNameList (duration)? (':' '(' typeRefList ')')?
-  { // code
-    // ## = #( tnl, d, trl ) ;
-  } // !code
+  {
+
+  }
 ;
 
 timerNameList:
@@ -1066,9 +1064,9 @@ typeRefList:
 
 dynamicDeclList:
   'variables' variableDeclList end
-  { // code
-    // ## = #( #[DynamicDeclarationList], ##);
-  } // !code
+  {
+
+  }
 ;
 
 variableDeclList:
@@ -1087,16 +1085,16 @@ dataDefinition:
   ('language' dataLanguageName end)?
   (wildcardDecl)?
   ('data' dataDefinitionString end)?
-  { // code
-    // ## = #( #[DataDefinition], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 wildcardDecl:
   'wildcards' variableDeclList
 ;
 
-/* [Z.120] 1.7.5	-- Static Data */
+
 
 dataParameterDecl:
   ('variables')? variableDeclList
@@ -1145,13 +1143,13 @@ wildcard:
   wildcardString
 ;
 
-/* [Z.120] 1.7.8	-- Data in message and timer parameters */
+
 
 parameterList:
   parameterDefn (',' parameterDefn)*
-  { // code
-    // ## = #( #[ParameterList], ## );
-  } // !code
+  {
+
+  }
 ;
 
 parameterDefn:
@@ -1188,9 +1186,9 @@ undefineStatement:
 
 timeOffset:
   'offset' timeExpression
-  { // code
-    // ## = #( #[TimeOffset], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 /* [Z.120] 1.8.7	-- Time Points, Measurements, and Intervals
@@ -1198,12 +1196,12 @@ timeOffset:
 
 timePoint:
   ('@')? timeExpression
-  { // code
-    // ## = #( #[TimePoint], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
-/* [Z.120] 1.8.9	-- Measurements */
+
 
 measurement:
   relMeasurement
@@ -1212,19 +1210,19 @@ measurement:
 
 relMeasurement:
   '&' timePattern
-  { // code
-    // ## = #( #[RelTimeMeasurement], ## );
-  } // !code
+  {
+
+  }
 ;
 
 absMeasurement:
   '@' timePattern
-  { // code
-    // ## = #(#[AbsTimeMeasurement], ##) ;
-  } // !code
+  {
+
+  }
 ;
 
-/* [Z.120] 1.8.10	-- Time Interval */
+
 
 timeInterval:
   ((intervalLabel)? singularTime) => (intervalLabel)? singularTime
@@ -1238,22 +1236,22 @@ intervalLabel:
 
 singularTime:
   '[' timePoint ']'
-  { // code
-    // ## = #(#[SingularTime], ##);
-  } // !code
+  {
+
+  }
   | measurement
 ;
 
 boundedTime:
   '@'?
-  ('(' { /*#l = #lo ;*/ } | '[' { /*#l = #lc ;*/ })
-  (timePoint  { /* #lb = #([LowerBound], tp1 );*/ })?
+  ('(' {  })
+  (timePoint  {  })?
   ','
-  (timePoint  { /*#ub = #([UpperBound], tp2 );*/ })?
-  (')' { /*#r = #ro ;*/ } | ']' { /*#r = #rc ;*/ } )
-  { // code
-    // ## = #(#[BoundedTime], atm, l, lb, ub, r );
-  } // !code
+  (timePoint  {  })?
+  (')' {  } )
+  {
+
+  }
 ;
 
 /* [Z.120] 1.9		-- Structural Concepts
@@ -1261,44 +1259,44 @@ boundedTime:
 
 startCoregion:
   'concurrent' end
-  { // code
-    // ## = #( #[StartCoregion], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 endCoregion:
   'endconcurrent' end
-  { // code
-    // ## = #( #[EndCoregion], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
-/* [Z.120] 1.9.2	-- Inline expression */
+
 
 sharedInlineExpr:
   (extraGlobal)? (sharedLoopExpr | sharedOptExpr | sharedAltExpr | sharedSeqExpr
   | sharedParExpr | sharedExcExpr)
   (
     'time' timeInterval end
-    { // code
-      // #time = #([Time], ti, e1);
-    } // !code
+    {
+
+    }
   )?
   (
     'top' timeDestList end
-    { // code
-      // #top = #([Top], ttdl, e2);
-    } // !code
+    {
+
+    }
   )?
   (
     'bottom' timeDestList end
-    { // code
-      // #bottom = #([Bottom], btdl, e3);
-    } // !code
+    {
+
+    }
   )?
-  { // code
-    // ## = #( #[SharedInlineExpr], ##, time, top, bottom );
-  } // !code
+  {
+
+  }
 ;
 
 extraGlobal:
@@ -1309,14 +1307,14 @@ sharedLoopExpr:
   (inlineGateInterface)?
   (
     instanceEventList
-    { // code
-      // astFactory.addASTChild(currentAST, #( [InstanceEventList], iel) );
-    } // !code
+    {
+
+    }
   )?
   'loop' 'end' end
-  { // code
-    // ## = #( #[SharedLoopExpr], ## );
-  } // !code
+  {
+
+  }
 ;
 
 sharedOptExpr:
@@ -1324,14 +1322,14 @@ sharedOptExpr:
   (inlineGateInterface)?
   (
     instanceEventList
-    { // code
-      //  astFactory.addASTChild(currentAST, #( [InstanceEventList], iel) );
-    } // !code
+    {
+
+    }
   )?
   'opt' 'end' end
-  { // code
-    // ## = #( #[SharedOptExpr], ## );
-  } // !code
+  {
+
+  }
 ;
 
 sharedExcExpr:
@@ -1339,14 +1337,14 @@ sharedExcExpr:
   (inlineGateInterface)?
   (
     instanceEventList
-    { // code
-      // astFactory.addASTChild(currentAST, #( [InstanceEventList], iel) );
-    } // !code
+    {
+
+    }
   )?
   'exc' 'end' end
-  { // code
-    // ## = #( #[SharedExcExpr], ## );
-  } // !code
+  {
+
+  }
 ;
 
 sharedAltExpr:
@@ -1354,23 +1352,23 @@ sharedAltExpr:
   (inlineGateInterface)?
   (
     instanceEventList
-    { // code
-      // astFactory.addASTChild(currentAST, #( [InstanceEventList], iel) );
-    } // !code
+    {
+
+    }
   )?
   (
     'alt' end (inlineGateInterface)?
 	(
       instanceEventList
-      { // code
-        // astFactory.addASTChild(currentAST, #( [InstanceEventList], iel2) );
-      } // !code
+      {
+
+      }
     )?
   )*
   'alt' 'end' end
-  { // code
-    // ## = #( #[SharedAltExpr], ## );
-  } // !code
+  {
+
+  }
 ;
 
 sharedSeqExpr:
@@ -1378,23 +1376,23 @@ sharedSeqExpr:
   (inlineGateInterface)?
   (
     instanceEventList
-    { // code
-      // astFactory.addASTChild(currentAST, #( [InstanceEventList], iel) );
-    } // !code
+    {
+
+    }
   )?
   (
     'seq' end (inlineGateInterface)?
     (
       instanceEventList
-      { // code
-        // astFactory.addASTChild(currentAST, #( [InstanceEventList], iel2) );
-      } // !code
+      {
+
+      }
     )?
   )*
   'seq' 'end' end
-  { // code
-    // ## = #( #[SharedSeqExpr], ## );
-  } // !code
+  {
+
+  }
 ;
 
 sharedParExpr:
@@ -1402,33 +1400,33 @@ sharedParExpr:
   (inlineGateInterface)?
   (
     instanceEventList
-    { // code
-      // astFactory.addASTChild(currentAST, #( [InstanceEventList], iel) );
-    } // !code
+    {
+
+    }
   )?
   (
     'par' end (inlineGateInterface)?
     (
       instanceEventList
-      { // code
-        //  astFactory.addASTChild(currentAST, #( [InstanceEventList], iel2) );
-      } // !code
+      {
+
+      }
     )?
   )*
   'par' 'end' end
-  { // code
-    // ## = #( #[SharedParExpr], ## );
-  } // !code
+  {
+
+  }
 ;
 
 inlineExpr:
   (extraGlobal)? (loopExpr | optExpr | altExpr | seqExpr | parExpr | excExpr)
-  ('time' timeInterval end { /*#time = #([Time], ti, e1);*/ })?
-  ('top' timeDestList end {/*#top = #([Top], ttdl, e2);*/ })?
-  ('bottom' timeDestList end {/*#bottom = #([Bottom], btdl, e3);*/})?
-  { // code
-    // ## = #( #[InlineExpr], ##, time, top, bottom );
-  } // !code
+  ('time' timeInterval end {  })?
+  ('top' timeDestList end { })?
+  ('bottom' timeDestList end {})?
+  {
+
+  }
 ;
 
 loopExpr:
@@ -1436,27 +1434,27 @@ loopExpr:
   (inlineExprIdentification)? end
   (inlineGateInterface)? mscBody
   'loop' 'end' end
-  { // code
-    // ## = #( #[LoopExpr], ## );
-  } // !code
+  {
+
+  }
 ;
 
 optExpr:
   'opt' 'begin' (inlineExprIdentification)? end
   (inlineGateInterface)? mscBody
   'opt' 'end' end
-  { // code
-    // ## = #( #[OptExpr], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 excExpr:
   'exc' 'begin' (inlineExprIdentification)? end
   (inlineGateInterface)? mscBody
   'exc' 'end' end
-  { // code
-    // ## = #( #[ExcExpr], ## ) ;
-  } // code
+  {
+
+  }
 ;
 
 
@@ -1465,9 +1463,9 @@ altExpr:
   (inlineGateInterface)? mscBody
   ('alt' end (inlineGateInterface)? mscBody)*
   'alt' 'end' end
-  { // code
-    //  ## = #( #[AltExpr], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 seqExpr:
@@ -1475,9 +1473,9 @@ seqExpr:
   (inlineGateInterface)? mscBody
   ('seq' end (inlineGateInterface)? mscBody)*
   'seq' 'end' end
-  { // code
-    // ## = #( #[SeqExpr], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 parExpr:
@@ -1485,16 +1483,16 @@ parExpr:
   (inlineGateInterface)? mscBody
   ('par' end (inlineGateInterface)? mscBody)*
   'par' 'end' end
-  { // code
-    //  ## = #( #[ParExpr], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 loopBoundary:
   '<' infNatural (',' infNatural)? '>'
-  { // code
-    // ## = #( #[LoopBoundary], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 infNatural:
@@ -1507,9 +1505,9 @@ inlineExprIdentification:
 
 inlineGateInterface:
   ('gate' inlineGate end)+
-  { // code
-    // ## = #( #[InlineGateInterface], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 inlineGate:
@@ -1525,30 +1523,30 @@ inlineGate:
   | inlineOrderInGate
 ;
 
-/* [Z.120] 1.9.3	-- MSC reference */
+
 
 sharedMSCReference:
   'reference' (mscReferenceIdentification ':')?
   mscRefExpr shared end
-  ('time' timeInterval end { /*#time = #([Time], ti, e1); */ })?
-  ('top' timeDestList end {/*#top = #([Top], ttdl, e2);*/})?
-  ('bottom' timeDestList end {/*#bottom = #([Bottom], btdl, e3);*/})?
+  ('time' timeInterval end {  })?
+  ('top' timeDestList end {})?
+  ('bottom' timeDestList end {})?
   referenceGateInterface
-  { // code
-    //  ## = #( #[SharedMscReference], ##, time, top, bottom );
-  } // !code
+  {
+
+  }
 ;
 
 mscReference:
   'reference' (mscReferenceIdentification ':')?
   mscRefExpr end
-  ('time' timeInterval end { /*#time = #([Time], ti, e1);*/ })?
-  ('top' timeDestList end { /*#top = #([Top], ttdl, e2);*/ })?
-  ('bottom' timeDestList end { /*#bottom = #([Bottom], btdl, e3);*/ })?
+  ('time' timeInterval end {  })?
+  ('top' timeDestList end {  })?
+  ('bottom' timeDestList end {  })?
   referenceGateInterface
-  { // code
-    //  ## = #( #[MscReference], ##, time, top, bottom );
-  } // !code
+  {
+
+  }
 ;
 
 mscReferenceIdentification:
@@ -1557,30 +1555,30 @@ mscReferenceIdentification:
 
 mscRefExpr:
   mscRefParExpr ('alt' mscRefParExpr)*
-  { // code
-    // ## = #( #[MscRefExpr], ## );
-  } // !code
+  {
+
+  }
 ;
 
 mscRefParExpr:
   mscRefSeqExpr ('par' mscRefSeqExpr)*
-  { // code
-    // ## = #( #[MscRefParExpr], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 mscRefSeqExpr:
   mscRefIdentExpr ('seq' mscRefIdentExpr)*
-  { // code
-    // ## = #( #[MscRefSeqExpr], ## ) ;
-  } // !code
+  {
+
+  }
 ;
 
 mscRefIdentExpr:
-  'loop' (loopBoundary)? mscRefIdentExpr { /* ## = #(#[Loop], ##); */ }
-  | 'exc' mscRefIdentExpr { /* ## = #(#[Exc], ##); */}
-  | 'opt' mscRefIdentExpr { /* ## = #(#[Opt], ##); */ }
-  | 'empty' { /* ## = #(#[Empty], ##); */ }
+  'loop' (loopBoundary)? mscRefIdentExpr {  }
+  | 'exc' mscRefIdentExpr { }
+  | 'opt' mscRefIdentExpr {  }
+  | 'empty' {  }
   | (parent)* mscName (actualParameters)?
   | '(' mscRefExpr ')'
 ;
@@ -1602,9 +1600,9 @@ actualParametersBlock:
 
 actualInstanceParameters:
   'inst' actualInstanceParmList
-  { // code
-    // ## = #( #[InstanceParameters], ##);
-  } // !code
+  {
+
+  }
 ;
 
 actualInstanceParmList:
@@ -1617,9 +1615,9 @@ actualInstanceParameter:
 
 actualMessageParameters:
   'msg' actualMessageList
-  { // code
-    //  ## = #( #[MessageParameters], ## );
-  } // !code
+  {
+
+  }
 ;
 
 actualMessageList:
@@ -1628,9 +1626,9 @@ actualMessageList:
 
 actualTimerParameters:
   'timer' actualTimerList
-  { // code
-    //  ## = #( #[TimerParameters], ## );
-  } // !code
+  {
+
+  }
 ;
 
 actualTimerList:
@@ -1658,33 +1656,33 @@ refGate:
   | actualInReplyGate
 ;
 
-/* [Z.120] 1.9.4	-- Instance decomposition */
+
 
 decomposition:
   'decomposed' (substructureReference)?
-  { // code
-    // ## = #( #[Decomposition], ## );
-  } // !code
+  {
+
+  }
 ;
 
 substructureReference:
   'as' messageSequenceChartName
 ;
 
-/* [Z.120] 1.9.5	-- High-level MSC (HMSC) */
+
 
 hmsc:
   'expr' mscExpression
-  { // code
-    // ## = #( #[HmscBody], ## );
-  } // !code
+  {
+
+  }
 ;
 
 mscExpression:
   start (nodeExpression | textDefinition)*
-  { // code
-    // ## = #( #[MscExpression], ## );
-  } // !code
+  {
+
+  }
 ;
 
 start:
@@ -1693,84 +1691,83 @@ start:
 
 nodeExpression:
   labelName ':' (((timeableNode | node) 'seq' '(' labelNameList ')') | 'end') end
-  { // code
-    // ## = #( #[NodeExpression], ## );
-  } // !code
+  {
+
+  }
 ;
 
 labelNameList:
   labelName ('alt' labelName)*
-  { // code
-    // ## = #( #[LabelNameList], ## );
-  } // !code
+  {
+
+  }
 ;
 
 timeableNode:
   ('(' mscRefExpr ')' | parExpression )
   (
     'time' timeInterval end
-    { // code
-      /*#time = #([Time], ti, e1);*/
-    } // !code
+    {
+
+    }
   )?
   (
     'top' timeDestList end
-    { // code
-      // #top = #([Top], ttdl, e2);
-    } // !code
+    {
+
+    }
   )?
   ('bottom' timeDestList end
-    { // code
-      // #bottom = #([Bottom], btdl, e3);
-    } // !code
+    {
+
+    }
   )?
-  { // code
-    // ## = #( #[TimeableNode], ##, time, top, bottom );
-  } // !code
+  {
+
+  }
 ;
 
-node returns [msc::Node* n]:
-  conditionIdentification { /*n = conditionIdentification.n;*/ }
-  | 'connect' { /* FIXME n = new msc::Node(); */ }
+node:
+  conditionIdentification {  }
+  | 'connect' {  }
 ;
 
-parExpression returns [msc::ParExpression* n = new msc::ParExpression()]:
+parExpression:
   'expr' me1 = mscExpression 'endexpr'
-  { // code
-    // n->push_back(me1.n);
-  } // !code
+  {
+  }
   (
     'par' 'expr' me2 = mscExpression 'endexpr'
-    { // code
-      // n->push_back(me2.n);
-    } // !code
+    {
+
+    }
   )*
 ;
 
-/* Names : */
+
 
 mscName:
-  Name { ##->setType(MscName); }
+  Name { }
 ;
 
 instanceName:
-  Name { ##->setType(InstanceName); }
+  Name {  }
 ;
 
 actualInstanceParameterName:
-  Name { ##->setType(ActualInstanceParameterName); }
+  Name {  }
 ;
 
 eventName:
-  Name { ##->setType(EventName); }
+  Name {  }
 ;
 
 messageName:
-  Name { ##->setType(MessageName); }
+  Name {  }
 ;
 
 messageInstanceName:
-  Name { ##->setType(InstanceName); }
+  Name {  }
 ;
 
 gateName:
@@ -1778,50 +1775,46 @@ gateName:
 ;
 
 conditionName:
-  ( Name | CharacterString ) { ##->setType(ConditionName); }
-;
-
-/*x for MSC96 backward compat. */
-durationName:
-  Name { ##->setType(DurationName); }
+  ( Name | CharacterString ) {  }
 ;
 
 timerName:
-  Name { ##->setType(TimerName); }
+  Name {  }
 ;
 
 timerInstanceName:
-  Name { ##->setType(InstanceName); }
+  Name {  }
 ;
 
 intervalName:
-  Name  { ##->setType(IntervalName); }
+  Name  {  }
 ;
 
 inlineExprName:
-  Name  { ##->setType(InlineExprName); }
+  Name  {  }
 ;
 
 mscReferenceName:
-  Name { ##->setType(ReferenceName); }
+  Name {  }
 ;
 
 messageSequenceChartName:
-  Name { ##->setType(MessageSequenceChartName); }
+  Name {  }
 ;
 
 labelName:
-  Name { ##->setType(LabelName); }
+  Name {  }
 ;
 
 dataLanguageName:
-  Name { ##->setType(DataLanguageName); } ;
-
-kindName:
-  Name { ##->setType(KindName); }
+  Name {  }
 ;
 
-/* Identifiers : */
+kindName:
+  Name {  }
+;
+
+
 
 sdlDocumentIdentifier:
   identifier
@@ -1831,19 +1824,19 @@ variableIdentifier:
   identifier
 ;
 
-/* Expressions : */
+
 
 timeExpression:
   expression
 ;
 
-/* Patterns : */
+
 
 timePattern:
   pattern
 ;
 
-/* Durationlimits : */
+
 
 minDurationlimit:
   durationlimit
@@ -1853,51 +1846,48 @@ maxDurationlimit:
   durationlimit
 ;
 
-/* Strings : */
+
 
 /* The Z.120 <_expression_ string> non-terminals
    are named expressionString */
 
-/*x deviation concerning data strings from the standard */
+
 expressionString
 	: (CharacterString | Name)
-		{ ##->setType(ExpressionString); }
+		{  }
 	;
 
 typeRefString
 	: (CharacterString | Name)
-		{ ##->setType(TypeRefString); }
+		{  }
     ;
 
 variableString
 	: (CharacterString | Name)
-		{ ##->setType(VariableString); }
+		{  }
     ;
 
-dataDefinitionString
-	: (CharacterString | Name)
-		{ ##->setType(DataDefinitionString); }
+dataDefinitionString:
+  (CharacterString | Name)
+		{  }
     ;
 
-wildcardString returns [msc::String str = ""]:
-  s = (CharacterString | Name) { /*str = s.str;*/ }
+wildcardString:
+  s = (CharacterString | Name)
 ;
 
 Name:
   (Letter | DecimalDigit | Underline | FullStop)+
 ;
 
-fragment
 Space:
-  (' ' | '\t' | '\r' | '\n' {/*newline();*/})
+  (' ' | '\t' | '\r' | '\n' {})
 ;
 
-fragment
 Underline:
   '_'
 ;
 
-fragment
 DecimalDigit:
   '0' .. '9'
 ;
@@ -1911,12 +1901,10 @@ National:
   | UpwardArrowHead
 ;
 
-fragment
 FullStop:
   '.'
 ;
 
-fragment
 UpwardArrowHead:
   '^'
 ;
@@ -1941,32 +1929,32 @@ OtherCharacter:
   '?' | '%' | '+' | '-' | '!' | '/' | '*' | '"' | '='
 ;
 
-fragment
+
 Overline:
   '~'
 ;
 
-fragment
+
 VerticalLine:
   '|'
 ;
 
-fragment
+
 LeftCurlyBracket:
   '{'
 ;
 
-fragment
+
 RightCurlyBracket:
   '}'
 ;
 
-fragment
+
 Misc:
   OtherCharacter | Apostrophe
 ;
 
-fragment
+
 Alphanumeric:
   Letter | DecimalDigit	| National
 ;

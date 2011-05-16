@@ -22,6 +22,6 @@ namespace msc
 
       virtual void accept(Visitor& v);
   };
-};
+}
 
 #endif /* !MSC_HH_ */
