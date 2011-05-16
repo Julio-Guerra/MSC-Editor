@@ -2,6 +2,9 @@
 # define TYPES_HH_
 
 # include "msc/all.hh"
+# include "view/qt/gmsc/instance.hh"
+
+// Remove this
 # include "view/qt/gmsc/graphical-extension.hh"
 
 namespace view

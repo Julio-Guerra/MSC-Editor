@@ -16,9 +16,9 @@ void GraphView::operator()(msc::Msc& node)
 
 void GraphView::operator()(msc::Instance& node)
 {
-  gmsc::GInstance& gnode = static_cast<gmsc::GInstance&> (node);
+  gmsc::Instance& gnode = static_cast<gmsc::Instance&> (node);
 
-  //this->scene()->addItem(gnode);
+  this->scene()->addItem(&gnode);
   //accept(gnode.element_->last_);
 }
 

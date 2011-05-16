@@ -1,5 +1,5 @@
-ADD_SUBDIRECTORY(gmsc)
-
-ADD_LIBRARY(libview graph-view.cc)
+ADD_LIBRARY(libview graph-view.cc
+                    gmsc/instance.cc
+)
 
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/src)
