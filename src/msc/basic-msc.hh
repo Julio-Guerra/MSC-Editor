@@ -1,13 +1,13 @@
 #ifndef BASIC_MSC_HH_
 # define BASIC_MSC_HH_
 
-# include <list>
-# include "msc/instance.hh"
-# include "msc/msc.hh"
+# include <vector>
+# include "msc/ast.hh"
+
 
 namespace msc
 {
-  class BasicMsc : public Msc
+  class BasicMsc : public Ast
   {
     public:
       virtual void              accept(Visitor&);
@@ -19,7 +19,7 @@ namespace msc
       // const InstanceList&       instances_get() const;
 
     private:
-      std::list<Instance*>      instances_;
+//      std::vector<Instance*>      instances_;
   };
 };
 

@@ -5,8 +5,8 @@ set(CMAKE_C_COMPILER    g++)
 set(MAKE                make)
 set(CMAKE_C_FLAGS_DEBUG "-g -ggdb")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb")
-set(CMAKE_C_FLAGS "-Wall -Wextra -pedantic -std=c++98 -O3")
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic -std=c++98 -O3")
+set(CMAKE_C_FLAGS "-Wall -Wextra -pedantic -std=c++98")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic -std=c++98")
 
 
 include(ExternalProject)

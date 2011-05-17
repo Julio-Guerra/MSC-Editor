@@ -10,6 +10,7 @@ options
 
 @parser::includes
 {
+  #include "msc/all.hh"
 }
 
 mscTextualFile :
@@ -89,8 +90,11 @@ definingMscReference:
   }
 ;
 
-virtuality:
-  'virtual' | 'redefined' | 'finalized' ;
+virtuality returns [msc::MessageSequenceChart::virtuality_enum n]:
+  'virtual'     { $n = msc::MessageSequenceChart::VIRTUAL;   }
+  | 'redefined' { $n = msc::MessageSequenceChart::REDEFINED; }
+  | 'finalized' { $n = msc::MessageSequenceChart::FINALIZED; }
+;
 
 usingClause:
   ('using' instanceKind ';')*
@@ -177,14 +181,16 @@ Special:
 /* [Z.120] 1.6		-- Basic MSC
    [Z.120] 1.6.1	-- Message Sequence Chart */
 
-messageSequenceChart:
-  (virtuality)? 'msc' mscHead (bmsc | hmsc) 'endmsc' end
-  {
-
-  }
+messageSequenceChart returns [msc::MessageSequenceChart* n = 0]:
+  ((v = virtuality)? 'msc' mscHead (msc = bmsc | msc = hmsc) 'endmsc' end)
+  { // code
+    $n = new msc::MessageSequenceChart($v ? $v.n : 0,
+                                       /*, mscHead*/
+                                       $msc.n);
+  } // !code
 ;
 
-bmsc:
+bmsc returns [int n = 1]:
   mscBody
 ;
 
@@ -305,7 +311,7 @@ mscStatement:
 ;
 
 eventDefinition:
-  (instanceName ':' instanceEventList) => instanceName ':' instanceEventList
+  ((instanceName ':' instanceEventList) => instanceName ':' instanceEventList)
   {
 
   }
@@ -1671,7 +1677,7 @@ substructureReference:
 
 
 
-hmsc:
+hmsc returns [int n = 2]:
   'expr' mscExpression
   {
 
@@ -1881,7 +1887,7 @@ Name:
 ;
 
 Space:
-  (' ' | '\t' | '\r' | '\n' {})
+  (' ' | '\t' | '\r' | '\n')+  { $channel = HIDDEN; }
 ;
 
 Underline:

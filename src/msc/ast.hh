@@ -16,7 +16,7 @@ namespace msc
        * be virtual to be able to call childs'
        * dtors.
        */
-      virtual ~Ast() = 0;
+      virtual ~Ast() {}
 
       virtual void accept(Visitor&) = 0;
 
