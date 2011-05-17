@@ -2,7 +2,7 @@
 
 namespace msc
 {
-  TextDefinition::TextDefinition(pString text)
+  TextDefinition::TextDefinition(String*        text)
     : text_ (text)
   {
   }

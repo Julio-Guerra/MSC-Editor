@@ -23,7 +23,7 @@ namespace msc
 
       /// Ctor & dtor
       /// \{
-      MessageSequenceChart(virtuality_enum, pMsc);
+      MessageSequenceChart(virtuality_enum, Msc*);
 
       virtual ~MessageSequenceChart();
       /// \}

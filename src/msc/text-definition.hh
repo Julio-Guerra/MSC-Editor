@@ -15,7 +15,7 @@ namespace msc
    public:
       /// \name Ctor & Dtor
       /// \{
-      TextDefinition(pString);
+      TextDefinition(String*);
 
       virtual ~TextDefinition();
       /// \}

@@ -13,7 +13,7 @@ namespace msc
     public:
       /// \name Ctor & Dtor.
       /// \{
-      BasicMsc(const std::vector<pStatement>&);
+      BasicMsc(const std::vector<Statement*>&);
 
       virtual ~BasicMsc();
       /// \}

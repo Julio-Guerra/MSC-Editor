@@ -11,6 +11,8 @@ options
 @parser::includes
 {
   #include <vector>
+  #include <iostream>
+
   #include "msc/types.hh"
   #include "msc/all.hh"
 }
@@ -48,11 +50,11 @@ comment:
   'comment' CharacterString {  }
 ;
 
-textDefinition returns [msc::pTextDefinition n]:
+textDefinition returns [msc::TextDefinition* n = 0]:
   'text' CharacterString end
   {
-    msc::pString text(new msc::String((char*) $CharacterString.text->chars));
-    $n.reset(new msc::TextDefinition(text));
+    msc::String* text = new msc::String((char*) $CharacterString.text->chars);
+    $n = new msc::TextDefinition(text);
   }
 ;
 
@@ -199,14 +201,14 @@ messageSequenceChart returns [msc::MessageSequenceChart* n = 0]:
   } // !code
 ;
 
-bmsc returns [msc::pMsc n]:
+bmsc returns [msc::Msc* n = 0]:
   mscBody
   { // code
-    $n.reset(new msc::BasicMsc($mscBody.n));
+    $n = new msc::BasicMsc($mscBody.n);
   } // !code
 ;
 
-mscHead:
+mscHead returns [ int n = 1, int n2 = 2 ]:
   mscName mscParameterDecl? timeOffset? end
   mscInstInterface? mscGateInterface
   {
@@ -311,18 +313,18 @@ orderGate:
   defOrderInGate | defOrderOutGate
 ;
 
-mscBody returns [std::vector<msc::pStatement> n]:
+mscBody returns [std::vector<msc::Statement*> n]:
   (
     mscStatement { $n.push_back($mscStatement.n); }
   )*
 ;
 
-mscStatement returns [msc::pStatement n]:
-  textDefinition { $n.reset($textDefinition.n.get()); }
-  | eventDefinition { }
+mscStatement returns [msc::Statement* n = 0]:
+  textDefinition { $n = $textDefinition.n; }
+  | eventDefinition { $n = $eventDefinition.n; }
 ;
 
-eventDefinition:
+eventDefinition returns [msc::EventDefinition* n = 0]:
   ((instanceName ':' instanceEventList) => instanceName ':' instanceEventList)
   {
 
@@ -411,8 +413,6 @@ multiInstanceEvent:
   condition | mscReference | inlineExpr
 ;
 
-
-
 instanceHeadStatement:
   'instance' (instanceKind)? (decomposition)? end
   {
@@ -426,8 +426,6 @@ instanceEndStatement:
 
   }
 ;
-
-
 
 messageEvent:
   messageOutput | messageInput
@@ -1689,7 +1687,7 @@ substructureReference:
 
 
 
-hmsc returns [msc::pMsc n]:
+hmsc returns [msc::Msc* n = 0]:
   'expr' mscExpression
   {
     // FIXME
@@ -1768,8 +1766,8 @@ mscName:
   Name { }
 ;
 
-instanceName:
-  Name {  }
+instanceName returns [msc::String* n = 0]:
+  Name { $n = new msc::String((char*) $Name.text->chars); }
 ;
 
 actualInstanceParameterName:
@@ -1929,7 +1927,7 @@ UpwardArrowHead:
 
 CharacterString:
   (Apostrophe { $channel = HIDDEN; })
-  str = ((Alphanumeric
+  ((Alphanumeric
   | OtherCharacter
   | Special
   | FullStop

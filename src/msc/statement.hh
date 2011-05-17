@@ -8,6 +8,8 @@ namespace msc
   /// \brief Abstract base class.
   class Statement : public virtual Ast
   {
+    public:
+      ~Statement() {};
   };
 } // namespace msc
 

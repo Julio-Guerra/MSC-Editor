@@ -3,6 +3,7 @@ add_library(msc gen-visitor.cc
                 message-sequence-chart.cc
                 basic-msc.cc
                 text-definition.cc
+#                event-definition.cc
 
                 message.cc
                 instance.cc

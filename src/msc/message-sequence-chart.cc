@@ -3,7 +3,7 @@
 namespace msc
 {
   MessageSequenceChart::MessageSequenceChart(virtuality_enum    virtuality,
-                                             pMsc               msc)
+                                             Msc*               msc)
     : virtuality_ (virtuality), msc_ (msc)
   {
   }

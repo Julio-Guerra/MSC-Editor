@@ -19,6 +19,8 @@ namespace msc
   typedef boost::shared_ptr<Statement>          pStatement;
 
   typedef boost::shared_ptr<TextDefinition>     pTextDefinition;
+
+  typedef boost::shared_ptr<EventDefinition>    pEventDefinition;
 }
 
 #endif /* !TYPES_HH_ */

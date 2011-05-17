@@ -9,6 +9,7 @@ namespace msc
   class Statement;
   class Expression;
   class TextDefinition;
+  class EventDefinition;
 
   class Instance;
   class Message;
