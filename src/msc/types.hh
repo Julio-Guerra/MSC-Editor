@@ -14,7 +14,7 @@ namespace msc
 
   typedef boost::shared_ptr<String>             pString;
 
-  typedef boost::shared_ptr<BasicMsc>           pBasicMsc;
+  typedef boost::shared_ptr<Msc>                pMsc;
 
   typedef boost::shared_ptr<Statement>          pStatement;
 

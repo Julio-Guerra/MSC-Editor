@@ -6,7 +6,7 @@
 namespace msc
 {
   /// \brief Abstract class for expressions.
-  class Expression : public Ast
+  class Expression : public virtual Ast
   {
   };
 } // namespace msc

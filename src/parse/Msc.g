@@ -49,7 +49,11 @@ comment:
 ;
 
 textDefinition returns [msc::pTextDefinition n]:
-  'text' CharacterString end { $n = new TextDefinition($CharacterString.n); }
+  'text' CharacterString end
+  {
+    msc::pString text(new msc::String((char*) $CharacterString.text->chars));
+    $n.reset(new msc::TextDefinition(text));
+  }
 ;
 
 /* [Z.120] 1.4.4	-- Drawing Rules
@@ -59,9 +63,6 @@ textDefinition returns [msc::pTextDefinition n]:
 textualMSCDocument:
   documentHead textualDefiningPart textualUtilityPart
   {
-
-
-
   }
 ;
 
@@ -198,10 +199,10 @@ messageSequenceChart returns [msc::MessageSequenceChart* n = 0]:
   } // !code
 ;
 
-bmsc returns [msc::pBasicMsc n]:
+bmsc returns [msc::pMsc n]:
   mscBody
   { // code
-    n = new msc::BasicMsc($mscBody.n);
+    $n.reset(new msc::BasicMsc($mscBody.n));
   } // !code
 ;
 
@@ -310,14 +311,14 @@ orderGate:
   defOrderInGate | defOrderOutGate
 ;
 
-mscBody returns [std::vector<msc::pMscStatement> n]:
+mscBody returns [std::vector<msc::pStatement> n]:
   (
     mscStatement { $n.push_back($mscStatement.n); }
   )*
 ;
 
 mscStatement returns [msc::pStatement n]:
-  textDefinition { $n = *$textDefinition.n; }
+  textDefinition { $n.reset($textDefinition.n.get()); }
   | eventDefinition { }
 ;
 
@@ -1688,7 +1689,7 @@ substructureReference:
 
 
 
-hmsc returns [msc::Msc* n = 0]:
+hmsc returns [msc::pMsc n]:
   'expr' mscExpression
   {
     // FIXME
@@ -1926,8 +1927,8 @@ UpwardArrowHead:
   '^'
 ;
 
-CharacterString returns [msc::pString n]:
-  Apostrophe
+CharacterString:
+  (Apostrophe { $channel = HIDDEN; })
   str = ((Alphanumeric
   | OtherCharacter
   | Special
@@ -1935,10 +1936,7 @@ CharacterString returns [msc::pString n]:
   | Underline
   | Space
   | Apostrophe Apostrophe
-  )*) Apostrophe
-  {
-    $n = new msc::String($str.text);
-  }
+  )*) (Apostrophe { $channel = HIDDEN; })
 ;
 
 Apostrophe:

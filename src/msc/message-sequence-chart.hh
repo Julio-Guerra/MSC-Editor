@@ -23,7 +23,7 @@ namespace msc
 
       /// Ctor & dtor
       /// \{
-      MessageSequenceChart(virtuality_enum, Msc*);
+      MessageSequenceChart(virtuality_enum, pMsc);
 
       virtual ~MessageSequenceChart();
       /// \}
@@ -35,7 +35,7 @@ namespace msc
 
       /// Pointer to a BasicMsc or a HighMsc.
       /// The shared_ptr make the default copy constructor safe.
-      boost::shared_ptr<Msc>    msc_;
+      pMsc                      msc_;
   };
 } // namespace msc
 

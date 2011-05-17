@@ -11,7 +11,7 @@ namespace msc
   {
   }
 
-  void accept(Visitor& v)
+  void TextDefinition::accept(Visitor& v)
   {
     v(*this);
   }

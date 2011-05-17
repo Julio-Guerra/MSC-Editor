@@ -6,7 +6,7 @@
 namespace msc
 {
   /// \brief Abstract base class.
-  class Statement : public Ast
+  class Statement : public virtual Ast
   {
   };
 } // namespace msc
