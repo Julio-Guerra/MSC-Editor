@@ -2,25 +2,31 @@
 # define BASIC_MSC_HH_
 
 # include <vector>
-# include "msc/ast.hh"
 
+# include "msc/types.hh"
+# include "msc/msc.hh"
 
 namespace msc
 {
-  class BasicMsc : public Ast
+  class BasicMsc : public Msc
   {
     public:
-      virtual void              accept(Visitor&);
+      /// \name Ctor & Dtor.
+      /// \{
+      BasicMsc(const std::vector<pStatement>&);
 
-      // void                      add_instance(Instance&);
+      virtual ~BasicMsc();
+      /// \}
 
-      // bool                      remove_instances(const Label&);
-
-      // const InstanceList&       instances_get() const;
+      /// \name Visitor entry point.
+      /// \{
+      virtual void      accept(Visitor&);
+      /// \}
 
     private:
-//      std::vector<Instance*>      instances_;
+      /// Vector of MscStatements' shared pointers.
+      std::vector<pStatement>        statements_;
   };
-};
+}
 
 #endif /* !BASIC_MSC_HH_ */

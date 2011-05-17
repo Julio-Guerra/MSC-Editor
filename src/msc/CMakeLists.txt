@@ -1,9 +1,11 @@
 add_library(msc gen-visitor.cc
-                message-sequence-chart.cc
                 labelable.cc
+                message-sequence-chart.cc
+                basic-msc.cc
+
                 message.cc
                 instance.cc
-
 )
 
-include_directories(${PROJECT_SOURCE_DIR}/src)
+include_directories(${PROJECT_SOURCE_DIR}/src
+                    ${Boost_INCLUDE_DIR})

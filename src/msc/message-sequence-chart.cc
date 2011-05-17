@@ -1,13 +1,11 @@
 # include "msc/message-sequence-chart.hh"
 
-#include <iostream>
-
 namespace msc
 {
-  MessageSequenceChart::MessageSequenceChart(virtuality_enum virtuality, int n)
+  MessageSequenceChart::MessageSequenceChart(virtuality_enum    virtuality,
+                                             Msc*               msc)
+    : virtuality_ (virtuality), msc_ (msc)
   {
-    std::cout << virtuality << " " << UNKNOWN << std::endl;
-    std::cout << "n = " << n << std::endl;
   }
 
   MessageSequenceChart::~MessageSequenceChart()

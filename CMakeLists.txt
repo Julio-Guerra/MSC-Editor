@@ -25,6 +25,8 @@ find_library(
   HINTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/libantlr3c-3.1.3/lib
 )
 
+find_package(Boost REQUIRED)
+
 add_subdirectory(src)
 add_subdirectory(tests)
 

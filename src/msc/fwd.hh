@@ -3,11 +3,16 @@
 
 namespace msc
 {
-  // From gen-visitor.h
   class Ast;
   class Msc;
+  class BasicMsc;
+  class Statement;
+  class Expression;
+  class TextDefinition;
+
   class Instance;
   class Message;
+
 } // namespace msc
 
 #endif /* !FWD_HH_ */

@@ -10,7 +10,14 @@ options
 
 @parser::includes
 {
+  #include <vector>
+  #include "msc/types.hh"
   #include "msc/all.hh"
+}
+
+@lexer::includes
+{
+  #include "msc/types.hh"
 }
 
 mscTextualFile :
@@ -41,8 +48,8 @@ comment:
   'comment' CharacterString {  }
 ;
 
-textDefinition:
-  'text' CharacterString end {  }
+textDefinition returns [msc::pTextDefinition n]:
+  'text' CharacterString end { $n = new TextDefinition($CharacterString.n); }
 ;
 
 /* [Z.120] 1.4.4	-- Drawing Rules
@@ -182,16 +189,20 @@ Special:
    [Z.120] 1.6.1	-- Message Sequence Chart */
 
 messageSequenceChart returns [msc::MessageSequenceChart* n = 0]:
-  ((v = virtuality)? 'msc' mscHead (msc = bmsc | msc = hmsc) 'endmsc' end)
+  (v = virtuality? 'msc' mscHead (msc = bmsc | msc = hmsc) 'endmsc' end)
   { // code
-    $n = new msc::MessageSequenceChart($v ? $v.n : 0,
-                                       /*, mscHead*/
+    $n = new msc::MessageSequenceChart($v.text ?
+                                       $v.n :
+                                       msc::MessageSequenceChart::UNKNOWN,
                                        $msc.n);
   } // !code
 ;
 
-bmsc returns [int n = 1]:
+bmsc returns [msc::pBasicMsc n]:
   mscBody
+  { // code
+    n = new msc::BasicMsc($mscBody.n);
+  } // !code
 ;
 
 mscHead:
@@ -299,15 +310,15 @@ orderGate:
   defOrderInGate | defOrderOutGate
 ;
 
-mscBody:
-  (mscStatement)*
-  {
-
-  }
+mscBody returns [std::vector<msc::pMscStatement> n]:
+  (
+    mscStatement { $n.push_back($mscStatement.n); }
+  )*
 ;
 
-mscStatement:
-  textDefinition | eventDefinition
+mscStatement returns [msc::pStatement n]:
+  textDefinition { $n = *$textDefinition.n; }
+  | eventDefinition { }
 ;
 
 eventDefinition:
@@ -1677,10 +1688,10 @@ substructureReference:
 
 
 
-hmsc returns [int n = 2]:
+hmsc returns [msc::Msc* n = 0]:
   'expr' mscExpression
   {
-
+    // FIXME
   }
 ;
 
@@ -1915,16 +1926,19 @@ UpwardArrowHead:
   '^'
 ;
 
-CharacterString:
+CharacterString returns [msc::pString n]:
   Apostrophe
-  (Alphanumeric
+  str = ((Alphanumeric
   | OtherCharacter
   | Special
   | FullStop
   | Underline
   | Space
   | Apostrophe Apostrophe
-  )* Apostrophe
+  )*) Apostrophe
+  {
+    $n = new msc::String($str.text);
+  }
 ;
 
 Apostrophe:
