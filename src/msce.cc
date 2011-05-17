@@ -2,24 +2,15 @@
 #include <iostream>
 
 #include "view/qt/graph-view.hh"
-#include "gui/qt/msc-editor.h"
 #include "view/qt/gmsc/types.hh"
+#include "gui/qt/window.hh"
 
 int main(int argc, char **argv)
 {
   QApplication          app(argc, argv);
-  QMainWindow*          window = new QMainWindow();
-  Ui_MainWindow*        gui = new Ui_MainWindow();
-  QGraphicsScene        scene;
-  msc::Instance*        msc_i = new msc::Instance();
-  view::gmsc::Instance* i = new view::gmsc::Instance(*msc_i);
+  gui::Window*          window = new gui::Window();
 
-  gui->setupUi(window);
-
-  i->label_set("Instance1");
-  gui->graphicsView->setScene(&scene);
-  (*gui->graphicsView)(*i);
-
+  window->open_msc_file();
   window->show();
 
   return app.exec();

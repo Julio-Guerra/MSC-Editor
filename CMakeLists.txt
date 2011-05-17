@@ -26,4 +26,4 @@ ADD_SUBDIRECTORY(src)
 
 # add the executable
 ADD_EXECUTABLE(msce src/msce.cc)
-TARGET_LINK_LIBRARIES(msce libview libmsc ${QT_LIBRARIES})
+TARGET_LINK_LIBRARIES(msce libgui libview libmsc ${QT_LIBRARIES})

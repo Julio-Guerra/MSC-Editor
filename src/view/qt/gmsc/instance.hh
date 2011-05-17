@@ -3,6 +3,8 @@
 
 # include <QtGui/QPainter>
 # include <QtGui/QGraphicsItem>
+# include <QtGui/QGraphicsTextItem>
+# include <QtGui/QGraphicsScene>
 
 # include "msc/instance.hh"
 
@@ -15,7 +17,12 @@ namespace view
       public:
         Instance (const msc::Instance&);
         virtual ~Instance();
-
+        
+        void label_set(const Label& l);
+        
+        // TO REMOVE
+        QGraphicsTextItem* t_;  
+        
       private:
         QPolygonF polygon_;
     };
