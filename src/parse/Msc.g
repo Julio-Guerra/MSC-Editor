@@ -22,6 +22,124 @@ options
   #include "msc/types.hh"
 }
 
+
+Qualifier:
+  '<<'
+  (
+    Letter
+    | Decimal_Digit
+    | OtherCharacter
+    | Special
+    | '.'
+    | '_'
+    | ' '
+    | '\''
+  )*
+  '>>'
+;
+
+
+Letter:
+  'a'..'z' | 'A'..'Z'
+;
+
+
+Decimal_Digit:
+   '0'..'9'
+;
+
+fragment
+Special:
+  '@' | '&' | '(' | ')' | '[' | ']' | '<' | '>' | '#' | ',' | ';' | ':'
+;
+
+Name:
+  (Letter | DecimalDigit | Underline | FullStop)+
+;
+
+Space:
+  (' ' | '\t' | '\r' | '\n')+  { $channel = HIDDEN; }
+;
+
+fragment
+Underline:
+  '_'
+;
+
+fragment
+DecimalDigit:
+  '0' .. '9'
+;
+
+National:
+  '`' | '\\'
+  | LeftCurlyBracket
+  | VerticalLine
+  | RightCurlyBracket
+  | Overline
+  | UpwardArrowHead
+;
+
+fragment
+FullStop:
+  '.'
+;
+
+fragment
+UpwardArrowHead:
+  '^'
+;
+
+CharacterString:
+  (Apostrophe { $channel = HIDDEN; })
+  ((Alphanumeric
+  | OtherCharacter
+  | Special
+  | FullStop
+  | Underline
+  | Space
+  | Apostrophe Apostrophe
+  )*) (Apostrophe { $channel = HIDDEN; })
+;
+
+Apostrophe:
+  '\''
+;
+
+OtherCharacter:
+  '?' | '%' | '+' | '-' | '!' | '/' | '*' | '"' | '='
+;
+
+fragment
+Overline:
+  '~'
+;
+
+fragment
+VerticalLine:
+  '|'
+;
+
+fragment
+LeftCurlyBracket:
+  '{'
+;
+
+fragment
+RightCurlyBracket:
+  '}'
+;
+
+fragment
+Misc:
+  OtherCharacter | Apostrophe
+;
+
+fragment
+Alphanumeric:
+  Letter | DecimalDigit | National
+;
+
 mscTextualFile :
   (
     textualMSCDocument
@@ -157,37 +275,6 @@ sdlReference:
 identifier:
   (Qualifier)? Name
 ;
-
-Qualifier:
-  '<<'
-  (
-    Letter
-    | Decimal_Digit
-    | OtherCharacter
-    | Special
-    | '.'
-    | '_'
-    | ' '
-    | '\''
-  )*
-  '>>'
-;
-
-
-Letter:
-  'a'..'z' | 'A'..'Z'
-;
-
-
-Decimal_Digit:
-   '0'..'9'
-;
-
-
-Special:
-  '@' | '&' | '(' | ')' | '[' | ']' | '<' | '>' | '#' | ',' | ';' | ':'
-;
-
 /* [Z.120] 1.6		-- Basic MSC
    [Z.120] 1.6.1	-- Message Sequence Chart */
 
@@ -325,11 +412,7 @@ mscStatement returns [msc::Statement* n = 0]:
 ;
 
 eventDefinition returns [msc::EventDefinition* n = 0]:
-  ((instanceName ':' instanceEventList) => instanceName ':' instanceEventList)
-  {
-
-  }
-  | instanceNameList ':' multiInstanceEventList
+  instanceName (',' instanceName)* ':' (instanceEventList | multiInstanceEventList)
   {
     //#(#[EventDefition],#( #[InstanceNames], inl),#(#[InstanceEvents],miel))
   }
@@ -344,18 +427,18 @@ instanceEvent:
 ;
 
 orderableEvent:
-  ('label' (eventName {  }) end)?
+  ('label' eventName end)?
   (
-    (messageEvent) => messageEvent {  }
-    | incompleteMessageEvent { }
-    | (methodCallEvent) => methodCallEvent {  }
-    | incompleteMethodCallEvent {  }
-    | create {  }
-    | timerStatement {  }
-    | action  {  }
+    messageEvent
+    | incompleteMessageEvent
+    | methodCallEvent
+    | incompleteMethodCallEvent
+    | create
+    | timerStatement
+    | action
   )
-  ('before' orderDestList {  })?
-  ('after' orderDestList  {  })?
+  ('before' orderDestList)?
+  ('after' orderDestList)?
   end
   ('time' timeDestList ';')?
   {
@@ -405,8 +488,7 @@ instanceNameList:
 ;
 
 multiInstanceEventList:
-  multiInstanceEvent
-  ((multiInstanceEvent) => multiInstanceEventList)?
+  multiInstanceEvent (multiInstanceEvent)*
 ;
 
 multiInstanceEvent:
@@ -1783,7 +1865,7 @@ messageName:
 ;
 
 messageInstanceName:
-  Name {  }
+  Name
 ;
 
 gateName:
@@ -1889,90 +1971,7 @@ dataDefinitionString:
     ;
 
 wildcardString:
-  s = (CharacterString | Name)
-;
-
-Name:
-  (Letter | DecimalDigit | Underline | FullStop)+
-;
-
-Space:
-  (' ' | '\t' | '\r' | '\n')+  { $channel = HIDDEN; }
-;
-
-Underline:
-  '_'
-;
-
-DecimalDigit:
-  '0' .. '9'
-;
-
-National:
-  '`' | '\\'
-  | LeftCurlyBracket
-  | VerticalLine
-  | RightCurlyBracket
-  | Overline
-  | UpwardArrowHead
-;
-
-FullStop:
-  '.'
-;
-
-UpwardArrowHead:
-  '^'
-;
-
-CharacterString:
-  (Apostrophe { $channel = HIDDEN; })
-  ((Alphanumeric
-  | OtherCharacter
-  | Special
-  | FullStop
-  | Underline
-  | Space
-  | Apostrophe Apostrophe
-  )*) (Apostrophe { $channel = HIDDEN; })
-;
-
-Apostrophe:
-  '\''
-;
-
-OtherCharacter:
-  '?' | '%' | '+' | '-' | '!' | '/' | '*' | '"' | '='
-;
-
-
-Overline:
-  '~'
-;
-
-
-VerticalLine:
-  '|'
-;
-
-
-LeftCurlyBracket:
-  '{'
-;
-
-
-RightCurlyBracket:
-  '}'
-;
-
-
-Misc:
-  OtherCharacter | Apostrophe
-;
-
-
-Alphanumeric:
-  Letter | DecimalDigit	| National
+  (CharacterString | Name)
 ;
 
 createGateIdentification:
