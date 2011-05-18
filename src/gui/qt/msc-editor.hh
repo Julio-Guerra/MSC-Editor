@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'msc-editor.ui'
 **
-** Created: Tue May 17 21:47:57 2011
+** Created: Wed May 18 15:23:50 2011
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -81,7 +81,7 @@ public:
         gridLayoutWidget->setGeometry(QRect(0, 0, 201, 601));
         basic_msc_layout = new QGridLayout(gridLayoutWidget);
         basic_msc_layout->setObjectName(QString::fromUtf8("basic_msc_layout"));
-        basic_msc_layout->setContentsMargins(0, 0, 0, 0);
+        basic_msc_layout->setContentsMargins(0, 0, 5, 0);
         msc_toobox->addItem(basic_msc_page, QString::fromUtf8("Basic MSC"));
         messages_page = new QWidget();
         messages_page->setObjectName(QString::fromUtf8("messages_page"));

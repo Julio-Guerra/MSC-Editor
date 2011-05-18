@@ -68,7 +68,11 @@
           <height>601</height>
          </rect>
         </property>
-        <layout class="QGridLayout" name="basic_msc_layout"/>
+        <layout class="QGridLayout" name="basic_msc_layout">
+         <property name="rightMargin">
+          <number>5</number>
+         </property>
+        </layout>
        </widget>
       </widget>
       <widget class="QWidget" name="messages_page">

@@ -2,6 +2,7 @@
 # define	INSTANCE_HH
 
 # include <QtGui/QPainter>
+# include <QtGui/QLabel>
 # include <QtGui/QGraphicsItem>
 # include <QtGui/QGraphicsTextItem>
 # include <QtGui/QGraphicsScene>
@@ -18,6 +19,7 @@ namespace view
         Instance (const msc::Instance&);
         virtual ~Instance();
         
+        QPixmap& to_image();
         void label_set(const Label& l);
         
         // TO REMOVE
