@@ -38,12 +38,12 @@ Qualifier:
   '>>'
 ;
 
-
+fragment
 Letter:
-  'a'..'z' | 'A'..'Z'
+ ('a'..'z') | ('A'..'Z')
 ;
 
-
+fragment
 Decimal_Digit:
    '0'..'9'
 ;
@@ -91,7 +91,7 @@ UpwardArrowHead:
 ;
 
 CharacterString:
-  (Apostrophe { $channel = HIDDEN; })
+  (Apostrophe)
   ((Alphanumeric
   | OtherCharacter
   | Special
@@ -99,13 +99,15 @@ CharacterString:
   | Underline
   | Space
   | Apostrophe Apostrophe
-  )*) (Apostrophe { $channel = HIDDEN; })
+  )*) (Apostrophe)
 ;
 
+fragment
 Apostrophe:
   '\''
 ;
 
+fragment
 OtherCharacter:
   '?' | '%' | '+' | '-' | '!' | '/' | '*' | '"' | '='
 ;
@@ -412,7 +414,8 @@ mscStatement returns [msc::Statement* n = 0]:
 ;
 
 eventDefinition returns [msc::EventDefinition* n = 0]:
-  instanceName (',' instanceName)* ':' (instanceEventList | multiInstanceEventList)
+  (instanceName ':' instanceEventList)=> instanceName ':' instanceEventList
+  | instanceNameList ':' multiInstanceEventList
   {
     //#(#[EventDefition],#( #[InstanceNames], inl),#(#[InstanceEvents],miel))
   }
@@ -429,9 +432,9 @@ instanceEvent:
 orderableEvent:
   ('label' eventName end)?
   (
-    messageEvent
+    (messageEvent) => messageEvent
     | incompleteMessageEvent
-    | methodCallEvent
+    | (methodCallEvent)=> methodCallEvent
     | incompleteMethodCallEvent
     | create
     | timerStatement
