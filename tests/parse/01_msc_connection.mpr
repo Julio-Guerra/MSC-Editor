@@ -1,6 +1,6 @@
 msc connection;
 inst calling_party: process digite;
-inst called_party: process digite; 
+inst called_party: process digite;
 gate out off_hook to calling_party;
 gate in dial_tone_on from calling_party;
 gate out digit to calling_party;
@@ -36,4 +36,4 @@ in off_hook from env;
 out answer to calling_party;
 condition Talking shared all;
 endinstance;
-endmsc; 
+endmsc;

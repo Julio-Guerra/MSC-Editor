@@ -10,7 +10,137 @@ options
 
 @parser::includes
 {
+  #include <vector>
+  #include <iostream>
+
+  #include "msc/types.hh"
+  #include "msc/all.hh"
 }
+
+@lexer::includes
+{
+  #include "msc/types.hh"
+}
+
+
+Qualifier:
+  '<<'
+  (
+    Letter
+    | Decimal_Digit
+    | OtherCharacter
+    | Special
+    | '.'
+    | '_'
+    | ' '
+    | '\''
+  )*
+  '>>'
+;
+
+fragment
+Letter:
+ ('a'..'z') | ('A'..'Z')
+;
+
+fragment
+Decimal_Digit:
+   '0'..'9'
+;
+
+fragment
+Special:
+  '@' | '&' | '(' | ')' | '[' | ']' | '<' | '>' | '#' | ',' | ';' | ':'
+;
+
+Name:
+  (Letter | DecimalDigit | Underline | FullStop)+
+;
+
+Space:
+  (' ' | '\t' | '\r' | '\n')+  { $channel = HIDDEN; }
+;
+
+fragment
+Underline:
+  '_'
+;
+
+fragment
+DecimalDigit:
+  '0' .. '9'
+;
+
+National:
+  '`' | '\\'
+  | LeftCurlyBracket
+  | VerticalLine
+  | RightCurlyBracket
+  | Overline
+  | UpwardArrowHead
+;
+
+fragment
+FullStop:
+  '.'
+;
+
+fragment
+UpwardArrowHead:
+  '^'
+;
+
+CharacterString:
+  (Apostrophe)
+  ((Alphanumeric
+  | OtherCharacter
+  | Special
+  | FullStop
+  | Underline
+  | Space
+  | Apostrophe Apostrophe
+  )*) (Apostrophe)
+;
+
+fragment
+Apostrophe:
+  '\''
+;
+
+fragment
+OtherCharacter:
+  '?' | '%' | '+' | '-' | '!' | '/' | '*' | '"' | '='
+;
+
+fragment
+Overline:
+  '~'
+;
+
+fragment
+VerticalLine:
+  '|'
+;
+
+fragment
+LeftCurlyBracket:
+  '{'
+;
+
+fragment
+RightCurlyBracket:
+  '}'
+;
+
+fragment
+Misc:
+  OtherCharacter | Apostrophe
+;
+
+fragment
+Alphanumeric:
+  Letter | DecimalDigit | National
+;
 
 mscTextualFile :
   (
@@ -40,8 +170,12 @@ comment:
   'comment' CharacterString {  }
 ;
 
-textDefinition:
-  'text' CharacterString end {  }
+textDefinition returns [msc::TextDefinition* n = 0]:
+  'text' CharacterString end
+  {
+    msc::String* text = new msc::String((char*) $CharacterString.text->chars);
+    $n = new msc::TextDefinition(text);
+  }
 ;
 
 /* [Z.120] 1.4.4	-- Drawing Rules
@@ -51,9 +185,6 @@ textDefinition:
 textualMSCDocument:
   documentHead textualDefiningPart textualUtilityPart
   {
-
-
-
   }
 ;
 
@@ -89,8 +220,11 @@ definingMscReference:
   }
 ;
 
-virtuality:
-  'virtual' | 'redefined' | 'finalized' ;
+virtuality returns [msc::MessageSequenceChart::virtuality_enum n]:
+  'virtual'     { $n = msc::MessageSequenceChart::VIRTUAL;   }
+  | 'redefined' { $n = msc::MessageSequenceChart::REDEFINED; }
+  | 'finalized' { $n = msc::MessageSequenceChart::FINALIZED; }
+;
 
 usingClause:
   ('using' instanceKind ';')*
@@ -143,52 +277,27 @@ sdlReference:
 identifier:
   (Qualifier)? Name
 ;
-
-Qualifier:
-  '<<'
-  (
-    Letter
-    | Decimal_Digit
-    | OtherCharacter
-    | Special
-    | '.'
-    | '_'
-    | ' '
-    | '\''
-  )*
-  '>>'
-;
-
-fragment
-Letter:
-  'a'..'z' | 'A'..'Z'
-;
-
-fragment
-Decimal_Digit:
-   '0'..'9'
-;
-
-fragment
-Special:
-  '@' | '&' | '(' | ')' | '[' | ']' | '<' | '>' | '#' | ',' | ';' | ':'
-;
-
 /* [Z.120] 1.6		-- Basic MSC
    [Z.120] 1.6.1	-- Message Sequence Chart */
 
-messageSequenceChart:
-  (virtuality)? 'msc' mscHead (bmsc | hmsc) 'endmsc' end
-  {
-
-  }
+messageSequenceChart returns [msc::MessageSequenceChart* n = 0]:
+  (v = virtuality? 'msc' mscHead (msc = bmsc | msc = hmsc) 'endmsc' end)
+  { // code
+    $n = new msc::MessageSequenceChart($v.text ?
+                                       $v.n :
+                                       msc::MessageSequenceChart::UNKNOWN,
+                                       $msc.n);
+  } // !code
 ;
 
-bmsc:
+bmsc returns [msc::Msc* n = 0]:
   mscBody
+  { // code
+    $n = new msc::BasicMsc($mscBody.n);
+  } // !code
 ;
 
-mscHead:
+mscHead returns [ int n = 1, int n2 = 2 ]:
   mscName mscParameterDecl? timeOffset? end
   mscInstInterface? mscGateInterface
   {
@@ -293,22 +402,19 @@ orderGate:
   defOrderInGate | defOrderOutGate
 ;
 
-mscBody:
-  (mscStatement)*
-  {
-
-  }
+mscBody returns [std::vector<msc::Statement*> n]:
+  (
+    mscStatement { $n.push_back($mscStatement.n); }
+  )*
 ;
 
-mscStatement:
-  textDefinition | eventDefinition
+mscStatement returns [msc::Statement* n = 0]:
+  textDefinition { $n = $textDefinition.n; }
+  | eventDefinition { $n = $eventDefinition.n; }
 ;
 
-eventDefinition:
-  (instanceName ':' instanceEventList) => instanceName ':' instanceEventList
-  {
-
-  }
+eventDefinition returns [msc::EventDefinition* n = 0]:
+  (instanceName ':' instanceEventList)=> instanceName ':' instanceEventList
   | instanceNameList ':' multiInstanceEventList
   {
     //#(#[EventDefition],#( #[InstanceNames], inl),#(#[InstanceEvents],miel))
@@ -324,18 +430,18 @@ instanceEvent:
 ;
 
 orderableEvent:
-  ('label' (eventName {  }) end)?
+  ('label' eventName end)?
   (
-    (messageEvent) => messageEvent {  }
-    | incompleteMessageEvent { }
-    | (methodCallEvent) => methodCallEvent {  }
-    | incompleteMethodCallEvent {  }
-    | create {  }
-    | timerStatement {  }
-    | action  {  }
+    (messageEvent) => messageEvent
+    | incompleteMessageEvent
+    | (methodCallEvent)=> methodCallEvent
+    | incompleteMethodCallEvent
+    | create
+    | timerStatement
+    | action
   )
-  ('before' orderDestList {  })?
-  ('after' orderDestList  {  })?
+  ('before' orderDestList)?
+  ('after' orderDestList)?
   end
   ('time' timeDestList ';')?
   {
@@ -385,15 +491,12 @@ instanceNameList:
 ;
 
 multiInstanceEventList:
-  multiInstanceEvent
-  ((multiInstanceEvent) => multiInstanceEventList)?
+  multiInstanceEvent (multiInstanceEvent)*
 ;
 
 multiInstanceEvent:
   condition | mscReference | inlineExpr
 ;
-
-
 
 instanceHeadStatement:
   'instance' (instanceKind)? (decomposition)? end
@@ -408,8 +511,6 @@ instanceEndStatement:
 
   }
 ;
-
-
 
 messageEvent:
   messageOutput | messageInput
@@ -1671,10 +1772,10 @@ substructureReference:
 
 
 
-hmsc:
+hmsc returns [msc::Msc* n = 0]:
   'expr' mscExpression
   {
-
+    // FIXME
   }
 ;
 
@@ -1750,8 +1851,8 @@ mscName:
   Name { }
 ;
 
-instanceName:
-  Name {  }
+instanceName returns [msc::String* n = 0]:
+  Name { $n = new msc::String((char*) $Name.text->chars); }
 ;
 
 actualInstanceParameterName:
@@ -1767,7 +1868,7 @@ messageName:
 ;
 
 messageInstanceName:
-  Name {  }
+  Name
 ;
 
 gateName:
@@ -1873,95 +1974,7 @@ dataDefinitionString:
     ;
 
 wildcardString:
-  s = (CharacterString | Name)
-;
-
-Name:
-  (Letter | DecimalDigit | Underline | FullStop)+
-;
-
-fragment
-Space:
-  (' ' | '\t' | '\r' | '\n' {})
-;
-
-fragment
-Underline:
-  '_'
-;
-
-fragment
-DecimalDigit:
-  '0' .. '9'
-;
-
-National:
-  '`' | '\\'
-  | LeftCurlyBracket
-  | VerticalLine
-  | RightCurlyBracket
-  | Overline
-  | UpwardArrowHead
-;
-
-fragment
-FullStop:
-  '.'
-;
-
-fragment
-UpwardArrowHead:
-  '^'
-;
-
-CharacterString:
-  Apostrophe
-  (Alphanumeric
-  | OtherCharacter
-  | Special
-  | FullStop
-  | Underline
-  | Space
-  | Apostrophe Apostrophe
-  )* Apostrophe
-;
-
-Apostrophe:
-  '\''
-;
-
-OtherCharacter:
-  '?' | '%' | '+' | '-' | '!' | '/' | '*' | '"' | '='
-;
-
-fragment
-Overline:
-  '~'
-;
-
-fragment
-VerticalLine:
-  '|'
-;
-
-fragment
-LeftCurlyBracket:
-  '{'
-;
-
-fragment
-RightCurlyBracket:
-  '}'
-;
-
-fragment
-Misc:
-  OtherCharacter | Apostrophe
-;
-
-fragment
-Alphanumeric:
-  Letter | DecimalDigit	| National
+  (CharacterString | Name)
 ;
 
 createGateIdentification:
