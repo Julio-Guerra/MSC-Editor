@@ -51,7 +51,7 @@ void Window::create_toolbox()
     //
     button = new QToolButton();
     button->setIcon(icon);
-    button->setIconSize(QSize(80, 80));
+    button->setIconSize(QSize(70, 70));
     button->setCheckable(true);
     
     layout = new QGridLayout;
@@ -66,7 +66,7 @@ void Window::create_toolbox()
     //
     button = new QToolButton();
     button->setIcon(icon);
-    button->setIconSize(QSize(80, 80));
+    button->setIconSize(QSize(70, 70));
     button->setCheckable(true);
 
     layout = new QGridLayout;

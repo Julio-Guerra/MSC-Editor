@@ -3,13 +3,16 @@
 using namespace view::gmsc;
 
 Instance::Instance(const msc::Instance& instance)
-  : msc::Instance(instance),
-    polygon_(QRectF(-10, -10, 100, 50))
+  : msc::Instance(instance)
 {
   QString* s = new QString(instance.label_get().c_str());
   
   t_ = new QGraphicsTextItem(*s, this);
-  
+
+  //polygon_(QRectF(-10, -10, 100, 50))
+  polygon_ << QPointF(0, 0) << QPointF(115, 0);
+  polygon_ << QPointF(115, 35) << QPointF(0, 35);
+  polygon_ << QPointF(58, 35);
   this->setPolygon(polygon_);
   
   this->setFlag(QGraphicsItem::ItemIsMovable, true);
