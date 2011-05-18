@@ -10,7 +10,7 @@ namespace msc
   class Labelable
   {
     public:
-      typedef std::wstring Label;
+      typedef std::string Label;
 
       /// Set the label property.
       void                label_set(const Label&);

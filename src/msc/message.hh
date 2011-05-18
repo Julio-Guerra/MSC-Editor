@@ -19,6 +19,8 @@ namespace msc
       Instance* to;
       // !temporary
 
+      virtual ~Message();
+
       virtual void accept(Visitor&);
   };
 }

@@ -12,6 +12,10 @@ namespace msc
   class Instance : public Ast, public Labelable
   {
     public:
+      Instance();
+      Instance(const Instance&);
+      virtual ~Instance();
+
       // temporary
       // 1) Use Labelable to name the Instance.
       // 2) Message: from -> to

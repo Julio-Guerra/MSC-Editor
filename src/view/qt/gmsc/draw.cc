@@ -1,7 +1,6 @@
-#include "draw.hh"
 #include <iostream>
-#include "misc/any.hh"
-#include "boost/variant.hpp"
+
+#include "view/qt/gmsc/draw.hh"
 
 void Draw::operator()(msc::EventArea& e)
 {
