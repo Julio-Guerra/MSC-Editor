@@ -1,5 +1,6 @@
-# include "parse/MscParser.h"
-# include "parse/MscLexer.h"
+#include "parse/MscParser.h"
+#include "parse/MscLexer.h"
+#include "msc/message-sequence-chart.hh"
 
 int main(int argc, char* argv[])
 {
@@ -48,7 +49,7 @@ int main(int argc, char* argv[])
   // the starting rule (any rule can start first of course). This is a generated type
   // based upon the rule we start with.
   //
-  // MscParser_decl_return     langAST;
+  msc::MessageSequenceChart*     ast;
 
   // Create the input stream based upon the argument supplied to us on the command line
   // for this example, the input will always default to ./input if there is no explicit
@@ -134,14 +135,14 @@ int main(int argc, char* argv[])
   // It also has the side advantage, if you are using an IDE such as VS2005 that can do it
   // that when you type ->, you will see a list of all the methods the object supports.
   //
-  //langAST = psr->decl(psr);
+  ast = psr->messageSequenceChart(psr);
 
   // If the parser ran correctly, we will have a tree to parse. In general I recommend
   // keeping your own flags as part of the error trapping, but here is how you can
   // work out if there were errors if you are using the generic error messages
   //
-//  if (psr->pParser->rec->errorCount > 0)
-//    ANTLR3_FPRINTF(stderr, "The parser returned %d errors, tree walking aborted.\n", psr->pParser->rec->errorCount);
+  if (psr->pParser->rec->state->errorCount > 0)
+    return 1;
 
 //  nodes   ->free  (nodes);        nodes   = NULL;
 

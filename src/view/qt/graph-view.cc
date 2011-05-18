@@ -1,4 +1,5 @@
 #include "view/qt/graph-view.hh"
+#include "view/qt/gmsc/all.hh"
 
 using namespace view;
 
@@ -9,7 +10,7 @@ GraphView::GraphView(QWidget*& widget)
 
 void GraphView::operator()(msc::Msc& node)
 {
-  gmsc::GMsc& gnode = static_cast<gmsc::GMsc&> (node);
+  //gmsc::GMsc& gnode = static_cast<gmsc::GMsc&> (node);
 
   //this->scene()->addItem();
 }
@@ -24,7 +25,7 @@ void GraphView::operator()(msc::Instance& node)
 
 void GraphView::operator()(msc::Message& node)
 {
-  gmsc::GMessage& gnode = static_cast<gmsc::GMessage&> (node);
+  //gmsc::GMessage& gnode = static_cast<gmsc::GMessage&> (node);
 
   //this->scene()->addItem();
 }

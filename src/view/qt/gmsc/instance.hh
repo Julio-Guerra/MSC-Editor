@@ -6,6 +6,7 @@
 # include <QtGui/QGraphicsItem>
 # include <QtGui/QGraphicsTextItem>
 # include <QtGui/QGraphicsScene>
+ #include <QString>
 
 # include "msc/instance.hh"
 
@@ -18,13 +19,14 @@ namespace view
       public:
         Instance (const msc::Instance&);
         virtual ~Instance();
-        
+
         QPixmap& to_image();
-        void label_set(const Label& l);
-        
+
+        void label_set(const QString&);
+
         // TO REMOVE
-        QGraphicsTextItem* t_;  
-        
+        QGraphicsTextItem* t_;
+
       private:
         QPolygonF polygon_;
     };
