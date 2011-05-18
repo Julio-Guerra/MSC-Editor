@@ -1,16 +1,13 @@
 PROJECT(MSC_EDITOR)
 
-<<<<<<< HEAD
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-=======
+
 set(CMAKE_C_COMPILER    g++)
 set(MAKE                make)
 set(CMAKE_C_FLAGS_DEBUG "-g -ggdb")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb")
-set(CMAKE_C_FLAGS "-Wall -Wextra -pedantic -std=c++98")
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic -std=c++98")
->>>>>>> parser
-
+set(CMAKE_C_FLAGS "-Wall -Wextra")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 
 include(ExternalProject)
 externalproject_add(
@@ -42,20 +39,8 @@ INCLUDE(${QT_USE_FILE})
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/src)
 
 add_subdirectory(src)
-<<<<<<< HEAD
-#add_subdirectory(tests)
-add_definitions(-g -ggdb)
+add_subdirectory(tests)
 
 # add the executable
 ADD_EXECUTABLE(msce src/msce.cc)
 TARGET_LINK_LIBRARIES(msce gui view msc ${QT_LIBRARIES})
-=======
-add_subdirectory(tests)
-
-add_definitions()
-
-# add the executable
-# add_executable (MscEditor main.cc)
-
-# target_link_libraries (msc-editor msc)
->>>>>>> parser

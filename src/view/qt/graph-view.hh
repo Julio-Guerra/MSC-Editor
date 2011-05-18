@@ -1,9 +1,9 @@
 #ifndef GRAPH_VIEW_HH_
 # define GRAPH_VIEW_HH_
 
-#include <QtGui/QGraphicsView>
+# include <QtGui/QGraphicsView>
 
-#include "view/qt/gmsc/types.hh"
+# include "msc/all.hh"
 
 namespace view
 {

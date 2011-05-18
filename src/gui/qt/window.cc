@@ -1,4 +1,9 @@
-#include "window.hh"
+#include "gui/qt/window.hh"
+
+// temp
+#include "msc/instance.hh"
+#include "view/qt/gmsc/instance.hh"
+// !temp
 
 using namespace gui;
 
@@ -8,31 +13,31 @@ Window::Window()
 
   config_.setupUi(this);
   this->create_toolbox();
-  
+
   config_.graphics_view->setScene(scene_);
 }
 
 void Window::open_msc_file()
 {
   // Ask whether to save the current scene if the old scene has objects
-  
+
   // Create a new scene
   scene_ = new QGraphicsScene();
-  
+
   // Set the new scene
   config_.graphics_view->setScene(scene_);
-  
+
   // Temporary test
   msc::Instance*          msc_i = new msc::Instance();
   view::gmsc::Instance*   i = new view::gmsc::Instance(*msc_i);
-  
+
   i->label_set("Instance 1");
   (*config_.graphics_view)(*i);
 }
 
 void Window::save_msc_file()
 {
-  
+
 }
 
 // Private methods
@@ -53,7 +58,7 @@ void Window::create_toolbox()
     button->setIcon(icon);
     button->setIconSize(QSize(80, 80));
     button->setCheckable(true);
-    
+
     layout = new QGridLayout;
     layout->addWidget(button, 0, 0, Qt::AlignHCenter);
     layout->addWidget(new QLabel("Instance"), 1, 0, Qt::AlignCenter);
