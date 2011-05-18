@@ -11,6 +11,7 @@ options
 @parser::includes
 {
   #include <vector>
+
   #include <iostream>
 
   #include "msc/types.hh"
@@ -90,7 +91,7 @@ UpwardArrowHead:
 ;
 
 CharacterString:
-  (Apostrophe)
+  (Apostrophe
   ((Alphanumeric
   | OtherCharacter
   | Special
@@ -98,7 +99,8 @@ CharacterString:
   | Underline
   | Space
   | Apostrophe Apostrophe
-  )*) (Apostrophe)
+  )*)
+  Apostrophe)
 ;
 
 fragment
@@ -166,7 +168,7 @@ end:
 ;
 
 comment:
-  'comment' CharacterString {  }
+  'comment' CharacterString { }
 ;
 
 textDefinition returns [msc::TextDefinition* n = 0]:
@@ -273,9 +275,16 @@ sdlReference:
   sdlDocumentIdentifier
 ;
 
-identifier:
-  (Qualifier)? Name
+identifier returns [msc::Identifier* n = 0]:
+  Qualifier? Name
+  {
+    msc::String* q = $Qualifier.text ?
+                        new msc::String((char*) $Qualifier.text->chars)
+                        : 0;
+    $n = new msc::Identifier(q, new msc::String((char*) $Name.text->chars));
+  }
 ;
+
 /* [Z.120] 1.6		-- Basic MSC
    [Z.120] 1.6.1	-- Message Sequence Chart */
 
@@ -361,17 +370,6 @@ mscInstInterface:
   containingClause
 ;
 
-instanceKind:
-  (kindDenominator)? identifier
-  {
-
-  }
-;
-
-kindDenominator:
-  kindName
-;
-
 mscGateInterface:
   (mscGateDef)*
 ;
@@ -412,20 +410,34 @@ mscStatement returns [msc::Statement* n = 0]:
   | eventDefinition { $n = $eventDefinition.n; }
 ;
 
-eventDefinition returns [msc::EventDefinition* n = 0]:
-  (instanceName ':' instanceEventList)=> instanceName ':' instanceEventList
+eventDefinition returns [msc::Instance* n = 0]:
+  (instanceName ':' instanceEventList) => instanceName ':' instanceEventList
+  {
+    $n = new msc::Instance(*$instanceName.n/*, instanceEventList.n*/);
+  }
   | instanceNameList ':' multiInstanceEventList
   {
-    //#(#[EventDefition],#( #[InstanceNames], inl),#(#[InstanceEvents],miel))
   }
 ;
 
-instanceEventList:
-  instanceEvent (instanceEvent)*
+instanceEventList returns [std::vector<msc::Event*> n]:
+  head = instanceEvent
+  {
+    $n.push_back($head.n);
+  }
+  (
+    tail = instanceEvent
+    {
+      $n.push_back($tail.n);
+    }
+  )*
 ;
 
-instanceEvent:
-  orderableEvent | nonOrderableEvent
+instanceEvent returns [msc::Event* n = 0]:
+  (orderableEvent | e = nonOrderableEvent)
+  {
+    $n = $e.n;
+  }
 ;
 
 orderableEvent:
@@ -433,7 +445,7 @@ orderableEvent:
   (
     (messageEvent) => messageEvent
     | incompleteMessageEvent
-    | (methodCallEvent)=> methodCallEvent
+    | (methodCallEvent) => methodCallEvent
     | incompleteMethodCallEvent
     | create
     | timerStatement
@@ -444,10 +456,6 @@ orderableEvent:
   end
   ('time' timeDestList ';')?
   {
-
-
-
-
 
   }
 ;
@@ -477,11 +485,19 @@ timeDest:
   (referenceIdentification | labelName)
 ;
 
-nonOrderableEvent:
-  startMethod | endMethod | startSuspension | endSuspension
-  | startCoregion | endCoregion | sharedCondition
-  | sharedMSCReference | sharedInlineExpr
-  | instanceHeadStatement | instanceEndStatement | stop
+nonOrderableEvent returns [msc::Event* n = 0]:
+  startMethod
+  | endMethod
+  | startSuspension
+  | endSuspension
+  | startCoregion
+  | endCoregion
+  | sharedCondition
+  | sharedMSCReference
+  | sharedInlineExpr
+  | instanceHeadStatement
+  | instanceEndStatement
+  | stop
 ;
 
 instanceNameList:
@@ -497,18 +513,39 @@ multiInstanceEvent:
   condition | mscReference | inlineExpr
 ;
 
-instanceHeadStatement:
-  'instance' (instanceKind)? (decomposition)? end
+instanceHeadStatement returns [msc::InstanceHead* n = 0]:
+  'instance' instanceKind? decomposition? end
   {
+    msc::String* kind = $instanceKind.text ? $instanceKind.kindDenominator : 0;
+    msc::Identifier* identifier = $instanceKind.text ?
+                                    $instanceKind.identifier : 0;
 
+    $n = new msc::InstanceHead(kind,
+                               identifier,
+                               $decomposition.text ? 1 : 0,
+                               $decomposition.text ? $decomposition.n : 0);
   }
+;
+
+instanceKind returns [msc::String* kindDenominator = 0,
+                      msc::Identifier* identifier = 0]:
+  k = kindDenominator? id = identifier
+  {
+    $kindDenominator = $k.text ? $k.n : 0;
+    $identifier = $id.n;
+  }
+;
+
+kindDenominator returns [msc::String* n = 0]:
+  kindName { $n = $kindName.n; }
+;
+
+decomposition returns [msc::String* n = 0]:
+  'decomposed' (substructureReference { $n = $substructureReference.n; })?
 ;
 
 instanceEndStatement:
   'endinstance' end
-  {
-
-  }
 ;
 
 messageEvent:
@@ -574,8 +611,6 @@ inputAddress:
 
   }
 ;
-
-
 
 methodCallEvent:
   callOut | callIn | replyOut | replyIn
@@ -1756,17 +1791,8 @@ refGate:
   | actualInReplyGate
 ;
 
-
-
-decomposition:
-  'decomposed' (substructureReference)?
-  {
-
-  }
-;
-
-substructureReference:
-  'as' messageSequenceChartName
+substructureReference returns [msc::String* n = 0]:
+  'as' m = messageSequenceChartName { $n = new msc::String((char*) $m.text->chars); }
 ;
 
 
@@ -1844,77 +1870,73 @@ parExpression:
   )*
 ;
 
-
-
-mscName:
-  Name { }
+mscName returns [msc::String* n = 0]:
+  Name { $n = new msc::String((char*) $Name.text->chars);}
 ;
 
 instanceName returns [msc::String* n = 0]:
   Name { $n = new msc::String((char*) $Name.text->chars); }
 ;
 
-actualInstanceParameterName:
-  Name {  }
+actualInstanceParameterName returns [msc::String* n = 0]:
+  Name { $n = new msc::String((char*) $Name.text->chars); }
 ;
 
-eventName:
-  Name {  }
+eventName returns [msc::String* n = 0]:
+  Name { $n = new msc::String((char*) $Name.text->chars); }
 ;
 
-messageName:
-  Name {  }
+messageName returns [msc::String* n = 0]:
+  Name { $n = new msc::String((char*) $Name.text->chars); }
 ;
 
-messageInstanceName:
-  Name
+messageInstanceName returns [msc::String* n = 0]:
+  Name { $n = new msc::String((char*) $Name.text->chars); }
 ;
 
-gateName:
-  Name
+gateName returns [msc::String* n = 0]:
+  Name { $n = new msc::String((char*) $Name.text->chars); }
 ;
 
-conditionName:
+conditionName returns [msc::String* n = 0]:
   ( Name | CharacterString ) {  }
 ;
 
-timerName:
-  Name {  }
+timerName returns [msc::String* n = 0]:
+  Name { $n = new msc::String((char*) $Name.text->chars); }
 ;
 
-timerInstanceName:
-  Name {  }
+timerInstanceName returns [msc::String* n = 0]:
+  Name { $n = new msc::String((char*) $Name.text->chars); }
 ;
 
-intervalName:
-  Name  {  }
+intervalName returns [msc::String* n = 0]:
+  Name  { $n = new msc::String((char*) $Name.text->chars); }
 ;
 
-inlineExprName:
-  Name  {  }
+inlineExprName returns [msc::String* n = 0]:
+  Name  { $n = new msc::String((char*) $Name.text->chars); }
 ;
 
-mscReferenceName:
-  Name {  }
+mscReferenceName returns [msc::String* n = 0]:
+  Name { $n = new msc::String((char*) $Name.text->chars); }
 ;
 
-messageSequenceChartName:
-  Name {  }
+messageSequenceChartName returns [msc::String* n = 0]:
+  Name { $n = new msc::String((char*) $Name.text->chars); }
 ;
 
-labelName:
-  Name {  }
+labelName returns [msc::String* n = 0]:
+  Name { $n = new msc::String((char*) $Name.text->chars); }
 ;
 
-dataLanguageName:
-  Name {  }
+dataLanguageName returns [msc::String* n = 0]:
+  Name { $n = new msc::String((char*) $Name.text->chars); }
 ;
 
-kindName:
-  Name {  }
+kindName returns [msc::String* n = 0]:
+  Name { $n = new msc::String((char*) $Name.text->chars); }
 ;
-
-
 
 sdlDocumentIdentifier:
   identifier
@@ -1924,19 +1946,13 @@ variableIdentifier:
   identifier
 ;
 
-
-
 timeExpression:
   expression
 ;
 
-
-
 timePattern:
   pattern
 ;
-
-
 
 minDurationlimit:
   durationlimit
@@ -1947,11 +1963,8 @@ maxDurationlimit:
 ;
 
 
-
 /* The Z.120 <_expression_ string> non-terminals
    are named expressionString */
-
-
 expressionString
 	: (CharacterString | Name)
 		{  }

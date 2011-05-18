@@ -10,6 +10,13 @@ namespace msc
   class Labelable
   {
     public:
+      /// \name Ctors
+      /// \{
+      Labelable();
+
+      Labelable(const Label&);
+      /// \}
+
       /// Set the label property.
       void                label_set(const Label&);
 

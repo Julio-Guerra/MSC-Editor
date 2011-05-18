@@ -3,10 +3,11 @@ add_library(msc gen-visitor.cc
                 message-sequence-chart.cc
                 basic-msc.cc
                 text-definition.cc
-#                event-definition.cc
+                instance.cc
+                instance-head.cc
+                identifier.cc
 
                 message.cc
-                instance.cc
 )
 
 include_directories(${PROJECT_SOURCE_DIR}/src

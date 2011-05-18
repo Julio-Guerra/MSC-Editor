@@ -28,7 +28,7 @@ void Window::open_msc_file()
   config_.graphics_view->setScene(scene_);
 
   // Temporary test
-  msc::Instance*          msc_i = new msc::Instance();
+  msc::Instance*          msc_i = new msc::Instance("Instance");
   view::gmsc::Instance*   i = new view::gmsc::Instance(*msc_i);
 
   i->label_set("Instance 1");
@@ -43,7 +43,7 @@ void Window::save_msc_file()
 // Private methods
 void Window::create_toolbox()
 {
-  msc::Instance*          msc_instance = new msc::Instance();
+  msc::Instance*          msc_instance = new msc::Instance("Instance");
   view::gmsc::Instance*   gmsc_instance = new view::gmsc::Instance(*msc_instance);
 
   //
