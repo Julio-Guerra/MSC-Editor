@@ -22,7 +22,6 @@ options
   #include "msc/types.hh"
 }
 
-
 Qualifier:
   '<<'
   (
