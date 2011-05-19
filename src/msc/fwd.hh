@@ -9,9 +9,10 @@ namespace msc
   class Statement;
   class Expression;
   class TextDefinition;
-  class EventDefinition;
-
   class Instance;
+  class InstanceHead;
+  class Identifier;
+
   class Message;
 
 } // namespace msc

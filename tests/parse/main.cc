@@ -135,7 +135,8 @@ int main(int argc, char* argv[])
   // It also has the side advantage, if you are using an IDE such as VS2005 that can do it
   // that when you type ->, you will see a list of all the methods the object supports.
   //
-  ast = psr->messageSequenceChart(psr);
+//  ast = psr->messageSequenceChart(psr);
+  psr->comment(psr);
 
   // If the parser ran correctly, we will have a tree to parse. In general I recommend
   // keeping your own flags as part of the error trapping, but here is how you can

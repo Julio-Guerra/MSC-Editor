@@ -2,28 +2,34 @@
 # define INSTANCE_HH_
 
 # include <vector>
-# include "msc/ast.hh"
+
+# include "msc/statement.hh"
+# include "msc/labelable.hh"
 # include "msc/gen-visitor.hh"
 # include "msc/message.hh"
 
-class EventArea;
+
 namespace msc
 {
-  class Instance : public Ast, public Labelable
+  class Instance : public Statement, public Labelable
   {
     public:
-      Instance();
-      Instance(const Instance&);
+      /// \name Ctor & Dtor
+      // \{
+      Instance(const Label&/*,
+               const std::vector<msc::Instance*>&*/);
+
       virtual ~Instance();
+      /// \}
 
-      // temporary
-      // 1) Use Labelable to name the Instance.
-      // 2) Message: from -> to
-      //    from is this Instance
-      std::vector<Message*>      messages;
-      // !temporary
-
+      /// \name Visitor entry point.
+      /// \{
       virtual void accept(Visitor&);
+      /// \}
+
+    private:
+      ///
+      /// std::vector<>
   };
 } // namespace msc
 

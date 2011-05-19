@@ -20,7 +20,9 @@ namespace msc
 
   typedef boost::shared_ptr<TextDefinition>     pTextDefinition;
 
-  typedef boost::shared_ptr<EventDefinition>    pEventDefinition;
+  typedef boost::shared_ptr<Instance>           pInstance;
+
+  typedef boost::shared_ptr<Identifier>         pIdentifier;
 }
 
 #endif /* !TYPES_HH_ */
