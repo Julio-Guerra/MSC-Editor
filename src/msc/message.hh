@@ -3,25 +3,37 @@
 
 # include "msc/fwd.hh"
 
-# include "msc/ast.hh"
+# include "msc/event.hh"
 # include "msc/labelable.hh"
 # include "msc/gen-visitor.hh"
 
 namespace msc
 {
-  class Message : public Ast, public Labelable
+  class Message : public Event, public Labelable
   {
     public:
-      // temporary
-      // 1) Use Labelable to name the message.
-      // 2) The instance node holding "this" is the "from"; so we
-      //    only need to know "to".
-      Instance* to;
-      // !temporary
+      typedef enum
+      {
+        IN = 0,
+        OUT
+      } direction_enum;
+
+      /// \name Ctor & Dtor
+      /// \{
+      Message(direction_enum, String*);
 
       virtual ~Message();
+      /// \}
 
+      /// \name Visitor entry point.
+      /// \{
       virtual void accept(Visitor&);
+      /// \}
+
+//    private:
+      direction_enum    direction_;
+
+      pString           instance_;
   };
 }
 

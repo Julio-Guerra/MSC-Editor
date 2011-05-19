@@ -23,14 +23,16 @@ namespace msc
 
       /// Ctor & dtor
       /// \{
-      MessageSequenceChart(virtuality_enum, Msc*);
+      MessageSequenceChart(String*, virtuality_enum, Msc*);
 
       virtual ~MessageSequenceChart();
       /// \}
 
       virtual void accept(Visitor&);
 
-    private:
+//    private:
+      pString                   name_;
+
       virtuality_enum           virtuality_;
 
       /// Pointer to a BasicMsc or a HighMsc.

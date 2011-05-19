@@ -276,10 +276,10 @@ sdlReference:
 ;
 
 identifier returns [msc::Identifier* n = 0]:
-  Qualifier? Name
+  qlf = Qualifier? Name
   {
-    msc::String* q = $Qualifier.text ?
-                        new msc::String((char*) $Qualifier.text->chars)
+    msc::String* q = $qlf ?
+                        new msc::String((char*) $qlf.text->chars)
                         : 0;
     $n = new msc::Identifier(q, new msc::String((char*) $Name.text->chars));
   }
@@ -291,7 +291,8 @@ identifier returns [msc::Identifier* n = 0]:
 messageSequenceChart returns [msc::MessageSequenceChart* n = 0]:
   (v = virtuality? 'msc' mscHead (msc = bmsc | msc = hmsc) 'endmsc' end)
   { // code
-    $n = new msc::MessageSequenceChart($v.text ?
+    $n = new msc::MessageSequenceChart($mscHead.name,
+                                       $v.text ?
                                        $v.n :
                                        msc::MessageSequenceChart::UNKNOWN,
                                        $msc.n);
@@ -305,11 +306,11 @@ bmsc returns [msc::Msc* n = 0]:
   } // !code
 ;
 
-mscHead returns [ int n = 1, int n2 = 2 ]:
-  mscName mscParameterDecl? timeOffset? end
+mscHead returns [msc::String* name = 0]:
+  n = mscName mscParameterDecl? timeOffset? end
   mscInstInterface? mscGateInterface
   {
-
+    $name = $n.n;
   }
 ;
 
@@ -413,7 +414,7 @@ mscStatement returns [msc::Statement* n = 0]:
 eventDefinition returns [msc::Instance* n = 0]:
   (instanceName ':' instanceEventList) => instanceName ':' instanceEventList
   {
-    $n = new msc::Instance(*$instanceName.n/*, instanceEventList.n*/);
+    $n = new msc::Instance(*$instanceName.n, $instanceEventList.n);
   }
   | instanceNameList ':' multiInstanceEventList
   {
@@ -440,10 +441,10 @@ instanceEvent returns [msc::Event* n = 0]:
   }
 ;
 
-orderableEvent:
+orderableEvent returns [msc::Event* n = 0]:
   ('label' eventName end)?
   (
-    (messageEvent) => messageEvent
+    (messageEvent) => messageEvent { $n = $messageEvent.n; }
     | incompleteMessageEvent
     | (methodCallEvent) => methodCallEvent
     | incompleteMethodCallEvent
@@ -495,7 +496,7 @@ nonOrderableEvent returns [msc::Event* n = 0]:
   | sharedCondition
   | sharedMSCReference
   | sharedInlineExpr
-  | instanceHeadStatement
+  | instanceHeadStatement { $n = $instanceHeadStatement.n; }
   | instanceEndStatement
   | stop
 ;
@@ -514,7 +515,7 @@ multiInstanceEvent:
 ;
 
 instanceHeadStatement returns [msc::InstanceHead* n = 0]:
-  'instance' instanceKind? decomposition? end
+  'instance' instanceKind? (decomposition)? end
   {
     msc::String* kind = $instanceKind.text ? $instanceKind.kindDenominator : 0;
     msc::Identifier* identifier = $instanceKind.text ?
@@ -522,8 +523,8 @@ instanceHeadStatement returns [msc::InstanceHead* n = 0]:
 
     $n = new msc::InstanceHead(kind,
                                identifier,
-                               $decomposition.text ? 1 : 0,
-                               $decomposition.text ? $decomposition.n : 0);
+                               $decomposition.n ? 1 : 0,
+                               $decomposition.n);
   }
 ;
 
@@ -548,21 +549,24 @@ instanceEndStatement:
   'endinstance' end
 ;
 
-messageEvent:
-  messageOutput | messageInput
-;
-
-messageOutput:
-  'out' msgIdentification 'to' inputAddress
+messageEvent returns [msc::Event* n = 0]:
+  m = messageOutput | m = messageInput
   {
-
+    $n = $m.n;
   }
 ;
 
-messageInput:
+messageOutput returns [msc::Message* n = 0]:
+  'out' msgIdentification 'to' inputAddress
+  {
+    $n = new msc::Message(msc::Message::OUT, $msgIdentification.n);
+  }
+;
+
+messageInput returns [msc::Message* n = 0]:
   'in' msgIdentification 'from' outputAddress
   {
-
+    $n = new msc::Message(msc::Message::IN, $msgIdentification.n);
   }
 ;
 
@@ -584,18 +588,18 @@ incompleteMessageInput:
   }
 ;
 
-msgIdentification:
+msgIdentification returns [msc::String* n = 0]:
   messageName (',' messageInstanceName)?
   ('(' parameterList ')')?
   {
-
+    $n = $messageName.n;
   }
 ;
 
-outputAddress:
+outputAddress returns [msc::String* n = 0]:
   (instanceName	| ('env' | referenceIdentification) ('via' gateName)?)
   {
-
+    $n = $instanceName.n;
   }
 ;
 
@@ -604,11 +608,11 @@ referenceIdentification:
   | 'inline' inlineExprIdentification
 ;
 
-inputAddress:
+inputAddress returns [msc::String* n = 0]:
   (instanceName
   | ('env' | referenceIdentification) ('via' gateName)?)
   {
-
+    $n = $instanceName.n;
   }
 ;
 

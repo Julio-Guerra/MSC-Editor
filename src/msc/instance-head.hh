@@ -2,13 +2,13 @@
 # define INSTANCE_HEAD_HH_
 
 # include "msc/types.hh"
-# include "msc/ast.hh"
+# include "msc/event.hh"
 # include "msc/gen-visitor.hh"
 # include "msc/identifier.hh"
 
 namespace msc
 {
-  class InstanceHead : public Ast
+  class InstanceHead : public Event
   {
     public:
       /// \name Ctor & Dtor.
@@ -23,7 +23,7 @@ namespace msc
       virtual void accept(Visitor&);
       /// \}
 
-    private:
+//    private:
       /// Instance kind denominator.
       pString           kind_;
 

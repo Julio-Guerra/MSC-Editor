@@ -33,7 +33,7 @@ void Window::open_msc_file()
 
   i->label_set("Instance 1");
   (*config_.graphics_view)(*i);
-}
+z}
 
 void Window::save_msc_file()
 {

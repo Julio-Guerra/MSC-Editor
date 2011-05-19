@@ -6,8 +6,7 @@
 # include "msc/statement.hh"
 # include "msc/labelable.hh"
 # include "msc/gen-visitor.hh"
-# include "msc/message.hh"
-
+# include "msc/event.hh"
 
 namespace msc
 {
@@ -16,8 +15,8 @@ namespace msc
     public:
       /// \name Ctor & Dtor
       // \{
-      Instance(const Label&/*,
-               const std::vector<msc::Instance*>&*/);
+      Instance(const Label&,
+               const std::vector<Event*>&);
 
       virtual ~Instance();
       /// \}
@@ -27,9 +26,9 @@ namespace msc
       virtual void accept(Visitor&);
       /// \}
 
-    private:
+//    private:
       ///
-      /// std::vector<>
+      std::vector<pEvent>    events_;
   };
 } // namespace msc
 

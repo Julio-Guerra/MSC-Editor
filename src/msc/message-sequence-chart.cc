@@ -2,9 +2,10 @@
 
 namespace msc
 {
-  MessageSequenceChart::MessageSequenceChart(virtuality_enum    virtuality,
+  MessageSequenceChart::MessageSequenceChart(String*            name,
+                                             virtuality_enum    virtuality,
                                              Msc*               msc)
-    : virtuality_ (virtuality), msc_ (msc)
+    : name_ (name), virtuality_ (virtuality), msc_ (msc)
   {
   }
 

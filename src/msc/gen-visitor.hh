@@ -19,8 +19,12 @@ namespace msc
 
       /** Basic MSC visitor's abstract methods.
        * \{ */
-      virtual void operator()(Msc&) = 0;
+      virtual void operator()(MessageSequenceChart&) = 0;
+      virtual void operator()(BasicMsc&) = 0;
       virtual void operator()(Instance&) = 0;
+      virtual void operator()(TextDefinition&) = 0;
+      virtual void operator()(InstanceHead&) = 0;
+      virtual void operator()(Identifier&) = 0;
       virtual void operator()(Message&) = 0;
       /** \} */
 

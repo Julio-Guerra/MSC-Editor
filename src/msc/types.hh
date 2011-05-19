@@ -23,6 +23,10 @@ namespace msc
   typedef boost::shared_ptr<Instance>           pInstance;
 
   typedef boost::shared_ptr<Identifier>         pIdentifier;
+
+  typedef boost::shared_ptr<Event>              pEvent;
+
+  typedef boost::shared_ptr<Message>            pMessage;
 }
 
 #endif /* !TYPES_HH_ */

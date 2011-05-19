@@ -23,7 +23,7 @@ namespace msc
       virtual void      accept(Visitor&);
       /// \}
 
-    private:
+//    private:
       /// Vector of MscStatements' shared pointers.
       std::vector<pStatement>        statements_;
   };

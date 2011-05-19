@@ -1,6 +1,7 @@
 #include "parse/MscParser.h"
 #include "parse/MscLexer.h"
 #include "msc/message-sequence-chart.hh"
+#include "binder/binder.hh"
 
 int main(int argc, char* argv[])
 {
@@ -135,8 +136,9 @@ int main(int argc, char* argv[])
   // It also has the side advantage, if you are using an IDE such as VS2005 that can do it
   // that when you type ->, you will see a list of all the methods the object supports.
   //
-//  ast = psr->messageSequenceChart(psr);
-  psr->comment(psr);
+  ast = psr->messageSequenceChart(psr);
+  binder::Binder b;
+  b(*ast);
 
   // If the parser ran correctly, we will have a tree to parse. In general I recommend
   // keeping your own flags as part of the error trapping, but here is how you can

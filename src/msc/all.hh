@@ -11,7 +11,6 @@
 # include "msc/instance-head.hh"
 # include "msc/identifier.hh"
 # include "msc/event.hh"
-
-//# include "msc/message.hh"
+# include "msc/message.hh"
 
 #endif /* !MSC_ALL_HH_ */

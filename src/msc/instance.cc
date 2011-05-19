@@ -1,10 +1,13 @@
-#include "instance.hh"
+#include "msc/instance.hh"
+#include "msc/helper.hh"
 
 namespace msc
 {
-  Instance::Instance(const Label& label)
-    : Labelable (label)
+  Instance::Instance(const Label&                       label,
+                     const std::vector<Event*>&         events)
+    : Labelable (label), events_ ()
   {
+    msc::pv_to_spv(events, events_);
   }
 
   Instance::~Instance()

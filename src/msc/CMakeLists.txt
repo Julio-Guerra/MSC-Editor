@@ -1,4 +1,5 @@
 add_library(msc gen-visitor.cc
+                default-visitor.cc
                 labelable.cc
                 message-sequence-chart.cc
                 basic-msc.cc
@@ -6,7 +7,6 @@ add_library(msc gen-visitor.cc
                 instance.cc
                 instance-head.cc
                 identifier.cc
-
                 message.cc
 )
 
