@@ -15,5 +15,6 @@ ADD_LIBRARY(gui window.cc
                 window-moc.cc
                 scene.cc
                 scene-moc.cc
+                arrow.cc
 )
 
