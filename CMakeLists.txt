@@ -9,20 +9,20 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb")
 set(CMAKE_C_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 
-#include(ExternalProject)
-#externalproject_add(
-#  libantlr3c
-#  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/libantlr3c-3.1.3
-#  CONFIGURE_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/lib/libantlr3c-3.1.3/configure --prefix=${CMAKE_CURRENT_SOURCE_DIR}/lib/libantlr3c-3.1.3
-#  PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/lib/libantlr3c-3.1.3
-#  BUILD_COMMAND make
-#  BUILD_IN_SOURCE 1
-#)
+include(ExternalProject)
+externalproject_add(
+  libantlr3c
+  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/libantlr3c-3.1.3
+  CONFIGURE_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/lib/libantlr3c-3.1.3/configure -prefix=${CMAKE_CURRENT_SOURCE_DIR}/lib/libantlr3c-3.1.3
+  PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/lib/libantlr3c-3.1.3
+  BUILD_COMMAND make
+  BUILD_IN_SOURCE 1
+)
 
 find_library(
   antlr3c
   libantlr3c.a
-  HINTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/libantlr3c-3.1.3/**
+  HINTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/libantlr3c-3.1.3/.libs
 )
 
 find_package(Boost REQUIRED)
