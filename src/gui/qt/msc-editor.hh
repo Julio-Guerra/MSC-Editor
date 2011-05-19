@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'msc-editor.ui'
 **
-** Created: Wed May 18 15:23:50 2011
+** Created: Thu May 19 02:38:28 2011
 **      by: Qt User Interface Compiler version 4.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -39,6 +39,8 @@ public:
     QWidget *gridLayoutWidget;
     QGridLayout *basic_msc_layout;
     QWidget *messages_page;
+    QWidget *gridLayoutWidget_2;
+    QGridLayout *messages_layout;
     view::GraphView *graphics_view;
     QMenuBar *menu;
     QMenu *file_menu;
@@ -86,6 +88,12 @@ public:
         messages_page = new QWidget();
         messages_page->setObjectName(QString::fromUtf8("messages_page"));
         messages_page->setGeometry(QRect(0, 0, 200, 607));
+        gridLayoutWidget_2 = new QWidget(messages_page);
+        gridLayoutWidget_2->setObjectName(QString::fromUtf8("gridLayoutWidget_2"));
+        gridLayoutWidget_2->setGeometry(QRect(0, 0, 201, 601));
+        messages_layout = new QGridLayout(gridLayoutWidget_2);
+        messages_layout->setObjectName(QString::fromUtf8("messages_layout"));
+        messages_layout->setContentsMargins(0, 0, 5, 0);
         msc_toobox->addItem(messages_page, QString::fromUtf8("Messages"));
 
         horizontalLayout->addWidget(msc_toobox);
@@ -132,7 +140,7 @@ public:
 
         retranslateUi(Config);
 
-        msc_toobox->setCurrentIndex(0);
+        msc_toobox->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(Config);

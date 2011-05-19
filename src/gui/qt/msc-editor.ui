@@ -45,7 +45,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="basic_msc_page">
        <property name="geometry">
@@ -87,6 +87,21 @@
        <attribute name="label">
         <string>Messages</string>
        </attribute>
+       <widget class="QWidget" name="gridLayoutWidget_2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>201</width>
+          <height>601</height>
+         </rect>
+        </property>
+        <layout class="QGridLayout" name="messages_layout">
+         <property name="rightMargin">
+          <number>5</number>
+         </property>
+        </layout>
+       </widget>
       </widget>
      </widget>
     </item>

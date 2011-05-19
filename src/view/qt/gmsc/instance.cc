@@ -5,17 +5,21 @@ using namespace view::gmsc;
 Instance::Instance(const msc::Instance& instance)
   : msc::Instance(instance)
 {
-  QString* s = new QString(instance.label_get().c_str());
+  polygon_ << QPointF(0, 0) << QPointF(140, 0);
+  polygon_ << QPointF(140, 30) << QPointF(0, 30);
+  
+  textItem_ = new QGraphicsTextItem(QString(instance.label_get().c_str()), this);
+  textItem_->setPos(textItem_->pos().x() + 30, textItem_->pos().y() + 4);
 
-  t_ = new QGraphicsTextItem(*s, this);
-
-  //polygon_(QRectF(-10, -10, 100, 50))
-  polygon_ << QPointF(0, 0) << QPointF(115, 0);
-  polygon_ << QPointF(115, 35) << QPointF(0, 35);
-  polygon_ << QPointF(58, 35);
-
+  lineItem_ = new QGraphicsLineItem(70, 30, 70, 500, this);
+  
+  rectItem_ = new QGraphicsRectItem(0, 500, 140, 17, this);
+  QBrush brush = rectItem_->brush();
+  brush.setColor(Qt::black);
+  brush.setStyle(Qt::SolidPattern);
+  rectItem_->setBrush(brush);  
+  
   this->setPolygon(polygon_);
-
   this->setFlag(QGraphicsItem::ItemIsMovable, true);
   this->setFlag(QGraphicsItem::ItemIsSelectable, true);
   this->setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
@@ -35,8 +39,10 @@ QPixmap& Instance::to_image()
     QPainter  painter(pixmap);
 
     painter.setPen(QPen(Qt::black, 2));
-    painter.translate(100, 100);
+    painter.translate(55, 10);
     painter.drawPolygon(polygon_);
+    painter.drawLine(lineItem_->line());
+    painter.drawRect(rectItem_->rect());
   }
 
   return (*pixmap);
@@ -45,5 +51,5 @@ QPixmap& Instance::to_image()
 void Instance::label_set(const QString& l)
 {
   Labelable::label_set(l.toStdString());
-  t_->setPlainText(l);
+  textItem_->setPlainText(l);
 }
