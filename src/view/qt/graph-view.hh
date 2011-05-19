@@ -3,21 +3,14 @@
 
 # include <QtGui/QGraphicsView>
 
-# include "msc/all.hh"
+# include "msc/default-visitor.hh"
 
 namespace view
 {
-  class GraphView : public QGraphicsView, public msc::Visitor
+  class GraphView : public QGraphicsView, public msc::DefaultVisitor
   {
     public:
       GraphView(QWidget*&);
-
-      virtual void operator()(msc::Msc&);
-      virtual void operator()(msc::Instance&);
-      virtual void operator()(msc::Message&);
-
-    private:
-
   };
 }
 

@@ -3,6 +3,10 @@
 
 namespace msc
 {
+  Instance::Instance()
+  {
+  }
+
   Instance::Instance(const Label&                       label,
                      const std::vector<Event*>&         events)
     : Labelable (label), events_ ()

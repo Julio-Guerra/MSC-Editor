@@ -1,4 +1,6 @@
 #include "gui/qt/window.hh"
+#include "view/qt/gmsc/all.hh"
+
 
 using namespace gui;
 

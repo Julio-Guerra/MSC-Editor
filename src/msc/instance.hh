@@ -15,6 +15,8 @@ namespace msc
     public:
       /// \name Ctor & Dtor
       // \{
+      Instance();
+
       Instance(const Label&,
                const std::vector<Event*>&);
 

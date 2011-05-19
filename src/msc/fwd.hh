@@ -1,6 +1,3 @@
-#ifndef FWD_HH_
-# define FWD_HH_
-
 namespace msc
 {
   class Ast;
@@ -17,5 +14,3 @@ namespace msc
   class Message;
 
 } // namespace msc
-
-#endif /* !FWD_HH_ */
