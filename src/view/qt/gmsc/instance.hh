@@ -20,15 +20,16 @@ namespace view
         Instance (const msc::Instance&);
         virtual ~Instance();
 
+        void label_set(const QString&);
+        
+        // QT helper methods
         QPixmap& to_image();
 
-        void label_set(const QString&);
-
-        // TO REMOVE
-        QGraphicsTextItem* t_;
-
       private:
-        QPolygonF polygon_;
+        QPolygonF           polygon_;
+        QGraphicsLineItem*  lineItem_;
+        QGraphicsRectItem*  rectItem_;
+        QGraphicsTextItem*  textItem_;
     };
   }
 }

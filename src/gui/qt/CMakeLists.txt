@@ -11,5 +11,9 @@ QT4_WRAP_UI(MSC_EDITOR_SOURCES ${MSC_EDITOR_UI})
 
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/src)
 
-ADD_LIBRARY(gui window.cc)
+ADD_LIBRARY(gui window.cc
+                window-moc.cc
+                scene.cc
+                scene-moc.cc
+)
 
