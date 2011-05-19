@@ -12,6 +12,9 @@ Instance::Instance(const msc::Instance& instance)
   textItem_->setPos(textItem_->pos().x() + 30, textItem_->pos().y() + 4);
 
   lineItem_ = new QGraphicsLineItem(70, 30, 70, 500, this);
+  QPen p = lineItem_->pen();
+  p.setWidth(2);
+  lineItem_->setPen(p);
   
   rectItem_ = new QGraphicsRectItem(0, 500, 140, 17, this);
   QBrush brush = rectItem_->brush();
