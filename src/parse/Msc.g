@@ -12,15 +12,8 @@ options
 {
   #include <vector>
 
-  #include <iostream>
-
   #include "msc/types.hh"
   #include "msc/all.hh"
-}
-
-@lexer::includes
-{
-  #include "msc/types.hh"
 }
 
 Qualifier:
@@ -101,6 +94,10 @@ CharacterString:
   | Apostrophe Apostrophe
   )*)
   Apostrophe)
+  {
+    pANTLR3_STRING quoted = GETTEXT();
+    SETTEXT(quoted->subString(quoted, 1, quoted->len-1));
+  }
 ;
 
 fragment
