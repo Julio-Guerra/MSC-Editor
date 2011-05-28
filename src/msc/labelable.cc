@@ -2,11 +2,6 @@
 
 namespace msc
 {
-  Labelable::Labelable()
-    : label_ ()
-  {
-  }
-
   Labelable::Labelable(const Label& label)
     : label_ (label)
   {

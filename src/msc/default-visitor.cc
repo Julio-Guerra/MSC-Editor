@@ -22,10 +22,6 @@ namespace msc
       (*i)->accept(*this);
   }
 
-  void DefaultVisitor::operator()(TextDefinition& td)
-  {
-  }
-
   void DefaultVisitor::operator()(InstanceHead& ih)
   {
     ih.identifier_->accept(*this);
@@ -33,10 +29,12 @@ namespace msc
 
   void DefaultVisitor::operator()(Identifier& id)
   {
+    (void) id;
   }
 
   void DefaultVisitor::operator()(Message& msg)
   {
+    (void) msg;
   }
 
   void DefaultVisitor::operator()(MessageSequenceChart& msc)

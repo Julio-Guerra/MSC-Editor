@@ -13,11 +13,11 @@ namespace msc
   class Instance : public Statement, public Labelable
   {
     public:
-      /// \name Ctor & Dtor
+      /// \name Ctor & Dtor.
       // \{
       Instance();
 
-      Instance(const Label&,
+      Instance(const String&,
                const std::vector<Event*>&);
 
       virtual ~Instance();

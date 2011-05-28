@@ -6,7 +6,6 @@ namespace msc
   class BasicMsc;
   class Statement;
   class Expression;
-  class TextDefinition;
   class Instance;
   class InstanceHead;
   class Identifier;

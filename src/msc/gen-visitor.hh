@@ -17,19 +17,14 @@ namespace msc
       /// Entry point of the visitor.
       void operator()(Ast&);
 
-      /** Basic MSC visitor's abstract methods.
+      /** Basic MSC visitor's pure abstract methods.
        * \{ */
       virtual void operator()(MessageSequenceChart&) = 0;
       virtual void operator()(BasicMsc&) = 0;
       virtual void operator()(Instance&) = 0;
-      virtual void operator()(TextDefinition&) = 0;
       virtual void operator()(InstanceHead&) = 0;
       virtual void operator()(Identifier&) = 0;
       virtual void operator()(Message&) = 0;
-      /** \} */
-
-      /** High Level MSC visitor's abstract methods.
-       * \{ */
       /** \} */
 
     protected:

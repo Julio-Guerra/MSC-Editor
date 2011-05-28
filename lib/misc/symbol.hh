@@ -66,6 +66,7 @@ namespace misc
     public:
       /// Create a new unique symbol.
       static Symbol fresh();
+
       /// Create a new unique symbol, forged from \a s.
       static Symbol fresh(const Symbol&);
       /** \} */

@@ -14,6 +14,9 @@ options
 
   #include "msc/types.hh"
   #include "msc/all.hh"
+
+  #define MAKE(Node, ...)                                   \
+      msc::Factory::instance().make_##Node##(__VA_ARGS__)
 }
 
 Qualifier:
@@ -140,15 +143,18 @@ Alphanumeric:
   Letter | DecimalDigit | National
 ;
 
-mscTextualFile :
+/* Parser */
+
+/* Root rule called by the parser. */
+parse returns [msc::Ast* n = 0]:
+  r = messageSequenceChart { $n = $r.n; }
+;
+
+mscTextualFile:
   (
     textualMSCDocument
     (
       messageSequenceChart
-      {
-
-
-      }
     )*
   )+
   {
@@ -165,15 +171,11 @@ end:
 ;
 
 comment:
-  'comment' CharacterString { }
+  'comment' CharacterString
 ;
 
-textDefinition returns [msc::TextDefinition* n = 0]:
+textDefinition:
   'text' CharacterString end
-  {
-    msc::String* text = new msc::String((char*) $CharacterString.text->chars);
-    $n = new msc::TextDefinition(text);
-  }
 ;
 
 /* [Z.120] 1.4.4	-- Drawing Rules
@@ -288,11 +290,12 @@ identifier returns [msc::Identifier* n = 0]:
 messageSequenceChart returns [msc::MessageSequenceChart* n = 0]:
   (v = virtuality? 'msc' mscHead (msc = bmsc | msc = hmsc) 'endmsc' end)
   { // code
-    $n = new msc::MessageSequenceChart($mscHead.name,
-                                       $v.text ?
-                                       $v.n :
-                                       msc::MessageSequenceChart::UNKNOWN,
-                                       $msc.n);
+    $n = MAKE(MessageSequenceChart,
+              $mscHead.name,
+              $v.text ?
+              $v.n :
+              msc::MessageSequenceChart::UNKNOWN,
+              $msc.n);
   } // !code
 ;
 
@@ -328,9 +331,6 @@ mscParmDeclBlock:
 
 instanceParameterDecl:
   'inst' instanceParmDeclList
-  {
-
-  }
 ;
 
 instanceParmDeclList:
@@ -404,7 +404,7 @@ mscBody returns [std::vector<msc::Statement*> n]:
 ;
 
 mscStatement returns [msc::Statement* n = 0]:
-  textDefinition { $n = $textDefinition.n; }
+  textDefinition
   | eventDefinition { $n = $eventDefinition.n; }
 ;
 
@@ -460,7 +460,7 @@ orderableEvent returns [msc::Event* n = 0]:
 
 orderDestList:
   orderDest (',' orderDest)*
-  {  }
+
 ;
 
 timeDestList:
@@ -477,8 +477,8 @@ timeDestination:
 timeDest:
   eventName |
   (
-    'top' {  }
-    | 'bottom' {  }
+    'top'
+    | 'bottom'
   )
   (referenceIdentification | labelName)
 ;
@@ -500,7 +500,7 @@ nonOrderableEvent returns [msc::Event* n = 0]:
 
 instanceNameList:
   instanceName (',' instanceName)*
-  | 'all' {  }
+  | 'all'
 ;
 
 multiInstanceEventList:
@@ -556,14 +556,18 @@ messageEvent returns [msc::Event* n = 0]:
 messageOutput returns [msc::Message* n = 0]:
   'out' msgIdentification 'to' inputAddress
   {
-    $n = new msc::Message(msc::Message::OUT, $msgIdentification.n);
+    // The source is null and will be set when coming back to the instance
+    // where this message is defined.
+    $n = MAKE(Message, $msgIdentification.n, 0, $intputAddress.n);
   }
 ;
 
 messageInput returns [msc::Message* n = 0]:
   'in' msgIdentification 'from' outputAddress
   {
-    $n = new msc::Message(msc::Message::IN, $msgIdentification.n);
+    // The destination is null and will be set when coming back to the instance
+    // where this message is defined.
+    $n = MAKE(Message, $msgIdentification.n, $outputAddress.n, 0);
   }
 ;
 
@@ -573,16 +577,10 @@ incompleteMessageEvent:
 
 incompleteMessageOutput:
   'out' msgIdentification 'to' 'lost' (inputAddress)?
-  {
-
-  }
 ;
 
 incompleteMessageInput:
   'in' msgIdentification 'from' 'found' (outputAddress)?
-  {
-
-  }
 ;
 
 msgIdentification returns [msc::String* n = 0]:
@@ -593,11 +591,9 @@ msgIdentification returns [msc::String* n = 0]:
   }
 ;
 
-outputAddress returns [msc::String* n = 0]:
-  (instanceName	| ('env' | referenceIdentification) ('via' gateName)?)
-  {
-    $n = $instanceName.n;
-  }
+outputAddress returns [msc::Instance* n = 0]:
+  instanceName   { $n = MAKE(Instance, $instanceName.n); }
+  | ('env' | referenceIdentification) ('via' gateName)?)
 ;
 
 referenceIdentification:
@@ -605,12 +601,9 @@ referenceIdentification:
   | 'inline' inlineExprIdentification
 ;
 
-inputAddress returns [msc::String* n = 0]:
-  (instanceName
+inputAddress returns [msc::Instance* n = 0]:
+  (instanceName { $n = MAKE(Instance, $instanceName.n); }
   | ('env' | referenceIdentification) ('via' gateName)?)
-  {
-    $n = $instanceName.n;
-  }
 ;
 
 methodCallEvent:
@@ -619,30 +612,18 @@ methodCallEvent:
 
 callOut:
   'call' msgIdentification 'to' inputAddress
-  {
-
-  }
 ;
 
 callIn:
   'receive' msgIdentification 'from' outputAddress
-  {
-
-  }
 ;
 
 replyOut:
   'replyout' msgIdentification 'to' inputAddress
-  {
-
-  }
 ;
 
 replyIn:
   'replyin' msgIdentification 'from' outputAddress
-  {
-
-  }
 ;
 
 incompleteMethodCallEvent:
@@ -956,13 +937,13 @@ conditionIdentification:
 
 conditionText:
   (
-    conditionNameList {  }
+    conditionNameList
     | 'when'
     (
-      conditionNameList {  }
-      | '(' expression ')' {  }
+      conditionNameList
+      | '(' expression ')'
     )
-    | 'otherwise' {  }
+    | 'otherwise'
   )
 ;
 
@@ -1380,11 +1361,11 @@ singularTime:
 
 boundedTime:
   '@'?
-  ('(' {  })
-  (timePoint  {  })?
+  ('(' )
+  (timePoint  )?
   ','
-  (timePoint  {  })?
-  (')' {  } )
+  (timePoint  )?
+  (')'  )
   {
 
   }
@@ -1557,9 +1538,9 @@ sharedParExpr:
 
 inlineExpr:
   (extraGlobal)? (loopExpr | optExpr | altExpr | seqExpr | parExpr | excExpr)
-  ('time' timeInterval end {  })?
-  ('top' timeDestList end { })?
-  ('bottom' timeDestList end {})?
+  ('time' timeInterval end )?
+  ('top' timeDestList end )?
+  ('bottom' timeDestList end )?
   {
 
   }
@@ -1664,9 +1645,9 @@ inlineGate:
 sharedMSCReference:
   'reference' (mscReferenceIdentification ':')?
   mscRefExpr shared end
-  ('time' timeInterval end {  })?
-  ('top' timeDestList end {})?
-  ('bottom' timeDestList end {})?
+  ('time' timeInterval end )?
+  ('top' timeDestList end )?
+  ('bottom' timeDestList end )?
   referenceGateInterface
   {
 
@@ -1676,9 +1657,9 @@ sharedMSCReference:
 mscReference:
   'reference' (mscReferenceIdentification ':')?
   mscRefExpr end
-  ('time' timeInterval end {  })?
-  ('top' timeDestList end {  })?
-  ('bottom' timeDestList end {  })?
+  ('time' timeInterval end )?
+  ('top' timeDestList end )?
+  ('bottom' timeDestList end )?
   referenceGateInterface
   {
 
@@ -1711,10 +1692,10 @@ mscRefSeqExpr:
 ;
 
 mscRefIdentExpr:
-  'loop' (loopBoundary)? mscRefIdentExpr {  }
-  | 'exc' mscRefIdentExpr { }
-  | 'opt' mscRefIdentExpr {  }
-  | 'empty' {  }
+  'loop' (loopBoundary)? mscRefIdentExpr
+  | 'exc' mscRefIdentExpr
+  | 'opt' mscRefIdentExpr
+  | 'empty'
   | (parent)* mscName (actualParameters)?
   | '(' mscRefExpr ')'
 ;
@@ -1796,13 +1777,8 @@ substructureReference returns [msc::String* n = 0]:
   'as' m = messageSequenceChartName { $n = new msc::String((char*) $m.text->chars); }
 ;
 
-
-
 hmsc returns [msc::Msc* n = 0]:
   'expr' mscExpression
-  {
-    // FIXME
-  }
 ;
 
 mscExpression:
@@ -1855,8 +1831,8 @@ timeableNode:
 ;
 
 node:
-  conditionIdentification {  }
-  | 'connect' {  }
+  conditionIdentification
+  | 'connect'
 ;
 
 parExpression:
@@ -1900,7 +1876,7 @@ gateName returns [msc::String* n = 0]:
 ;
 
 conditionName returns [msc::String* n = 0]:
-  ( Name | CharacterString ) {  }
+  ( Name | CharacterString )
 ;
 
 timerName returns [msc::String* n = 0]:
@@ -1968,22 +1944,22 @@ maxDurationlimit:
    are named expressionString */
 expressionString
 	: (CharacterString | Name)
-		{  }
+
 	;
 
 typeRefString
 	: (CharacterString | Name)
-		{  }
+
     ;
 
 variableString
 	: (CharacterString | Name)
-		{  }
+
     ;
 
 dataDefinitionString:
   (CharacterString | Name)
-		{  }
+
     ;
 
 wildcardString:

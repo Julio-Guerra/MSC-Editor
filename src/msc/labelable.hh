@@ -12,8 +12,6 @@ namespace msc
     public:
       /// \name Ctors
       /// \{
-      Labelable();
-
       Labelable(const Label&);
       /// \}
 

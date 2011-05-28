@@ -12,7 +12,6 @@ namespace msc
       virtual void operator()(MessageSequenceChart&);
       virtual void operator()(BasicMsc&);
       virtual void operator()(Instance&);
-      virtual void operator()(TextDefinition&);
       virtual void operator()(InstanceHead&);
       virtual void operator()(Identifier&);
       virtual void operator()(Message&);
