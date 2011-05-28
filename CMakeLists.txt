@@ -27,20 +27,18 @@ find_library(
 
 find_package(Boost REQUIRED)
 
-set(CMAKE_C_COMPILER    g++)
-set(MAKE                make)
-
 # Qt4 package
 FIND_PACKAGE(Qt4 REQUIRED)
 
 # Qt modules
 INCLUDE(${QT_USE_FILE})
 
-INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/src)
-
 add_subdirectory(src)
+add_subdirectory(lib)
 add_subdirectory(tests)
+
+include_directories(${PROJECT_SOURCE_DIR}/src)
 
 # add the executable
 ADD_EXECUTABLE(msce src/msce.cc)
-TARGET_LINK_LIBRARIES(msce gui view msc ${QT_LIBRARIES})
+TARGET_LINK_LIBRARIES(msce gui view msc misc ${QT_LIBRARIES})
