@@ -1,5 +1,5 @@
-#ifndef INSTANCE_HH
-# define	INSTANCE_HH
+#ifndef VIEW_GMSC_INSTANCE_HH_
+# define	VIEW_GMSC_INSTANCE_HH_
 
 # include <QtGui/QPainter>
 # include <QtGui/QLabel>
@@ -21,7 +21,7 @@ namespace view
         virtual ~Instance();
 
         void label_set(const QString&);
-        
+
         // QT helper methods
         QPixmap& to_image();
 
@@ -34,5 +34,5 @@ namespace view
   }
 }
 
-#endif	/* INSTANCE_HH */
+#endif	/* VIEW_GMSC_INSTANCE_HH_ */
 

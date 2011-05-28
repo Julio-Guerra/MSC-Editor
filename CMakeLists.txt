@@ -22,7 +22,7 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 find_library(
   antlr3c
   libantlr3c.a
-  HINTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/libantlr3c-3.1.3/**
+  HINTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/libantlr3c-3.1.3/.libs
 )
 
 find_package(Boost REQUIRED)

@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'msc-editor.ui'
 **
-** Created: Thu May 19 02:38:28 2011
-**      by: Qt User Interface Compiler version 4.6.2
+** Created: Sat May 28 15:32:13 2011
+**      by: Qt User Interface Compiler version 4.7.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -15,6 +15,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QGridLayout>
+#include <QtGui/QGroupBox>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QMainWindow>
@@ -22,7 +23,6 @@
 #include <QtGui/QMenuBar>
 #include <QtGui/QStatusBar>
 #include <QtGui/QToolBar>
-#include <QtGui/QToolBox>
 #include <QtGui/QWidget>
 #include "view/qt/graph-view.hh"
 
@@ -34,13 +34,9 @@ public:
     QAction *action_selection;
     QWidget *central_widget;
     QHBoxLayout *horizontalLayout;
-    QToolBox *msc_toobox;
-    QWidget *basic_msc_page;
+    QGroupBox *msc_toolbox;
     QWidget *gridLayoutWidget;
     QGridLayout *basic_msc_layout;
-    QWidget *messages_page;
-    QWidget *gridLayoutWidget_2;
-    QGridLayout *messages_layout;
     view::GraphView *graphics_view;
     QMenuBar *menu;
     QMenu *file_menu;
@@ -67,36 +63,22 @@ public:
         central_widget->setObjectName(QString::fromUtf8("central_widget"));
         horizontalLayout = new QHBoxLayout(central_widget);
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
-        msc_toobox = new QToolBox(central_widget);
-        msc_toobox->setObjectName(QString::fromUtf8("msc_toobox"));
-        QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+        msc_toolbox = new QGroupBox(central_widget);
+        msc_toolbox->setObjectName(QString::fromUtf8("msc_toolbox"));
+        QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(msc_toobox->sizePolicy().hasHeightForWidth());
-        msc_toobox->setSizePolicy(sizePolicy);
-        msc_toobox->setMinimumSize(QSize(200, 0));
-        basic_msc_page = new QWidget();
-        basic_msc_page->setObjectName(QString::fromUtf8("basic_msc_page"));
-        basic_msc_page->setGeometry(QRect(0, 0, 200, 607));
-        gridLayoutWidget = new QWidget(basic_msc_page);
+        sizePolicy.setHeightForWidth(msc_toolbox->sizePolicy().hasHeightForWidth());
+        msc_toolbox->setSizePolicy(sizePolicy);
+        msc_toolbox->setMinimumSize(QSize(175, 0));
+        gridLayoutWidget = new QWidget(msc_toolbox);
         gridLayoutWidget->setObjectName(QString::fromUtf8("gridLayoutWidget"));
-        gridLayoutWidget->setGeometry(QRect(0, 0, 201, 601));
+        gridLayoutWidget->setGeometry(QRect(0, 20, 171, 651));
         basic_msc_layout = new QGridLayout(gridLayoutWidget);
         basic_msc_layout->setObjectName(QString::fromUtf8("basic_msc_layout"));
-        basic_msc_layout->setContentsMargins(0, 0, 5, 0);
-        msc_toobox->addItem(basic_msc_page, QString::fromUtf8("Basic MSC"));
-        messages_page = new QWidget();
-        messages_page->setObjectName(QString::fromUtf8("messages_page"));
-        messages_page->setGeometry(QRect(0, 0, 200, 607));
-        gridLayoutWidget_2 = new QWidget(messages_page);
-        gridLayoutWidget_2->setObjectName(QString::fromUtf8("gridLayoutWidget_2"));
-        gridLayoutWidget_2->setGeometry(QRect(0, 0, 201, 601));
-        messages_layout = new QGridLayout(gridLayoutWidget_2);
-        messages_layout->setObjectName(QString::fromUtf8("messages_layout"));
-        messages_layout->setContentsMargins(0, 0, 5, 0);
-        msc_toobox->addItem(messages_page, QString::fromUtf8("Messages"));
+        basic_msc_layout->setContentsMargins(0, 0, 0, 0);
 
-        horizontalLayout->addWidget(msc_toobox);
+        horizontalLayout->addWidget(msc_toolbox);
 
         graphics_view = new view::GraphView(central_widget);
         graphics_view->setObjectName(QString::fromUtf8("graphics_view"));
@@ -115,7 +97,7 @@ public:
         Config->setCentralWidget(central_widget);
         menu = new QMenuBar(Config);
         menu->setObjectName(QString::fromUtf8("menu"));
-        menu->setGeometry(QRect(0, 0, 980, 27));
+        menu->setGeometry(QRect(0, 0, 980, 25));
         file_menu = new QMenu(menu);
         file_menu->setObjectName(QString::fromUtf8("file_menu"));
         edit_menu = new QMenu(menu);
@@ -140,9 +122,6 @@ public:
 
         retranslateUi(Config);
 
-        msc_toobox->setCurrentIndex(1);
-
-
         QMetaObject::connectSlotsByName(Config);
     } // setupUi
 
@@ -150,8 +129,7 @@ public:
     {
         Config->setWindowTitle(QApplication::translate("Config", "MSC Editor", 0, QApplication::UnicodeUTF8));
         action_selection->setText(QApplication::translate("Config", "Selection", 0, QApplication::UnicodeUTF8));
-        msc_toobox->setItemText(msc_toobox->indexOf(basic_msc_page), QApplication::translate("Config", "Basic MSC", 0, QApplication::UnicodeUTF8));
-        msc_toobox->setItemText(msc_toobox->indexOf(messages_page), QApplication::translate("Config", "Messages", 0, QApplication::UnicodeUTF8));
+        msc_toolbox->setTitle(QApplication::translate("Config", "Elements", 0, QApplication::UnicodeUTF8));
         file_menu->setTitle(QApplication::translate("Config", "File", 0, QApplication::UnicodeUTF8));
         edit_menu->setTitle(QApplication::translate("Config", "Edit", 0, QApplication::UnicodeUTF8));
         view_menu->setTitle(QApplication::translate("Config", "View", 0, QApplication::UnicodeUTF8));

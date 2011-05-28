@@ -31,77 +31,32 @@
   <widget class="QWidget" name="central_widget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QToolBox" name="msc_toobox">
+     <widget class="QGroupBox" name="msc_toolbox">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
       <property name="minimumSize">
        <size>
-        <width>200</width>
+        <width>175</width>
         <height>0</height>
        </size>
       </property>
-      <property name="currentIndex">
-       <number>1</number>
+      <property name="title">
+       <string>Elements</string>
       </property>
-      <widget class="QWidget" name="basic_msc_page">
+      <widget class="QWidget" name="gridLayoutWidget">
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
-         <width>200</width>
-         <height>607</height>
+         <y>20</y>
+         <width>171</width>
+         <height>651</height>
         </rect>
        </property>
-       <attribute name="label">
-        <string>Basic MSC</string>
-       </attribute>
-       <widget class="QWidget" name="gridLayoutWidget">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>201</width>
-          <height>601</height>
-         </rect>
-        </property>
-        <layout class="QGridLayout" name="basic_msc_layout">
-         <property name="rightMargin">
-          <number>5</number>
-         </property>
-        </layout>
-       </widget>
-      </widget>
-      <widget class="QWidget" name="messages_page">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>200</width>
-         <height>607</height>
-        </rect>
-       </property>
-       <attribute name="label">
-        <string>Messages</string>
-       </attribute>
-       <widget class="QWidget" name="gridLayoutWidget_2">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>201</width>
-          <height>601</height>
-         </rect>
-        </property>
-        <layout class="QGridLayout" name="messages_layout">
-         <property name="rightMargin">
-          <number>5</number>
-         </property>
-        </layout>
-       </widget>
+       <layout class="QGridLayout" name="basic_msc_layout"/>
       </widget>
      </widget>
     </item>
@@ -143,7 +98,7 @@
      <x>0</x>
      <y>0</y>
      <width>980</width>
-     <height>27</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="file_menu">
