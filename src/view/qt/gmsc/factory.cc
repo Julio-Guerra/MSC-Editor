@@ -38,7 +38,14 @@ Instance* Factory::create_instance()
 {
   msc::Instance*  msc_instance = new msc::Instance();
 
-  msc_instance->label_set("Test");
+  msc_instance->label_set("Instance X");
   return (new Instance(*msc_instance));
 }
 
+Message* Factory::create_message()
+{
+  msc::Message* msc_message = new msc::Message(msc::Message::OUT, new std::string());
+
+  msc_message->label_set("Message X");
+  return (new Message(*msc_message));
+}

@@ -37,8 +37,8 @@ namespace gui
       Mode                          mode_;
       view::gmsc::Factory::ItemType item_type_;
       QGraphicsPolygonItem*         item_;
-      QGraphicsLineItem*            line_;
       QLineEdit*                    lineEdit_;
+      view::gmsc::Message*          message_;
       view::gmsc::Instance*         instanceEdit_;
 
       void mouseDoubleClickEvent(QGraphicsSceneMouseEvent*);

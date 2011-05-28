@@ -1,6 +1,6 @@
 #include "gui/qt/scene.hh"
 
-#include "view/qt/gmsc/instance.hh"
+#include "view/qt/gmsc/all.hh"
 
 using namespace gui;
 
@@ -9,7 +9,7 @@ Scene::Scene()
     mode_ (MODE_SELECT),
     item_type_ (view::gmsc::Factory::ITEM_TYPE_NONE),
     item_ (NULL),
-    line_ (NULL)
+    message_ (NULL)
 {
 }
 
@@ -21,6 +21,40 @@ void Scene::set_mode(Mode mode)
 void Scene::set_type(view::gmsc::Factory::ItemType type)
 {
   item_type_ = type;
+}
+
+void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* mouseEvent)
+{
+  QList<QGraphicsItem *> items;
+
+  switch (mode_)
+  {
+    case MODE_SELECT:
+      items = this->items(mouseEvent->scenePos());
+      if (items.count() != 0)
+      {
+        for (unsigned int i = 0; i < items.count(); ++i)
+        {
+          QGraphicsTextItem*    textInstance = dynamic_cast<QGraphicsTextItem*> (items.at(i));
+          view::gmsc::Instance* instance = dynamic_cast<view::gmsc::Instance*> (items.at(i)->parentItem());
+
+          if ((instance != NULL) && (textInstance != NULL))
+          {
+            this->set_mode(MODE_LABEL_EDITION);
+            instanceEdit_ = instance;
+            lineEdit_ = new QLineEdit(instance->label_get().c_str());
+            lineEdit_->setParent(this->views().first());
+            lineEdit_->move(instance->x() + 130, instance->y() + 10);
+            lineEdit_->setFocus();
+            lineEdit_->show();
+          }
+        }
+      }
+      break;
+
+    default:
+      break;
+  }
 }
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent*  mouseEvent)
@@ -51,14 +85,14 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent*  mouseEvent)
       break;
 
     case MODE_LINE_INSERTION:
-      line_ = new QGraphicsLineItem(QLineF(mouseEvent->scenePos(),
-                                          mouseEvent->scenePos()));
+      message_ = view::gmsc::Factory::instance().create_message();
+      message_->setLine(QLineF(mouseEvent->scenePos(), mouseEvent->scenePos()));
       {
-        QPen p = line_->pen();
+        QPen p = message_->pen();
         p.setWidth(2);
-        line_->setPen(p);
+        message_->setPen(p);
       }
-      this->addItem(line_);
+      this->addItem(message_);
       break;
 
     default:
@@ -66,41 +100,6 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent*  mouseEvent)
   }
 
   QGraphicsScene::mousePressEvent(mouseEvent);
-}
-
-void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* mouseEvent)
-{
-  QList<QGraphicsItem *> items;
-
-  switch (mode_)
-  {
-    case MODE_SELECT:
-      items = this->items(mouseEvent->scenePos());
-      if (items.count() != 0)
-      {
-        for (unsigned int i = 0; i < items.count(); ++i)
-        {
-          QGraphicsTextItem*    textInstance = dynamic_cast<QGraphicsTextItem*> (items.at(i));
-          view::gmsc::Instance* instance = dynamic_cast<view::gmsc::Instance*> (items.at(i)->parentItem());
-
-          if (instance)
-          {
-            this->set_mode(MODE_LABEL_EDITION);
-            instanceEdit_ = instance;
-            lineEdit_ = new QLineEdit(instance->label_get().c_str());
-            lineEdit_->setParent(this->views().first());
-            lineEdit_->setMinimumSize(instance->boundingRect().width(), instance->boundingRect().height());
-            lineEdit_->move(instance->x() + 130, instance->y() + 5);
-            lineEdit_->setFocus();
-            lineEdit_->show();
-          }
-        }
-      }
-      break;
-
-    default:
-      break;
-  }
 }
 
 void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent*  mouseEvent)
@@ -123,10 +122,10 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent*  mouseEvent)
             this->views().first()->setCursor(QCursor(Qt::CrossCursor));
         }
       }
-      if (line_ != NULL)
+      if (message_ != NULL)
       {
-        QLineF newLine(line_->line().p1(), mouseEvent->scenePos());
-        line_->setLine(newLine);
+        QLineF newLine(message_->line().p1(), mouseEvent->scenePos());
+        message_->setLine(newLine);
       }
       break;
 
@@ -135,7 +134,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent*  mouseEvent)
       break;
   }
 }
-
+#include <iostream>
 void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent*  mouseEvent)
 {
   QList<QGraphicsItem *> startItems;
@@ -144,28 +143,51 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent*  mouseEvent)
   switch (mode_) {
 
     case MODE_LINE_INSERTION:
-      startItems = this->items(line_->line().p1());
-      if (startItems.count() && (startItems.first() == line_))
+      if (message_ == NULL)
+        break;
+
+      startItems = this->items(message_->line().p1());
+      if (startItems.count() && (startItems.first() == message_))
         startItems.removeFirst();
 
-      endItems = this->items(line_->line().p2());
-      if (endItems.count() && (endItems.first() == line_))
+      endItems = this->items(message_->line().p2());
+      if (endItems.count() && (endItems.first() == message_))
         endItems.removeFirst();
 
-      if ((startItems.count() > 0) && (endItems.count() > 0) && (startItems.first() != endItems.first()))
+      if ((startItems.count() > 0) && (endItems.count() > 0))
       {
-        QGraphicsLineItem* startInstance = dynamic_cast<QGraphicsLineItem*> (startItems.first());
-        QGraphicsLineItem* endInstance = dynamic_cast<QGraphicsLineItem*> (endItems.first());
+        bool added = false;
 
-        if ((startInstance == NULL) || (endInstance == NULL))
-          this->removeItem(line_);
-        else
-          emit itemInserted(item_);
+        for (unsigned int i = 0; i < startItems.count(); ++i)
+        {
+          for (unsigned int j = 0; j < endItems.count(); ++j)
+          {
+            view::gmsc::Instance* startInstance = dynamic_cast<view::gmsc::Instance*> (startItems.at(i)->parentItem());
+            view::gmsc::Instance* endInstance = dynamic_cast<view::gmsc::Instance*> (endItems.at(j)->parentItem());
+            QGraphicsLineItem*    startInstanceLine = dynamic_cast<QGraphicsLineItem*> (startItems.at(i));
+            QGraphicsLineItem*    endInstanceLine = dynamic_cast<QGraphicsLineItem*> (endItems.at(j));
+
+            if ((startInstance != NULL) && (endInstance != NULL) &&
+                (startInstanceLine != NULL) && (endInstanceLine != NULL))
+            {
+              added = true;
+              message_->from_ = dynamic_cast<view::gmsc::Instance*> (startInstance);
+              message_->from_pos_.setX(-message_->from_->x() + message_->line().p1().x());
+              message_->from_pos_.setY(-message_->from_->y() + message_->line().p1().y());
+              message_->to_ = dynamic_cast<view::gmsc::Instance*> (endInstance);
+              message_->to_pos_.setX(-message_->to_->x() + message_->line().p2().x());
+              message_->to_pos_.setY(-message_->to_->y() + message_->line().p2().y());
+              emit itemInserted(item_);
+            }
+          }
+          if (!added)
+            this->removeItem(message_);
+        }
       }
       else
-        this->removeItem(line_);
+        this->removeItem(message_);
 
-      line_ = NULL;
+      message_ = NULL;
       break;
 
     default:
