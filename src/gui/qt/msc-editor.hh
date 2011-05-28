@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'msc-editor.ui'
 **
-** Created: Sat May 28 15:32:13 2011
+** Created: Sat May 28 22:40:07 2011
 **      by: Qt User Interface Compiler version 4.7.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -73,9 +73,10 @@ public:
         msc_toolbox->setMinimumSize(QSize(175, 0));
         gridLayoutWidget = new QWidget(msc_toolbox);
         gridLayoutWidget->setObjectName(QString::fromUtf8("gridLayoutWidget"));
-        gridLayoutWidget->setGeometry(QRect(0, 20, 171, 651));
+        gridLayoutWidget->setGeometry(QRect(0, 20, 171, 181));
         basic_msc_layout = new QGridLayout(gridLayoutWidget);
         basic_msc_layout->setObjectName(QString::fromUtf8("basic_msc_layout"));
+        basic_msc_layout->setSizeConstraint(QLayout::SetDefaultConstraint);
         basic_msc_layout->setContentsMargins(0, 0, 0, 0);
 
         horizontalLayout->addWidget(msc_toolbox);

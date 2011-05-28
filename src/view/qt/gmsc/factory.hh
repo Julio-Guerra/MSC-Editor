@@ -31,6 +31,7 @@ namespace view
         QGraphicsPolygonItem* create_node(ItemType);
 
         gmsc::Instance* create_instance();
+        gmsc::Message*  create_message();
 
       private:
         Factory();
@@ -39,4 +40,3 @@ namespace view
 }
 
 #endif	/* !FACTORY_HH_ */
-

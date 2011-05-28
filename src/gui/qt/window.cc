@@ -36,12 +36,13 @@ void Window::save_msc_file()
 void Window::create_toolbox()
 {
   view::gmsc::Instance* gmsc_instance = view::gmsc::Factory::instance().create_instance();
+  view::gmsc::Message*  gmsc_message = view::gmsc::Factory::instance().create_message();
   QIcon                 icon(gmsc_instance->to_image());
+  QIcon                 icon2(gmsc_message->to_image());
   QToolButton*          button;
   QGridLayout*          layout;
   QWidget*              widget;
 
-  //
   buttonGroup_ = new QButtonGroup(this);
   buttonGroup_->setExclusive(false);
   connect(buttonGroup_, SIGNAL(buttonClicked(int)), this, SLOT(buttonGroupClicked(int)));
@@ -64,7 +65,7 @@ void Window::create_toolbox()
 
   //
   button = new QToolButton();
-  button->setIcon(icon);
+  button->setIcon(icon2);
   button->setIconSize(QSize(70, 70));
   button->setCheckable(true);
   buttonGroup_->addButton(button, view::gmsc::Factory::ITEM_TYPE_MESSAGE);
@@ -83,6 +84,7 @@ void Window::create_toolbox()
 void Window::buttonGroupClicked(int id)
 {
   scene_->set_type(view::gmsc::Factory::ItemType(id));
+  QList<QAbstractButton *> buttons = buttonGroup_->buttons();
 
   if (id == view::gmsc::Factory::ITEM_TYPE_MESSAGE)
     scene_->set_mode(Scene::MODE_LINE_INSERTION);
@@ -91,6 +93,12 @@ void Window::buttonGroupClicked(int id)
 
   if (buttonGroup_->checkedButton() == NULL)
     scene_->set_mode(Scene::MODE_SELECT);
+
+  foreach (QAbstractButton *button, buttons)
+  {
+    if (button != buttonGroup_->checkedButton())
+      button->setChecked(false);
+  }
 }
 
 void Window::itemInserted(QGraphicsPolygonItem*)

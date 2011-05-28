@@ -6,6 +6,7 @@ namespace view
   namespace gmsc
   {
     class Instance;
+    class Message;
   }
 }
 

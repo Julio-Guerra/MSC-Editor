@@ -53,10 +53,14 @@
          <x>0</x>
          <y>20</y>
          <width>171</width>
-         <height>651</height>
+         <height>181</height>
         </rect>
        </property>
-       <layout class="QGridLayout" name="basic_msc_layout"/>
+       <layout class="QGridLayout" name="basic_msc_layout">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetDefaultConstraint</enum>
+        </property>
+       </layout>
       </widget>
      </widget>
     </item>
