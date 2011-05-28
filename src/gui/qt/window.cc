@@ -6,11 +6,10 @@ using namespace gui;
 
 Window::Window()
 {
-  scene_ = new Scene();
-
   config_.setupUi(this);
   this->create_toolbox();
 
+  scene_ = new Scene();
   config_.graphics_view->setScene(scene_);
 
   connect(scene_, SIGNAL(itemInserted(QGraphicsPolygonItem*)), this, SLOT(itemInserted(QGraphicsPolygonItem*)));
@@ -52,7 +51,7 @@ void Window::create_toolbox()
   button->setIcon(icon);
   button->setIconSize(QSize(70, 70));
   button->setCheckable(true);
-  buttonGroup_->addButton(button, Scene::ITEM_TYPE_INSTANCE);
+  buttonGroup_->addButton(button, view::gmsc::Factory::ITEM_TYPE_INSTANCE);
 
   layout = new QGridLayout;
   layout->addWidget(button, 0, 0, Qt::AlignHCenter);
@@ -68,7 +67,7 @@ void Window::create_toolbox()
   button->setIcon(icon);
   button->setIconSize(QSize(70, 70));
   button->setCheckable(true);
-  buttonGroup_->addButton(button, Scene::ITEM_TYPE_MESSAGE);
+  buttonGroup_->addButton(button, view::gmsc::Factory::ITEM_TYPE_MESSAGE);
 
   layout = new QGridLayout;
   layout->addWidget(button, 0, 0, Qt::AlignHCenter);
@@ -77,18 +76,21 @@ void Window::create_toolbox()
   widget = new QWidget;
   widget->setLayout(layout);
 
-  config_.messages_layout->addWidget(widget, 0, 0, Qt::AlignCenter);
+  config_.basic_msc_layout->addWidget(widget, 0, 1, Qt::AlignCenter);
 }
 
 // Slots
 void Window::buttonGroupClicked(int id)
 {
-  scene_->set_type(Scene::ItemType(id));
+  scene_->set_type(view::gmsc::Factory::ItemType(id));
 
-  if (id == Scene::ITEM_TYPE_MESSAGE)
+  if (id == view::gmsc::Factory::ITEM_TYPE_MESSAGE)
     scene_->set_mode(Scene::MODE_LINE_INSERTION);
   else
     scene_->set_mode(Scene::MODE_ITEM_INSERTION);
+
+  if (buttonGroup_->checkedButton() == NULL)
+    scene_->set_mode(Scene::MODE_SELECT);
 }
 
 void Window::itemInserted(QGraphicsPolygonItem*)

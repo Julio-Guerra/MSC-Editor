@@ -35,22 +35,19 @@ CMAKE_COMMAND = /usr/bin/cmake
 # The command to remove a file.
 RM = /usr/bin/cmake -E remove -f
 
-# The program to use to edit the cache.
-CMAKE_EDIT_COMMAND = /usr/bin/cmake-gui
-
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/patrick/Desktop/msc/MSC-Editor/src
+CMAKE_SOURCE_DIR = /home/patrick/Projects/msceditor/MSC-Editor
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/patrick/Desktop/msc/MSC-Editor/src
+CMAKE_BINARY_DIR = /home/patrick/Projects/msceditor/MSC-Editor
 
 #=============================================================================
 # Targets provided globally by CMake.
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
-	/usr/bin/cmake-gui -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running interactive CMake command-line interface..."
+	/usr/bin/cmake -i .
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -69,14 +66,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/patrick/Desktop/msc/MSC-Editor/src/CMakeFiles /home/patrick/Desktop/msc/MSC-Editor/src/CMakeFiles/progress.marks
-	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/patrick/Desktop/msc/MSC-Editor/src/CMakeFiles 0
+	cd /home/patrick/Projects/msceditor/MSC-Editor && $(CMAKE_COMMAND) -E cmake_progress_start /home/patrick/Projects/msceditor/MSC-Editor/CMakeFiles /home/patrick/Projects/msceditor/MSC-Editor/src/CMakeFiles/progress.marks
+	cd /home/patrick/Projects/msceditor/MSC-Editor && $(MAKE) -f CMakeFiles/Makefile2 src/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/patrick/Projects/msceditor/MSC-Editor/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	$(MAKE) -f CMakeFiles/Makefile2 clean
+	cd /home/patrick/Projects/msceditor/MSC-Editor && $(MAKE) -f CMakeFiles/Makefile2 src/clean
 .PHONY : clean
 
 # The main clean target
@@ -85,31 +82,18 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	$(MAKE) -f CMakeFiles/Makefile2 preinstall
+	cd /home/patrick/Projects/msceditor/MSC-Editor && $(MAKE) -f CMakeFiles/Makefile2 src/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	$(MAKE) -f CMakeFiles/Makefile2 preinstall
+	cd /home/patrick/Projects/msceditor/MSC-Editor && $(MAKE) -f CMakeFiles/Makefile2 src/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/patrick/Projects/msceditor/MSC-Editor && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
-
-#=============================================================================
-# Target rules for targets named libmsc
-
-# Build rule for target.
-libmsc: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 libmsc
-.PHONY : libmsc
-
-# fast build rule for target.
-libmsc/fast:
-	$(MAKE) -f msc/CMakeFiles/libmsc.dir/build.make msc/CMakeFiles/libmsc.dir/build
-.PHONY : libmsc/fast
 
 # Help Target
 help:
@@ -119,7 +103,6 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... libmsc"
 .PHONY : help
 
 
@@ -131,6 +114,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/patrick/Projects/msceditor/MSC-Editor && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 
