@@ -1,5 +1,5 @@
-#ifndef INSTANCE_HH_
-# define INSTANCE_HH_
+#ifndef MSC_INSTANCE_HH_
+# define MSC_INSTANCE_HH_
 
 # include <vector>
 
@@ -7,20 +7,27 @@
 # include "msc/labelable.hh"
 # include "msc/gen-visitor.hh"
 # include "msc/event.hh"
+# include "msc/instance-head.hh"
 
 namespace msc
 {
   class Instance : public Statement, public Labelable
   {
     public:
-      /// \name Ctor & Dtor
+      /// \name Ctor & Dtor.
       // \{
-      Instance();
+      Instance(const String&);
 
-      Instance(const Label&,
+      Instance(const String&,
                const std::vector<Event*>&);
 
       virtual ~Instance();
+      /// \}
+
+      /// \name Accessors.
+      /// \{
+      void                      events_set(const std::vector<Event*>&);
+      std::vector<pEvent>&      events_get();
       /// \}
 
       /// \name Visitor entry point.
@@ -28,10 +35,12 @@ namespace msc
       virtual void accept(Visitor&);
       /// \}
 
-//    private:
-      ///
-      std::vector<pEvent>    events_;
+    private:
+      /// Vector of events ordered by declaration order.
+      std::vector<pEvent>       events_;
   };
 } // namespace msc
 
-#endif /* !INSTANCE_HH_ */
+# include "msc/instance.hxx"
+
+#endif /* !MSC_INSTANCE_HH_ */

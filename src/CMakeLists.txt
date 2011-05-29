@@ -1,5 +1,4 @@
-ADD_SUBDIRECTORY(msc)
+add_subdirectory(msc)
 add_subdirectory(parse)
-ADD_SUBDIRECTORY(binder)
-ADD_SUBDIRECTORY(gui)
-ADD_SUBDIRECTORY(view)
+#add_subdirectory(gui)
+#add_subdirectory(view)

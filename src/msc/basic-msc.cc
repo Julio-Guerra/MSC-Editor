@@ -1,20 +1,11 @@
 #include "msc/basic-msc.hh"
-
 #include "msc/helper.hh"
 
 namespace msc
 {
   BasicMsc::BasicMsc(const std::vector<Statement*>& v)
   {
-//    msc::pv_to_spv<Statement*>(v, statements_);
-    std::vector<Statement*>::const_iterator i;
-
-    for (i = v.begin(); i != v.end(); ++i)
-    {
-//      pStatement ps(*i);
-//      statements_.push_back();
-    }
-
+    statements_set(v);
   }
 
   BasicMsc::~BasicMsc()
@@ -25,4 +16,4 @@ namespace msc
   {
     v(*this);
   }
-}
+} // namespace msc

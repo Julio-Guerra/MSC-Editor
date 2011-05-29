@@ -3,12 +3,15 @@ add_library(msc gen-visitor.cc
                 labelable.cc
                 message-sequence-chart.cc
                 basic-msc.cc
-                text-definition.cc
                 instance.cc
                 instance-head.cc
                 identifier.cc
                 message.cc
+                factory.cc
+                pretty-printer.cc
+                ast.cc
 )
 
 include_directories(${PROJECT_SOURCE_DIR}/src
+                    ${PROJECT_SOURCE_DIR}/lib
                     ${Boost_INCLUDE_DIR})

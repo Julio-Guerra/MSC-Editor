@@ -5,10 +5,11 @@
 # include <boost/shared_ptr.hpp>
 
 # include "msc/fwd.hh"
+# include "misc/symbol.hh"
 
 namespace msc
 {
-  typedef std::string                           String;
+  typedef misc::Symbol                          String;
 
   typedef String                                Label;
 
@@ -18,9 +19,9 @@ namespace msc
 
   typedef boost::shared_ptr<Statement>          pStatement;
 
-  typedef boost::shared_ptr<TextDefinition>     pTextDefinition;
-
   typedef boost::shared_ptr<Instance>           pInstance;
+
+  typedef boost::shared_ptr<InstanceHead>       pInstanceHead;
 
   typedef boost::shared_ptr<Identifier>         pIdentifier;
 

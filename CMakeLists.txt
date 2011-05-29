@@ -40,5 +40,5 @@ add_subdirectory(tests)
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
 # add the executable
-ADD_EXECUTABLE(msce src/msce.cc)
-TARGET_LINK_LIBRARIES(msce gui view msc misc ${QT_LIBRARIES})
+#ADD_EXECUTABLE(msce src/msce.cc)
+#TARGET_LINK_LIBRARIES(msce gui view msc misc ${QT_LIBRARIES})

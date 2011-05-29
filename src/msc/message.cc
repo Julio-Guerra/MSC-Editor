@@ -1,9 +1,9 @@
-#include "message.hh"
+#include "msc/message.hh"
 
 namespace msc
 {
-  Message::Message(direction_enum direction, String* instance)
-    : direction_ (direction), instance_ (instance)
+  Message::Message(const String& label, Instance* from, Instance* to)
+    : Labelable(label), from_ (from), to_ (to)
   {
   }
 

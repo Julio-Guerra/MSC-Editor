@@ -1,22 +1,15 @@
-#ifndef AST_HH_
-# define AST_HH_
+#ifndef MSC_AST_HH_
+# define MSC_AST_HH_
 
 # include "msc/gen-visitor.hh"
 
 namespace msc
 {
-  /** The pure abstract class implemented by every single node of the AST.
-   */
+  /// The pure abstract class implemented by every single node of the AST.
   class Ast
   {
     public:
-      /** A very simple way to enforce at least the first generation
-       * to implement the dtor.
-       * By the way, a dtor from a class part of a hierarchy *must*
-       * be virtual to be able to call childs'
-       * dtors.
-       */
-      virtual ~Ast() {}
+      virtual ~Ast();
 
       virtual void accept(Visitor&) = 0;
 
@@ -24,4 +17,4 @@ namespace msc
   };
 } // namespace msc
 
-#endif /* !AST_HH_ */
+#endif /* !MSC_AST_HH_ */

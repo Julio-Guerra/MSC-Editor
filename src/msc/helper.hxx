@@ -1,5 +1,5 @@
-#ifndef HELPER_HXX_
-# define HELPER_HXX_
+#ifndef MSC_HELPER_HXX_
+# define MSC_HELPER_HXX_
 
 # include "msc/helper.hh"
 
@@ -16,4 +16,4 @@ namespace msc
   }
 } // namespace msc
 
-#endif /* !HELPER_HXX_ */
+#endif /* !MSC_HELPER_HXX_ */

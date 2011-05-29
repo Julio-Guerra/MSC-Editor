@@ -10,11 +10,20 @@ namespace msc
   class Identifier : public Ast
   {
     public:
-      /// \name Visitor entry point.
+      /// \name Ctor & Dtor.
       /// \{
       Identifier(String*, String*);
 
       virtual ~Identifier();
+      /// \}
+
+      /// \name Getters & Setters.
+      /// \{
+      const pString     qualifier_get();
+      void              qualifier_set(String*);
+
+      const pString     name_get();
+      void              name_set(String*);
       /// \}
 
       /// \name Visitor entry point.
@@ -30,5 +39,7 @@ namespace msc
       pString   name_;
   };
 } // namespace msc
+
+# include "msc/identifier.hxx"
 
 #endif /* !IDENTIFIER_HH_ */

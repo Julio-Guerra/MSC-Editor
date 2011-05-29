@@ -1,5 +1,5 @@
-#ifndef MESSAGE_SEQUENCE_CHART_HH_
-# define MESSAGE_SEQUENCE_CHART_HH_
+#ifndef MSC_MESSAGE_SEQUENCE_CHART_HH_
+# define MSC_MESSAGE_SEQUENCE_CHART_HH_
 
 # include <boost/shared_ptr.hpp>
 
@@ -21,24 +21,34 @@ namespace msc
         UNKNOWN
       } virtuality_enum;
 
-      /// Ctor & dtor
+      /// \name Ctor & Dtor.
       /// \{
-      MessageSequenceChart(String*, virtuality_enum, Msc*);
+      MessageSequenceChart(const String&, virtuality_enum, Msc*);
 
       virtual ~MessageSequenceChart();
       /// \}
 
+      /// \name Accessors.
+      /// \{
+      virtuality_enum   virtuality_get();
+
+      pMsc              msc_get();
+      /// \}
+
+      /// \name Visitor entry point.
+      /// \{
       virtual void accept(Visitor&);
+      /// \}
 
-//    private:
-      pString                   name_;
-
+    private:
+      /// Virtuality of the MSC.
       virtuality_enum           virtuality_;
 
       /// Pointer to a BasicMsc or a HighMsc.
-      /// The shared_ptr make the default copy constructor safe.
       pMsc                      msc_;
   };
 } // namespace msc
 
-#endif /* !MESSAGE_SEQUENCE_CHART_HH_ */
+# include "msc/message-sequence-chart.hxx"
+
+#endif /* !MSC_MESSAGE_SEQUENCE_CHART_HH_ */
