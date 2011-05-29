@@ -503,7 +503,7 @@ multiInstanceEvent:
 ;
 
 instanceHeadStatement returns [msc::InstanceHead* n = 0]:
-  'instance' instanceKind? (decomposition)? end
+  'instance' instanceKind? decomposition? end
   {
     msc::String* kind = $instanceKind.text ? $instanceKind.kindDenominator : 0;
     msc::Identifier* identifier = $instanceKind.text ?
@@ -511,7 +511,6 @@ instanceHeadStatement returns [msc::InstanceHead* n = 0]:
 
     $n = new msc::InstanceHead(kind,
                                identifier,
-                               $decomposition.n ? 1 : 0,
                                $decomposition.n);
   }
 ;

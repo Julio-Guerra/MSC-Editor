@@ -7,6 +7,7 @@
 # include "msc/labelable.hh"
 # include "msc/gen-visitor.hh"
 # include "msc/event.hh"
+# include "msc/instance-head.hh"
 
 namespace msc
 {
@@ -25,9 +26,8 @@ namespace msc
 
       /// \name Accessors.
       /// \{
-      void events_set(const std::vector<Event*>&);
-
-      std::vector<pEvent>& events_get();
+      void                      events_set(const std::vector<Event*>&);
+      std::vector<pEvent>&      events_get();
       /// \}
 
       /// \name Visitor entry point.
@@ -37,7 +37,7 @@ namespace msc
 
     private:
       /// Vector of events ordered by declaration order.
-      std::vector<pEvent>    events_;
+      std::vector<pEvent>       events_;
   };
 } // namespace msc
 

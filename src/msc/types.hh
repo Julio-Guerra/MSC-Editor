@@ -21,6 +21,8 @@ namespace msc
 
   typedef boost::shared_ptr<Instance>           pInstance;
 
+  typedef boost::shared_ptr<InstanceHead>       pInstanceHead;
+
   typedef boost::shared_ptr<Identifier>         pIdentifier;
 
   typedef boost::shared_ptr<Event>              pEvent;

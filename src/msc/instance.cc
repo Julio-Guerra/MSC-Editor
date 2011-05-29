@@ -9,7 +9,7 @@ namespace msc
 
   Instance::Instance(const String&                      label,
                      const std::vector<Event*>&         events)
-    : Labelable (label), events_ ()
+    : Labelable(label), events_()
   {
     events_set(events);
   }

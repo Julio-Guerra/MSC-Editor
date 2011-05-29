@@ -6,11 +6,11 @@
 namespace msc
 {
   /** \brief Root class of all MSC visitors.
-   *
-   * GenVisitor is the root class of all MSC visitors.
-   * The visited MSC is not const; so derived visitors can change
-   * properties.
-   */
+    *
+    * GenVisitor is the root class of all MSC visitors.
+    * The visited MSC is not const; so derived visitors can change
+    * properties.
+    */
   class GenVisitor
   {
     public:
@@ -28,7 +28,7 @@ namespace msc
       /** \} */
 
     protected:
-      /** A shortcut for recurring code like this:
+      /** A shortcut for recurring code like :
        *  \code
        *  if (e)
        *    e->accept (*this);

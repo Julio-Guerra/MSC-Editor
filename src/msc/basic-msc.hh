@@ -21,7 +21,6 @@ namespace msc
       /// \name Accessors.
       /// \{
       std::vector<pStatement>&  statements_get();
-
       void                      statements_set(const std::vector<Statement*>&);
       /// \}
 

@@ -24,7 +24,7 @@ namespace msc
 
   void DefaultVisitor::operator()(InstanceHead& ih)
   {
-    (void) ih;
+    accept(ih.identifier_get().get());
   }
 
   void DefaultVisitor::operator()(Identifier& id)

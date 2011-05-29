@@ -8,6 +8,8 @@ add_library(msc gen-visitor.cc
                 identifier.cc
                 message.cc
                 factory.cc
+                pretty-printer.cc
+                ast.cc
 )
 
 include_directories(${PROJECT_SOURCE_DIR}/src
