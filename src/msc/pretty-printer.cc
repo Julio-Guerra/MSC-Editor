@@ -34,25 +34,27 @@ namespace msc
   {
     ostr_ << "instance";
 
-    if (n.kind_get() != 0)
-      ostr_ << " " << n.kind_get();
+    if (n.kind_get().get())
+      ostr_ << " " << *n.kind_get();
 
-    if (n.identifier_get().get() != 0)
+    ostr_ << ">1";
+    if (n.identifier_get().get())
     {
       ostr_ << " ";
-      super_type::operator()(n);
+      super_type::operator()(*n.identifier_get());
     }
 
-    if (n.substructure_get() != 0)
+    ostr_ << ">2";
+    if (n.is_decomposed())
       ostr_ << " " << n.substructure_get();
-
+    ostr_ << ">3";
     ostr_ << ";" << std::endl;
   }
 
   void PrettyPrinter::operator()(Identifier&    n)
   {
-    if (n.qualifier_get() != 0)
-      ostr_ << n.qualifier_get() << " ";
+    if (n.qualifier_get().get())
+      ostr_ << *n.qualifier_get() << " ";
 
     ostr_ << n.name_get();
 

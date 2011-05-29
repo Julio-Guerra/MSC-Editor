@@ -15,6 +15,8 @@ namespace msc
     public:
       typedef DefaultVisitor super_type;
 
+      using super_type::operator();
+
       /// \name Ctor & Dtor.
       /// \{
       PrettyPrinter(std::ostream&);
@@ -24,7 +26,6 @@ namespace msc
       /// \name Visitor methods.
       /// \{
       virtual void operator()(MessageSequenceChart&);
-      virtual void operator()(BasicMsc&);
       virtual void operator()(Instance&);
       virtual void operator()(InstanceHead&);
       virtual void operator()(Identifier&);

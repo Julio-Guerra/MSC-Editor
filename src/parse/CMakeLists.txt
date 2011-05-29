@@ -1,5 +1,7 @@
 add_library(parse       MscLexer.c
                         MscParser.c
+                        parser.cc
+                        exception.cc
 )
 
 include_directories("${PROJECT_SOURCE_DIR}/src")
