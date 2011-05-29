@@ -23,4 +23,15 @@ namespace misc
   {
     return object_map_size();
   }
+
+  /// Create a new unique symbol, forged from \a s.
+  Symbol Symbol::fresh(const Symbol& s)
+  {
+    static unsigned int count_ = 0;
+
+    return Symbol(s.object_get () + "_"
+                  + boost::lexical_cast<std::string>(count_++));
+  }
+  /** \} */
+
 } // namespace misc
