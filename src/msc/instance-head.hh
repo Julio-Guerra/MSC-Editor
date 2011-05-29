@@ -23,7 +23,7 @@ namespace msc
       virtual void accept(Visitor&);
       /// \}
 
-//    private:
+    private:
       /// Instance kind denominator.
       pString           kind_;
 

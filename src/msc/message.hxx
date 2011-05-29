@@ -7,17 +7,23 @@ namespace msc
 {
   inline void Message::from_set(Instance*       from)
   {
-//    from_
+    from_.reset(from);
   }
-  // TODO
-  // FIXME retourner pointeur sur les getters !
 
-  // Instance& from_get() const
-  // {
-  // }
+  inline pInstance Message::from_get() const
+  {
+    return from_;
+  }
 
-  //     void      to_set(Instance*);
-  //     Instance& to_get() const;
+  inline void Message::to_set(Instance*          to)
+  {
+    to_.reset(to);
+  }
+
+  inline pInstance Message::to_get() const
+  {
+    return to_;
+  }
 
 } // namespace msc
 

@@ -24,10 +24,10 @@ namespace msc
       /// \name Accessors.
       /// \{
       void      from_set(Instance*);
-      Instance& from_get() const;
+      pInstance from_get() const;
 
       void      to_set(Instance*);
-      Instance& to_get() const;
+      pInstance to_get() const;
       /// \}
 
       /// \name Visitor entry point.
@@ -35,7 +35,7 @@ namespace msc
       virtual void accept(Visitor&);
       /// \}
 
-//    private:
+    private:
       /// This message is sent from an Instance.
       pInstance         from_;
 

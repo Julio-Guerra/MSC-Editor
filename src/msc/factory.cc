@@ -11,19 +11,27 @@ namespace msc
   {
   }
 
+  Factory& Factory::instance()
+  {
+    static Factory instance_;
+    return instance_;
+  }
+
   MessageSequenceChart*
-  Factory::make_MessageSequenceChart(String* name,
+  Factory::make_MessageSequenceChart(const String&      name,
                                      MessageSequenceChart::virtuality_enum v,
-                                     Msc* msc)
+                                     Msc*               msc)
   {
     return new MessageSequenceChart(name, v, msc);
   }
 
   // TODO: if labels are null, get it from symbol::fresh(str)
 
-  Message* Factory::make_Message(String* label, Instance* from, Instance* to)
+  Message* Factory::make_Message(const String&  label,
+                                 Instance*      from,
+                                 Instance*      to)
   {
-    messages_map::iterator      it = messages_.find(*label);
+    messages_map::iterator      it = messages_.find(label);
     Message*                    message = 0;
 
     // e.g.:
@@ -47,7 +55,7 @@ namespace msc
       // where we come from in rule (0).
 
       Message* message = new Message(label, from, to);
-      messages_.insert(std::pair(*label, message));
+      messages_.insert(std::pair<String, Message*>(label, message));
     }
     else
     {
@@ -55,7 +63,7 @@ namespace msc
       // informations about the message. E.g. case (2) where the Message m is
       // fully declared, the destination is finally given.
 
-      message = *it;
+      message = it->second;
 
       // One of the Message's argument is null. So we make sure not to
       // override information previously set.
@@ -72,9 +80,35 @@ namespace msc
     return message;
   }
 
+
+  Instance* Factory::make_Instance(const String&                label)
+  {
+    instances_map::iterator     it = instances_.find(label);
+
+    if (it != instances_.end())
+      return it->second;
+
+    Instance* instance = new Instance(label);
+    instances_.insert(std::pair<String, Instance*>(label, instance));
+
+    return instance;
+  }
+
   Instance* Factory::make_Instance(const String&                label,
                                    const std::vector<Event*>&   events)
   {
+    instances_map::iterator     it = instances_.find(label);
+
+    if (it == instances_.end())
+    {
+      it->second->events_set(events);
+      return it->second;
+    }
+
+    Instance* instance = new Instance(label, events);
+    instances_.insert(std::pair<String, Instance*>(label, instance));
+
+    return instance;
   }
 
 } // namespace msc

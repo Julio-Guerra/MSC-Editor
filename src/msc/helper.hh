@@ -1,5 +1,5 @@
-#ifndef HELPER_HH_
-# define HELPER_HH_
+#ifndef MSC_HELPER_HH_
+# define MSC_HELPER_HH_
 
 # include <vector>
 # include <boost/shared_ptr.hpp>
@@ -15,4 +15,4 @@ namespace msc
 
 # include "msc/helper.hxx"
 
-#endif /* !HELPER_HH_ */
+#endif /* !MSC_HELPER_HH_ */

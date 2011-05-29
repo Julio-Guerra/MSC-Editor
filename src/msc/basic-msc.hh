@@ -1,5 +1,5 @@
-#ifndef BASIC_MSC_HH_
-# define BASIC_MSC_HH_
+#ifndef MSC_BASIC_MSC_HH_
+# define MSC_BASIC_MSC_HH_
 
 # include <vector>
 
@@ -13,9 +13,16 @@ namespace msc
     public:
       /// \name Ctor & Dtor.
       /// \{
-      BasicMsc(const std::vector<Statement*>&);
+      BasicMsc(const std::vector<Statement*>& events);
 
       virtual ~BasicMsc();
+      /// \}
+
+      /// \name Accessors.
+      /// \{
+      std::vector<pStatement>&  statements_get();
+
+      void                      statements_set(const std::vector<Statement*>&);
       /// \}
 
       /// \name Visitor entry point.
@@ -23,10 +30,12 @@ namespace msc
       virtual void      accept(Visitor&);
       /// \}
 
-//    private:
+    private:
       /// Vector of MscStatements' shared pointers.
       std::vector<pStatement>        statements_;
   };
 }
 
-#endif /* !BASIC_MSC_HH_ */
+# include "msc/basic-msc.hxx"
+
+#endif /* !MSC_BASIC_MSC_HH_ */

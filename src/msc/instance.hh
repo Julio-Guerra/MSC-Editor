@@ -1,5 +1,5 @@
-#ifndef INSTANCE_HH_
-# define INSTANCE_HH_
+#ifndef MSC_INSTANCE_HH_
+# define MSC_INSTANCE_HH_
 
 # include <vector>
 
@@ -15,7 +15,7 @@ namespace msc
     public:
       /// \name Ctor & Dtor.
       // \{
-      Instance();
+      Instance(const String&);
 
       Instance(const String&,
                const std::vector<Event*>&);
@@ -23,15 +23,24 @@ namespace msc
       virtual ~Instance();
       /// \}
 
+      /// \name Accessors.
+      /// \{
+      void events_set(const std::vector<Event*>&);
+
+      std::vector<pEvent>& events_get();
+      /// \}
+
       /// \name Visitor entry point.
       /// \{
       virtual void accept(Visitor&);
       /// \}
 
-//    private:
-      ///
+    private:
+      /// Vector of events ordered by declaration order.
       std::vector<pEvent>    events_;
   };
 } // namespace msc
 
-#endif /* !INSTANCE_HH_ */
+# include "msc/instance.hxx"
+
+#endif /* !MSC_INSTANCE_HH_ */

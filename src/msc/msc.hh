@@ -8,7 +8,7 @@ namespace msc
 {
   /** \brief Abstract class for BasicMsc and HighMsc.
    */
-  class Msc : public Ast, public Labelable
+  class Msc : public Ast
   {
   };
 }

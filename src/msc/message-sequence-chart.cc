@@ -2,10 +2,10 @@
 
 namespace msc
 {
-  MessageSequenceChart::MessageSequenceChart(String*            name,
+  MessageSequenceChart::MessageSequenceChart(const String&      name,
                                              virtuality_enum    virtuality,
                                              Msc*               msc)
-    : name_ (name), virtuality_ (virtuality), msc_ (msc)
+    : Labelable(name), virtuality_ (virtuality), msc_ (msc)
   {
   }
 

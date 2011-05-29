@@ -14,9 +14,10 @@ options
 
   #include "msc/types.hh"
   #include "msc/all.hh"
+  #include "msc/factory.hh"
 
   #define MAKE(Node, ...)                                   \
-      msc::Factory::instance().make_##Node##(__VA_ARGS__)
+      msc::Factory::instance().make_ ## Node(__VA_ARGS__)
 }
 
 Qualifier:
@@ -228,32 +229,22 @@ virtuality returns [msc::MessageSequenceChart::virtuality_enum n]:
 
 usingClause:
   ('using' instanceKind ';')*
-  {
-
-  }
 ;
 
 containingClause:
-  ('inst' instanceItem)+
-  {
-
-  }
+  (
+    'inst' instanceItem
+  )+
 ;
 
 instanceItem:
   instanceName (':' instanceKind)? (inheritance)?
   (decomposition)?
   (dynamicDeclList | ';')
-  {
-
-  }
 ;
 
 inheritance:
   'inherits' instanceKind
-  {
-
-  }
 ;
 
 messageDeclClause:
@@ -289,14 +280,14 @@ identifier returns [msc::Identifier* n = 0]:
 
 messageSequenceChart returns [msc::MessageSequenceChart* n = 0]:
   (v = virtuality? 'msc' mscHead (msc = bmsc | msc = hmsc) 'endmsc' end)
-  { // code
+  {
     $n = MAKE(MessageSequenceChart,
-              $mscHead.name,
+              *$mscHead.name,
               $v.text ?
               $v.n :
               msc::MessageSequenceChart::UNKNOWN,
               $msc.n);
-  } // !code
+  }
 ;
 
 bmsc returns [msc::Msc* n = 0]:
@@ -411,7 +402,7 @@ mscStatement returns [msc::Statement* n = 0]:
 eventDefinition returns [msc::Instance* n = 0]:
   (instanceName ':' instanceEventList) => instanceName ':' instanceEventList
   {
-    $n = new msc::Instance(*$instanceName.n, $instanceEventList.n);
+    $n = MAKE(Instance, *$instanceName.n, $instanceEventList.n);
   }
   | instanceNameList ':' multiInstanceEventList
   {
@@ -558,7 +549,7 @@ messageOutput returns [msc::Message* n = 0]:
   {
     // The source is null and will be set when coming back to the instance
     // where this message is defined.
-    $n = MAKE(Message, $msgIdentification.n, 0, $intputAddress.n);
+    $n = MAKE(Message, *$msgIdentification.n, 0, $inputAddress.n);
   }
 ;
 
@@ -567,7 +558,7 @@ messageInput returns [msc::Message* n = 0]:
   {
     // The destination is null and will be set when coming back to the instance
     // where this message is defined.
-    $n = MAKE(Message, $msgIdentification.n, $outputAddress.n, 0);
+    $n = MAKE(Message, *$msgIdentification.n, $outputAddress.n, 0);
   }
 ;
 
@@ -592,8 +583,8 @@ msgIdentification returns [msc::String* n = 0]:
 ;
 
 outputAddress returns [msc::Instance* n = 0]:
-  instanceName   { $n = MAKE(Instance, $instanceName.n); }
-  | ('env' | referenceIdentification) ('via' gateName)?)
+  instanceName { $n = MAKE(Instance, *$instanceName.n); }
+  | ('env' | referenceIdentification) ('via' gateName)?
 ;
 
 referenceIdentification:
@@ -602,7 +593,7 @@ referenceIdentification:
 ;
 
 inputAddress returns [msc::Instance* n = 0]:
-  (instanceName { $n = MAKE(Instance, $instanceName.n); }
+  (instanceName { $n = MAKE(Instance, *$instanceName.n); }
   | ('env' | referenceIdentification) ('via' gateName)?)
 ;
 
@@ -1810,24 +1801,12 @@ timeableNode:
   ('(' mscRefExpr ')' | parExpression )
   (
     'time' timeInterval end
-    {
-
-    }
   )?
   (
     'top' timeDestList end
-    {
-
-    }
   )?
   ('bottom' timeDestList end
-    {
-
-    }
   )?
-  {
-
-  }
 ;
 
 node:
@@ -1837,13 +1816,8 @@ node:
 
 parExpression:
   'expr' me1 = mscExpression 'endexpr'
-  {
-  }
   (
     'par' 'expr' me2 = mscExpression 'endexpr'
-    {
-
-    }
   )*
 ;
 
