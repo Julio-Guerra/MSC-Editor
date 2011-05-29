@@ -7,12 +7,12 @@
 
 namespace msc
 {
-  std::vector<pStatement>& BasicMsc::statements_get()
+  inline std::vector<pStatement>& BasicMsc::statements_get()
   {
     return statements_;
   }
 
-  void BasicMsc::statements_set(const std::vector<Statement*>& v)
+  inline void BasicMsc::statements_set(const std::vector<Statement*>& v)
   {
     msc::pv_to_spv(v, statements_);
   }

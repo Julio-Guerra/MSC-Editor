@@ -54,7 +54,7 @@ namespace msc
       // messageInput or messageOuput and you will notice that we can't know
       // where we come from in rule (0).
 
-      Message* message = new Message(label, from, to);
+      message = new Message(label, from, to);
       messages_.insert(std::pair<String, Message*>(label, message));
     }
     else
@@ -99,7 +99,7 @@ namespace msc
   {
     instances_map::iterator     it = instances_.find(label);
 
-    if (it == instances_.end())
+    if (it != instances_.end())
     {
       it->second->events_set(events);
       return it->second;
