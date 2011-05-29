@@ -7,6 +7,7 @@
 # include <QtGui/QKeyEvent>
 # include <QtGui/QLineEdit>
 
+#include "msc/fwd.hh"
 #include "view/qt/gmsc/fwd.hh"
 #include "view/qt/gmsc/factory.hh"
 
@@ -39,7 +40,7 @@ namespace gui
       QGraphicsPolygonItem*         item_;
       QLineEdit*                    lineEdit_;
       view::gmsc::Message*          message_;
-      view::gmsc::Instance*         instanceEdit_;
+      msc::Labelable*               labelable_;
 
       void mouseDoubleClickEvent(QGraphicsSceneMouseEvent*);
       void mousePressEvent(QGraphicsSceneMouseEvent*);

@@ -20,7 +20,7 @@ namespace view
         Instance (const msc::Instance&);
         virtual ~Instance();
 
-        void label_set(const QString&);
+        void label_set(const msc::Label&);
 
         // QT helper methods
         QPixmap& to_image();

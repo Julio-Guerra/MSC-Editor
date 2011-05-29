@@ -54,9 +54,9 @@ QPixmap& Instance::to_image()
   return (*pixmap);
 }
 
-void Instance::label_set(const QString& l)
+void Instance::label_set(const msc::Label& l)
 {
-  Labelable::label_set(l.toStdString());
-  textItem_->setPlainText(l);
+  Labelable::label_set(l);
+  textItem_->setPlainText(QString(l.c_str()));
   textItem_->setPos(this->boundingRect().center().x() - textItem_->boundingRect().width() / 2, textItem_->pos().y());
 }

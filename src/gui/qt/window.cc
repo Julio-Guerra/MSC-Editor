@@ -83,9 +83,10 @@ void Window::create_toolbox()
 // Slots
 void Window::buttonGroupClicked(int id)
 {
-  scene_->set_type(view::gmsc::Factory::ItemType(id));
   QList<QAbstractButton *> buttons = buttonGroup_->buttons();
 
+  scene_->set_type(view::gmsc::Factory::ItemType(id));
+  
   if (id == view::gmsc::Factory::ITEM_TYPE_MESSAGE)
     scene_->set_mode(Scene::MODE_LINE_INSERTION);
   else

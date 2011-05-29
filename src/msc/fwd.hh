@@ -12,5 +12,6 @@ namespace msc
   class Identifier;
   class Event;
   class Message;
+  class Labelable;
 
 } // namespace msc

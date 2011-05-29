@@ -18,7 +18,7 @@ namespace msc
       /// \}
 
       /// Set the label property.
-      void                label_set(const Label&);
+      virtual void        label_set(const Label&);
 
       /// Get the label property.
       const Label&        label_get() const;

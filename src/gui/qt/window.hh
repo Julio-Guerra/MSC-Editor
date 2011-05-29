@@ -13,13 +13,13 @@ namespace gui
   class Window : public QMainWindow
   {
       Q_OBJECT
-    
+
     public:
       Window ();
-      
+
       void open_msc_file();
       void save_msc_file();
-      
+
     private slots:
       void buttonGroupClicked(int id);
       void itemInserted(QGraphicsPolygonItem* item);
@@ -28,7 +28,7 @@ namespace gui
       Ui::Config      config_;
       Scene*          scene_;
       QButtonGroup*   buttonGroup_;
-      
+
       void create_toolbox();
   };
 }

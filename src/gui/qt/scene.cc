@@ -1,5 +1,6 @@
 #include "gui/qt/scene.hh"
 
+#include "msc/labelable.hh"
 #include "view/qt/gmsc/all.hh"
 
 using namespace gui;
@@ -15,6 +16,15 @@ Scene::Scene()
 
 void Scene::set_mode(Mode mode)
 {
+  if ((mode_ == MODE_LABEL_EDITION) && (lineEdit_ != NULL))
+  {
+    QGraphicsSceneMouseEvent* mouseEvent = new QGraphicsSceneMouseEvent();
+
+    mouseEvent->setButton(Qt::LeftButton);
+    this->mousePressEvent(mouseEvent);
+    delete mouseEvent;
+  }
+
   mode_ = mode;
 }
 
@@ -36,15 +46,15 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* mouseEvent)
         for (unsigned int i = 0; i < items.count(); ++i)
         {
           QGraphicsTextItem*    textInstance = dynamic_cast<QGraphicsTextItem*> (items.at(i));
-          view::gmsc::Instance* instance = dynamic_cast<view::gmsc::Instance*> (items.at(i)->parentItem());
+          msc::Labelable*       labelable = dynamic_cast<msc::Labelable*> (items.at(i)->parentItem());
 
-          if ((instance != NULL) && (textInstance != NULL))
+          if ((labelable != NULL) && (textInstance != NULL))
           {
             this->set_mode(MODE_LABEL_EDITION);
-            instanceEdit_ = instance;
-            lineEdit_ = new QLineEdit(instance->label_get().c_str());
+            labelable_ = labelable;
+            lineEdit_ = new QLineEdit(labelable->label_get().c_str());
             lineEdit_->setParent(this->views().first());
-            lineEdit_->move(instance->x() + 130, instance->y() + 10);
+            lineEdit_->move(mouseEvent->screenPos() - QPoint(315, 135));
             lineEdit_->setFocus();
             lineEdit_->show();
           }
@@ -70,7 +80,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent*  mouseEvent)
   {
     case MODE_LABEL_EDITION:
       q = lineEdit_->text();
-      instanceEdit_->label_set(q);
+      labelable_->label_set(q.toStdString());
       lineEdit_->hide();
       delete lineEdit_;
       lineEdit_ = NULL;
@@ -168,7 +178,8 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent*  mouseEvent)
             QGraphicsLineItem*    endInstanceLine = dynamic_cast<QGraphicsLineItem*> (endItems.at(j));
 
             if ((startInstance != NULL) && (endInstance != NULL) &&
-                (startInstanceLine != NULL) && (endInstanceLine != NULL))
+                (startInstanceLine != NULL) && (endInstanceLine != NULL) &&
+                (startInstance != endInstance))
             {
               added = true;
               message_->from_ = dynamic_cast<view::gmsc::Instance*> (startInstance);
