@@ -2,6 +2,7 @@
 # define GRAPH_VIEW_HH_
 
 # include <QtGui/QGraphicsView>
+# include <QtGui/QResizeEvent>
 
 # include "msc/default-visitor.hh"
 

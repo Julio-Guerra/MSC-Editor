@@ -71,6 +71,4 @@ namespace parse
   };
 } // namespace parse
 
-# include "parse/parser.hxx"
-
 #endif /* !PARSER_HH_ */

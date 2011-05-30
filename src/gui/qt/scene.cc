@@ -6,7 +6,7 @@
 using namespace gui;
 
 Scene::Scene()
-  : QGraphicsScene(0, 0, 500, 500),
+  : QGraphicsScene(),
     mode_ (MODE_SELECT),
     item_type_ (view::gmsc::Factory::ITEM_TYPE_NONE),
     item_ (NULL),
@@ -54,7 +54,7 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* mouseEvent)
             labelable_ = labelable;
             lineEdit_ = new QLineEdit(labelable->label_get().name_get().c_str());
             lineEdit_->setParent(this->views().first());
-            lineEdit_->move(mouseEvent->screenPos() - QPoint(315, 135));
+            lineEdit_->move(mouseEvent->screenPos() - QPoint(310, 105));
             lineEdit_->setFocus();
             lineEdit_->show();
           }
@@ -209,7 +209,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent*  mouseEvent)
 
   QGraphicsScene::mouseReleaseEvent(mouseEvent);
 }
-#include <iostream>
+
 void Scene::keyPressEvent(QKeyEvent* keyEvent)
 {
   switch (mode_)
@@ -247,19 +247,16 @@ void Scene::keyPressEvent(QKeyEvent* keyEvent)
 
               if (m != NULL)
               {
-                std::cout << "remove in list" << std::endl;
                 if (m->from_get() == instance)
                   m->to_get()->remove(m);
                 if (m->to_get() == instance)
                   m->from_get()->remove(m);
 
-                std::cout << "remove item msg" << std::endl;
                 this->removeItem(m);
               }
             }
           }
 
-          std::cout << "remove item inst" << std::endl;
           this->removeItem(item);
         }
       }

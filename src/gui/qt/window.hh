@@ -1,8 +1,10 @@
 #ifndef WINDOW_HH_
 # define	WINDOW_HH_
 
-#include <QtGui/QGraphicsScene>
-#include <QtGui/QToolButton>
+# include <QtGui/QGraphicsScene>
+# include <QtGui/QToolButton>
+# include <QtGui/QMessageBox>
+# include <QtGui/QFileDialog>
 
 # include "view/qt/gmsc/factory.hh"
 # include "gui/qt/msc-editor.hh"
@@ -17,17 +19,18 @@ namespace gui
     public:
       Window ();
 
-      void open_msc_file();
-      void save_msc_file();
-
     private slots:
       void buttonGroupClicked(int id);
       void itemInserted(QGraphicsPolygonItem* item);
+      void open_msc_file();
+      void save_msc_file();
+      void save_msc_file_as();
 
     private:
       Ui::Config      config_;
       Scene*          scene_;
       QButtonGroup*   buttonGroup_;
+      QString         filename_;
 
       void create_toolbox();
   };

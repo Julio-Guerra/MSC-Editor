@@ -1,17 +1,17 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'window.hh'
 **
-** Created: Thu May 19 01:11:53 2011
-**      by: The Qt Meta Object Compiler version 62 (Qt 4.6.2)
+** Created: Mon May 30 22:04:15 2011
+**      by: The Qt Meta Object Compiler version 62 (Qt 4.7.2)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "gui/qt/window.hh"
+#include "window.hh"
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'window.hh' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 62
-#error "This file was generated using the moc from 4.6.2. It"
+#error "This file was generated using the moc from 4.7.2. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -20,10 +20,10 @@ QT_BEGIN_MOC_NAMESPACE
 static const uint qt_meta_data_gui__Window[] = {
 
  // content:
-       4,       // revision
+       5,       // revision
        0,       // classname
        0,    0, // classinfo
-       2,   14, // methods
+       5,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -33,6 +33,9 @@ static const uint qt_meta_data_gui__Window[] = {
  // slots: signature, parameters, type, tag, flags
       16,   13,   12,   12, 0x08,
       45,   40,   12,   12, 0x08,
+      81,   12,   12,   12, 0x08,
+      97,   12,   12,   12, 0x08,
+     113,   12,   12,   12, 0x08,
 
        0        // eod
 };
@@ -40,6 +43,8 @@ static const uint qt_meta_data_gui__Window[] = {
 static const char qt_meta_stringdata_gui__Window[] = {
     "gui::Window\0\0id\0buttonGroupClicked(int)\0"
     "item\0itemInserted(QGraphicsPolygonItem*)\0"
+    "open_msc_file()\0save_msc_file()\0"
+    "save_msc_file_as()\0"
 };
 
 const QMetaObject gui::Window::staticMetaObject = {
@@ -73,9 +78,12 @@ int gui::Window::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         switch (_id) {
         case 0: buttonGroupClicked((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 1: itemInserted((*reinterpret_cast< QGraphicsPolygonItem*(*)>(_a[1]))); break;
+        case 2: open_msc_file(); break;
+        case 3: save_msc_file(); break;
+        case 4: save_msc_file_as(); break;
         default: ;
         }
-        _id -= 2;
+        _id -= 5;
     }
     return _id;
 }

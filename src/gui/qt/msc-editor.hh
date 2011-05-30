@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'msc-editor.ui'
 **
-** Created: Sun May 29 19:08:45 2011
+** Created: Mon May 30 21:51:55 2011
 **      by: Qt User Interface Compiler version 4.7.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -22,7 +22,6 @@
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
 #include <QtGui/QStatusBar>
-#include <QtGui/QToolBar>
 #include <QtGui/QWidget>
 #include "view/qt/graph-view.hh"
 
@@ -32,6 +31,9 @@ class Ui_Config
 {
 public:
     QAction *action_selection;
+    QAction *actionOpen;
+    QAction *actionSave;
+    QAction *actionSave_as;
     QWidget *central_widget;
     QHBoxLayout *horizontalLayout;
     QGroupBox *msc_toolbox;
@@ -40,11 +42,7 @@ public:
     view::GraphView *graphics_view;
     QMenuBar *menu;
     QMenu *file_menu;
-    QMenu *edit_menu;
-    QMenu *view_menu;
-    QMenu *help_menu;
     QStatusBar *status_bar;
-    QToolBar *tool_bar;
 
     void setupUi(QMainWindow *Config)
     {
@@ -59,6 +57,12 @@ public:
         action_selection = new QAction(Config);
         action_selection->setObjectName(QString::fromUtf8("action_selection"));
         action_selection->setCheckable(true);
+        actionOpen = new QAction(Config);
+        actionOpen->setObjectName(QString::fromUtf8("actionOpen"));
+        actionSave = new QAction(Config);
+        actionSave->setObjectName(QString::fromUtf8("actionSave"));
+        actionSave_as = new QAction(Config);
+        actionSave_as->setObjectName(QString::fromUtf8("actionSave_as"));
         central_widget = new QWidget(Config);
         central_widget->setObjectName(QString::fromUtf8("central_widget"));
         horizontalLayout = new QHBoxLayout(central_widget);
@@ -101,25 +105,15 @@ public:
         menu->setGeometry(QRect(0, 0, 980, 25));
         file_menu = new QMenu(menu);
         file_menu->setObjectName(QString::fromUtf8("file_menu"));
-        edit_menu = new QMenu(menu);
-        edit_menu->setObjectName(QString::fromUtf8("edit_menu"));
-        view_menu = new QMenu(menu);
-        view_menu->setObjectName(QString::fromUtf8("view_menu"));
-        help_menu = new QMenu(menu);
-        help_menu->setObjectName(QString::fromUtf8("help_menu"));
         Config->setMenuBar(menu);
         status_bar = new QStatusBar(Config);
         status_bar->setObjectName(QString::fromUtf8("status_bar"));
         Config->setStatusBar(status_bar);
-        tool_bar = new QToolBar(Config);
-        tool_bar->setObjectName(QString::fromUtf8("tool_bar"));
-        Config->addToolBar(Qt::TopToolBarArea, tool_bar);
 
         menu->addAction(file_menu->menuAction());
-        menu->addAction(edit_menu->menuAction());
-        menu->addAction(view_menu->menuAction());
-        menu->addAction(help_menu->menuAction());
-        tool_bar->addAction(action_selection);
+        file_menu->addAction(actionOpen);
+        file_menu->addAction(actionSave);
+        file_menu->addAction(actionSave_as);
 
         retranslateUi(Config);
 
@@ -130,12 +124,11 @@ public:
     {
         Config->setWindowTitle(QApplication::translate("Config", "MSC Editor", 0, QApplication::UnicodeUTF8));
         action_selection->setText(QApplication::translate("Config", "Selection", 0, QApplication::UnicodeUTF8));
+        actionOpen->setText(QApplication::translate("Config", "Open", 0, QApplication::UnicodeUTF8));
+        actionSave->setText(QApplication::translate("Config", "Save", 0, QApplication::UnicodeUTF8));
+        actionSave_as->setText(QApplication::translate("Config", "Save as", 0, QApplication::UnicodeUTF8));
         msc_toolbox->setTitle(QApplication::translate("Config", "Elements", 0, QApplication::UnicodeUTF8));
         file_menu->setTitle(QApplication::translate("Config", "File", 0, QApplication::UnicodeUTF8));
-        edit_menu->setTitle(QApplication::translate("Config", "Edit", 0, QApplication::UnicodeUTF8));
-        view_menu->setTitle(QApplication::translate("Config", "View", 0, QApplication::UnicodeUTF8));
-        help_menu->setTitle(QApplication::translate("Config", "Help", 0, QApplication::UnicodeUTF8));
-        tool_bar->setWindowTitle(QApplication::translate("Config", "toolBar", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };

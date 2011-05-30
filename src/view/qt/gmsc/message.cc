@@ -44,10 +44,9 @@ Message::Message(const msc::Message& message)
   this->setFlag(QGraphicsItem::ItemIsSelectable, true);
   this->setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
 }
-#include <iostream>
+
 Message::~Message()
 {
-  std::cout << "destructor message" << std::endl;
 }
 
 QPixmap& Message::to_image()
@@ -73,7 +72,6 @@ void Message::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, Q
   Instance* from = static_cast<Instance*> (this->from_get());
   Instance* to = static_cast<Instance*> (this->to_get());
 
-  std::cerr << "painting " << this << std::endl;
   if (this->from_get() != NULL)
   {
     QPointF from_pt(from->x() + from_pos_.x(), from->y() + from_pos_.y());
@@ -109,6 +107,8 @@ void Message::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, Q
     extremity_->setPolygon(p);
     extremity_->update(extremity_->boundingRect());
   }
+
+  extremity_->paint(painter, option, widget);
 
   QGraphicsLineItem::paint(painter, option, widget);
 }

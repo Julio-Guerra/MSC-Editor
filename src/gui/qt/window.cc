@@ -5,6 +5,7 @@
 using namespace gui;
 
 Window::Window()
+  : filename_ ("")
 {
   config_.setupUi(this);
   this->create_toolbox();
@@ -13,11 +14,34 @@ Window::Window()
   config_.graphics_view->setScene(scene_);
 
   connect(scene_, SIGNAL(itemInserted(QGraphicsPolygonItem*)), this, SLOT(itemInserted(QGraphicsPolygonItem*)));
+  config_.actionOpen->setShortcut(tr("Ctrl+O"));
+  connect(config_.actionOpen, SIGNAL(triggered()), this, SLOT(open_msc_file()));
+  config_.actionSave->setShortcut(tr("Ctrl+S"));
+  connect(config_.actionSave, SIGNAL(triggered()), this, SLOT(save_msc_file()));
+  connect(config_.actionSave_as, SIGNAL(triggered()), this, SLOT(save_msc_file_as()));
 }
 
 void Window::open_msc_file()
 {
   // Ask whether to save the current scene if the old scene has objects
+  if ((scene_ != NULL) && (scene_->items().count() != 0))
+  {
+    QMessageBox msgBox;
+
+    msgBox.setText("The document has been modified.");
+    msgBox.setInformativeText("Do you want to save your changes?");
+    msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard);
+    msgBox.setDefaultButton(QMessageBox::Save);
+
+    {
+      int ret = msgBox.exec();
+
+      if (ret == QMessageBox::Save)
+        save_msc_file();
+    }
+  }
+
+  filename_ = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("MSC Files (*.mpr);; All files (*)"));
 
   // Create a new scene
   scene_ = new Scene();
@@ -29,7 +53,21 @@ void Window::open_msc_file()
 
 void Window::save_msc_file()
 {
+  if (filename_ == "")
+  {
+    save_msc_file_as();
+    return;
+  }
 
+
+}
+
+void Window::save_msc_file_as()
+{
+  filename_ = QFileDialog::getSaveFileName(this, tr("Save file"), "", tr("MSC Files (*.mpr);; All files (*)"));
+
+  if (filename_ != "")
+    this->save_msc_file();
 }
 
 // Private methods
@@ -86,7 +124,7 @@ void Window::buttonGroupClicked(int id)
   QList<QAbstractButton *> buttons = buttonGroup_->buttons();
 
   scene_->set_type(view::gmsc::Factory::ItemType(id));
-  
+
   if (id == view::gmsc::Factory::ITEM_TYPE_MESSAGE)
     scene_->set_mode(Scene::MODE_LINE_INSERTION);
   else

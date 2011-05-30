@@ -26,6 +26,8 @@ namespace view
         // QT helper methods
         QPixmap& to_image();
 
+        void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
+
       private:
         QPolygonF           polygon_;
         QGraphicsLineItem*  lineItem_;
