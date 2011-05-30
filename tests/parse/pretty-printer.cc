@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
     return 1;
 
   msc::PrettyPrinter printer(std::cout);
-  printer.operator()(*ast);
+  printer(*ast);
 
   return 0;
 }

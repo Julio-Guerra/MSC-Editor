@@ -20,12 +20,12 @@ namespace msc
     return (substructure_ != 0);
   }
 
-  inline pString  InstanceHead::substructure_get() const
+  inline pString           InstanceHead::substructure_get() const
   {
     return substructure_;
   }
 
-  inline void           InstanceHead::substructure_set(String* sub)
+  inline void              InstanceHead::substructure_set(String* sub)
   {
     substructure_ = sub;
   }

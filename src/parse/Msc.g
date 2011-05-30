@@ -152,12 +152,7 @@ parse returns [msc::Ast* n = 0]:
 ;
 
 mscTextualFile:
-  (
-    textualMSCDocument
-    (
-      messageSequenceChart
-    )*
-  )+
+    textualMSCDocument messageSequenceChart 'endmscdocument' ';'?
   {
 
   }
@@ -184,20 +179,19 @@ textDefinition:
    [Z.120] 1.5		-- Message Sequence Chart document */
 
 textualMSCDocument:
-  documentHead textualDefiningPart textualUtilityPart
+  documentHead textualDefiningPart textualUtilityPart? /* MSC 96 */
   {
   }
 ;
 
 documentHead:
-  'mscdocument' instanceKind ('related' 'to' sdlReference)?
-  ((inheritance)? ';'
-  (parenthesisDeclaration)?
+  'mscdocument' instanceKind ('related' 'to' sdlReference)? inheritance? ';'
+  parenthesisDeclaration?
   dataDefinition
   usingClause
   containingClause
   messageDeclClause
-  timerDeclClause)?
+  timerDeclClause?
   {
 
   }
@@ -208,7 +202,7 @@ textualDefiningPart:
 ;
 
 textualUtilityPart:
-  'utilities' (containingClause)? (definingMscReference)*
+  ('utilities' (containingClause)? (definingMscReference)*)?
   {
 
   }
@@ -405,15 +399,15 @@ eventDefinition returns [msc::Instance* n = 0]:
     $n = MAKE(Instance, *$instanceName.n, $instanceEventList.n);
   }
   | instanceNameList ':' multiInstanceEventList
-  {
-  }
 ;
 
 instanceEventList returns [std::vector<msc::Event*> n]:
-  head = instanceEvent
-  {
-    $n.push_back($head.n);
-  }
+  (
+    head = instanceEvent
+    {
+      $n.push_back($head.n);
+    }
+  )
   (
     tail = instanceEvent
     {
@@ -423,7 +417,7 @@ instanceEventList returns [std::vector<msc::Event*> n]:
 ;
 
 instanceEvent returns [msc::Event* n = 0]:
-  (orderableEvent | e = nonOrderableEvent)
+  (e = orderableEvent | e = nonOrderableEvent)
   {
     $n = $e.n;
   }
