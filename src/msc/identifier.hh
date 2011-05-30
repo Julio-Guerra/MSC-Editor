@@ -28,7 +28,7 @@ namespace msc
 
       /// \name Visitor entry point.
       /// \{
-      virtual void accept(Visitor&);
+      virtual void      accept(Visitor&);
       /// \}
 
     private:

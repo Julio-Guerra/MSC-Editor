@@ -9,6 +9,8 @@ namespace msc
   class DefaultVisitor : public Visitor
   {
     public:
+      using Visitor::operator();
+
       virtual void operator()(MessageSequenceChart&);
       virtual void operator()(BasicMsc&);
       virtual void operator()(Instance&);
