@@ -8,11 +8,9 @@ const qreal Pi = 3.14;
 using namespace view::gmsc;
 
 Message::Message(const msc::Message& message)
-  : msc::Message(message),
-    from_(NULL),
-    to_(NULL)
+  : msc::Message(message)
 {
-  textItem_ = new QGraphicsTextItem(QString(message.label_get().c_str()), this);
+  textItem_ = new QGraphicsTextItem(QString(message.label_get().name_get().c_str()), this);
   textItem_->setPos(this->boundingRect().center().x() - textItem_->boundingRect().width() / 2,
                     this->boundingRect().center().y() - textItem_->boundingRect().height() / 2);
   rectItem_ = new QGraphicsRectItem(textItem_->x(), textItem_->y(),
@@ -42,10 +40,14 @@ Message::Message(const msc::Message& message)
     p.setColor(Qt::white);
     rectItem_->setPen(p);
   }
-}
 
+  this->setFlag(QGraphicsItem::ItemIsSelectable, true);
+  this->setFlag(QGraphicsItem::ItemSendsGeometryChanges, true);
+}
+#include <iostream>
 Message::~Message()
 {
+  std::cout << "destructor message" << std::endl;
 }
 
 QPixmap& Message::to_image()
@@ -67,21 +69,24 @@ QPixmap& Message::to_image()
 
 void Message::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
-  QLineF line = this->line();
+  QLineF    line = this->line();
+  Instance* from = static_cast<Instance*> (this->from_get());
+  Instance* to = static_cast<Instance*> (this->to_get());
 
-  if (from_ != NULL)
+  std::cerr << "painting " << this << std::endl;
+  if (this->from_get() != NULL)
   {
-    QPointF from(from_->x() + from_pos_.x(), from_->y() + from_pos_.y());
+    QPointF from_pt(from->x() + from_pos_.x(), from->y() + from_pos_.y());
 
-    line.setP1(from);
+    line.setP1(from_pt);
     this->setLine(line);
   }
 
-  if (to_ != NULL)
+  if (this->to_get() != NULL)
   {
-    QPointF to(to_->x() + to_pos_.x(), to_->y() + to_pos_.y());
+    QPointF to_pt(to->x() + to_pos_.x(), to->y() + to_pos_.y());
 
-    line.setP2(to);
+    line.setP2(to_pt);
     this->setLine(line);
   }
 
@@ -111,5 +116,5 @@ void Message::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, Q
 void Message::label_set(const msc::Label& s)
 {
   Labelable::label_set(s);
-  textItem_->setPlainText(QString(s.c_str()));
+  textItem_->setPlainText(QString(s.name_get().c_str()));
 }

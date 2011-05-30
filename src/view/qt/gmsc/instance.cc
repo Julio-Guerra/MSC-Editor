@@ -1,4 +1,5 @@
 #include "view/qt/gmsc/instance.hh"
+#include "view/qt/gmsc/message.hh"
 
 using namespace view::gmsc;
 
@@ -8,7 +9,7 @@ Instance::Instance(const msc::Instance& instance)
   polygon_ << QPointF(0, 0) << QPointF(140, 0);
   polygon_ << QPointF(140, 30) << QPointF(0, 30);
 
-  textItem_ = new QGraphicsTextItem(QString(instance.label_get().c_str()), this);
+  textItem_ = new QGraphicsTextItem(QString(instance.label_get().name_get().c_str()), this);
 
   lineItem_ = new QGraphicsLineItem(70, 30, 70, 500, this);
   QPen p = lineItem_->pen();
@@ -30,9 +31,10 @@ Instance::Instance(const msc::Instance& instance)
 
   textItem_->setPos(this->boundingRect().center().x() - textItem_->boundingRect().width() / 2, textItem_->pos().y() - 25);
 }
-
+#include <iostream>
 Instance::~Instance()
 {
+std::cout << "destructor instance" << std::endl;
 }
 
 QPixmap& Instance::to_image()
@@ -57,6 +59,6 @@ QPixmap& Instance::to_image()
 void Instance::label_set(const msc::Label& l)
 {
   Labelable::label_set(l);
-  textItem_->setPlainText(QString(l.c_str()));
+  textItem_->setPlainText(QString(l.name_get().c_str()));
   textItem_->setPos(this->boundingRect().center().x() - textItem_->boundingRect().width() / 2, textItem_->pos().y());
 }

@@ -7,9 +7,10 @@
 # include <QtGui/QKeyEvent>
 # include <QtGui/QLineEdit>
 
-#include "msc/fwd.hh"
-#include "view/qt/gmsc/fwd.hh"
-#include "view/qt/gmsc/factory.hh"
+# include "msc/fwd.hh"
+# include "view/qt/gmsc/fwd.hh"
+# include "view/qt/gmsc/factory.hh"
+# include "view/qt/dtor.hh"
 
 namespace gui
 {

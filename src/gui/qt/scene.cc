@@ -52,7 +52,7 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* mouseEvent)
           {
             this->set_mode(MODE_LABEL_EDITION);
             labelable_ = labelable;
-            lineEdit_ = new QLineEdit(labelable->label_get().c_str());
+            lineEdit_ = new QLineEdit(labelable->label_get().name_get().c_str());
             lineEdit_->setParent(this->views().first());
             lineEdit_->move(mouseEvent->screenPos() - QPoint(315, 135));
             lineEdit_->setFocus();
@@ -144,7 +144,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent*  mouseEvent)
       break;
   }
 }
-#include <iostream>
+
 void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent*  mouseEvent)
 {
   QList<QGraphicsItem *> startItems;
@@ -182,12 +182,14 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent*  mouseEvent)
                 (startInstance != endInstance))
             {
               added = true;
-              message_->from_ = dynamic_cast<view::gmsc::Instance*> (startInstance);
-              message_->from_pos_.setX(-message_->from_->x() + message_->line().p1().x());
-              message_->from_pos_.setY(-message_->from_->y() + message_->line().p1().y());
-              message_->to_ = dynamic_cast<view::gmsc::Instance*> (endInstance);
-              message_->to_pos_.setX(-message_->to_->x() + message_->line().p2().x());
-              message_->to_pos_.setY(-message_->to_->y() + message_->line().p2().y());
+              message_->from_set(startInstance);
+              message_->from_pos_set(QPointF(-startInstance->x() + message_->line().p1().x(),
+                                             -startInstance->y() + message_->line().p1().y()));
+              message_->to_set(endInstance);
+              message_->to_pos_set(QPointF(-endInstance->x() + message_->line().p2().x(),
+                                           -endInstance->y() + message_->line().p2().y()));
+              startInstance->events_get().push_back(msc::pEvent(message_));
+              endInstance->events_get().push_back(msc::pEvent(message_));
               emit itemInserted(item_);
             }
           }
@@ -220,6 +222,46 @@ void Scene::keyPressEvent(QKeyEvent* keyEvent)
         mouseEvent->setButton(Qt::LeftButton);
         this->mousePressEvent(mouseEvent);
         delete mouseEvent;
+      }
+      break;
+
+    case MODE_SELECT:
+      if (keyEvent->key() == Qt::Key_Delete)
+      {
+        view::Dtor dtor(this);
+
+        foreach (QGraphicsItem* item, this->selectedItems())
+        {
+          msc::Ast*             ast = dynamic_cast<msc::Ast*> (item);
+          view::gmsc::Instance* instance = dynamic_cast<view::gmsc::Instance*> (ast);
+
+          ast->accept(dtor);
+
+          if (instance)
+          {
+            std::vector<msc::pEvent>::iterator it;
+
+            for (it = instance->events_get().begin(); it != instance->events_get().end(); ++it)
+            {
+              view::gmsc::Message* m = dynamic_cast<view::gmsc::Message*> (*it);
+
+              if (m != NULL)
+              {
+                std::cout << "remove in list" << std::endl;
+                if (m->from_get() == instance)
+                  m->to_get()->remove(m);
+                if (m->to_get() == instance)
+                  m->from_get()->remove(m);
+
+                std::cout << "remove item msg" << std::endl;
+                this->removeItem(m);
+              }
+            }
+          }
+
+          std::cout << "remove item inst" << std::endl;
+          this->removeItem(item);
+        }
       }
       break;
 

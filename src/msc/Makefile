@@ -109,6 +109,30 @@ msc/fast:
 	cd /home/patrick/Projects/msceditor/MSC-Editor && $(MAKE) -f src/msc/CMakeFiles/msc.dir/build.make src/msc/CMakeFiles/msc.dir/build
 .PHONY : msc/fast
 
+ast.o: ast.cc.o
+.PHONY : ast.o
+
+# target to build an object file
+ast.cc.o:
+	cd /home/patrick/Projects/msceditor/MSC-Editor && $(MAKE) -f src/msc/CMakeFiles/msc.dir/build.make src/msc/CMakeFiles/msc.dir/ast.cc.o
+.PHONY : ast.cc.o
+
+ast.i: ast.cc.i
+.PHONY : ast.i
+
+# target to preprocess a source file
+ast.cc.i:
+	cd /home/patrick/Projects/msceditor/MSC-Editor && $(MAKE) -f src/msc/CMakeFiles/msc.dir/build.make src/msc/CMakeFiles/msc.dir/ast.cc.i
+.PHONY : ast.cc.i
+
+ast.s: ast.cc.s
+.PHONY : ast.s
+
+# target to generate assembly for a file
+ast.cc.s:
+	cd /home/patrick/Projects/msceditor/MSC-Editor && $(MAKE) -f src/msc/CMakeFiles/msc.dir/build.make src/msc/CMakeFiles/msc.dir/ast.cc.s
+.PHONY : ast.cc.s
+
 basic-msc.o: basic-msc.cc.o
 .PHONY : basic-msc.o
 
@@ -156,6 +180,30 @@ default-visitor.s: default-visitor.cc.s
 default-visitor.cc.s:
 	cd /home/patrick/Projects/msceditor/MSC-Editor && $(MAKE) -f src/msc/CMakeFiles/msc.dir/build.make src/msc/CMakeFiles/msc.dir/default-visitor.cc.s
 .PHONY : default-visitor.cc.s
+
+factory.o: factory.cc.o
+.PHONY : factory.o
+
+# target to build an object file
+factory.cc.o:
+	cd /home/patrick/Projects/msceditor/MSC-Editor && $(MAKE) -f src/msc/CMakeFiles/msc.dir/build.make src/msc/CMakeFiles/msc.dir/factory.cc.o
+.PHONY : factory.cc.o
+
+factory.i: factory.cc.i
+.PHONY : factory.i
+
+# target to preprocess a source file
+factory.cc.i:
+	cd /home/patrick/Projects/msceditor/MSC-Editor && $(MAKE) -f src/msc/CMakeFiles/msc.dir/build.make src/msc/CMakeFiles/msc.dir/factory.cc.i
+.PHONY : factory.cc.i
+
+factory.s: factory.cc.s
+.PHONY : factory.s
+
+# target to generate assembly for a file
+factory.cc.s:
+	cd /home/patrick/Projects/msceditor/MSC-Editor && $(MAKE) -f src/msc/CMakeFiles/msc.dir/build.make src/msc/CMakeFiles/msc.dir/factory.cc.s
+.PHONY : factory.cc.s
 
 gen-visitor.o: gen-visitor.cc.o
 .PHONY : gen-visitor.o
@@ -325,29 +373,29 @@ message.cc.s:
 	cd /home/patrick/Projects/msceditor/MSC-Editor && $(MAKE) -f src/msc/CMakeFiles/msc.dir/build.make src/msc/CMakeFiles/msc.dir/message.cc.s
 .PHONY : message.cc.s
 
-text-definition.o: text-definition.cc.o
-.PHONY : text-definition.o
+pretty-printer.o: pretty-printer.cc.o
+.PHONY : pretty-printer.o
 
 # target to build an object file
-text-definition.cc.o:
-	cd /home/patrick/Projects/msceditor/MSC-Editor && $(MAKE) -f src/msc/CMakeFiles/msc.dir/build.make src/msc/CMakeFiles/msc.dir/text-definition.cc.o
-.PHONY : text-definition.cc.o
+pretty-printer.cc.o:
+	cd /home/patrick/Projects/msceditor/MSC-Editor && $(MAKE) -f src/msc/CMakeFiles/msc.dir/build.make src/msc/CMakeFiles/msc.dir/pretty-printer.cc.o
+.PHONY : pretty-printer.cc.o
 
-text-definition.i: text-definition.cc.i
-.PHONY : text-definition.i
+pretty-printer.i: pretty-printer.cc.i
+.PHONY : pretty-printer.i
 
 # target to preprocess a source file
-text-definition.cc.i:
-	cd /home/patrick/Projects/msceditor/MSC-Editor && $(MAKE) -f src/msc/CMakeFiles/msc.dir/build.make src/msc/CMakeFiles/msc.dir/text-definition.cc.i
-.PHONY : text-definition.cc.i
+pretty-printer.cc.i:
+	cd /home/patrick/Projects/msceditor/MSC-Editor && $(MAKE) -f src/msc/CMakeFiles/msc.dir/build.make src/msc/CMakeFiles/msc.dir/pretty-printer.cc.i
+.PHONY : pretty-printer.cc.i
 
-text-definition.s: text-definition.cc.s
-.PHONY : text-definition.s
+pretty-printer.s: pretty-printer.cc.s
+.PHONY : pretty-printer.s
 
 # target to generate assembly for a file
-text-definition.cc.s:
-	cd /home/patrick/Projects/msceditor/MSC-Editor && $(MAKE) -f src/msc/CMakeFiles/msc.dir/build.make src/msc/CMakeFiles/msc.dir/text-definition.cc.s
-.PHONY : text-definition.cc.s
+pretty-printer.cc.s:
+	cd /home/patrick/Projects/msceditor/MSC-Editor && $(MAKE) -f src/msc/CMakeFiles/msc.dir/build.make src/msc/CMakeFiles/msc.dir/pretty-printer.cc.s
+.PHONY : pretty-printer.cc.s
 
 # Help Target
 help:
@@ -358,12 +406,18 @@ help:
 	@echo "... edit_cache"
 	@echo "... msc"
 	@echo "... rebuild_cache"
+	@echo "... ast.o"
+	@echo "... ast.i"
+	@echo "... ast.s"
 	@echo "... basic-msc.o"
 	@echo "... basic-msc.i"
 	@echo "... basic-msc.s"
 	@echo "... default-visitor.o"
 	@echo "... default-visitor.i"
 	@echo "... default-visitor.s"
+	@echo "... factory.o"
+	@echo "... factory.i"
+	@echo "... factory.s"
 	@echo "... gen-visitor.o"
 	@echo "... gen-visitor.i"
 	@echo "... gen-visitor.s"
@@ -385,9 +439,9 @@ help:
 	@echo "... message.o"
 	@echo "... message.i"
 	@echo "... message.s"
-	@echo "... text-definition.o"
-	@echo "... text-definition.i"
-	@echo "... text-definition.s"
+	@echo "... pretty-printer.o"
+	@echo "... pretty-printer.i"
+	@echo "... pretty-printer.s"
 .PHONY : help
 
 

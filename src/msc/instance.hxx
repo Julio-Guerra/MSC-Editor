@@ -8,7 +8,8 @@ namespace msc
 {
   inline void Instance::events_set(const std::vector<Event*>& events)
   {
-    msc::pv_to_spv(events, events_);
+    //msc::pv_to_spv(events, events_);
+    events_ = events;
   }
 
   inline std::vector<pEvent>& Instance::events_get()

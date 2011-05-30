@@ -6,7 +6,8 @@
 # include <QtGui/QGraphicsItem>
 # include <QtGui/QGraphicsTextItem>
 # include <QtGui/QGraphicsScene>
- #include <QString>
+# include <QString>
+# include <vector>
 
 # include "msc/instance.hh"
 

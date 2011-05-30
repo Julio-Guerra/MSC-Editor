@@ -36,16 +36,14 @@ QGraphicsPolygonItem* Factory::create_node(ItemType item_type){
 
 Instance* Factory::create_instance()
 {
-  msc::Instance*  msc_instance = new msc::Instance();
+  msc::Instance*  msc_instance = new msc::Instance(msc::String::fresh("Instance"));
 
-  msc_instance->label_set("Instance X");
   return (new Instance(*msc_instance));
 }
 
 Message* Factory::create_message()
 {
-  msc::Message* msc_message = new msc::Message(msc::Message::OUT, new std::string());
+  msc::Message* msc_message = new msc::Message(msc::String::fresh("message"), NULL, NULL);
 
-  msc_message->label_set("Message X");
   return (new Message(*msc_message));
 }

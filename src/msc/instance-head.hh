@@ -20,13 +20,13 @@ namespace msc
 
       /// \name Accessors.
       /// \{
-      const pString     kind_get() const;
+      pString           kind_get() const;
       void              kind_set(String*);
 
-      const pIdentifier identifier_get() const;
+      pIdentifier       identifier_get() const;
       void              identifier_set(Identifier*);
 
-      const pString     substructure_get() const;
+      pString           substructure_get() const;
       /// Set the substructure and decomposed if not null.
       void              substructure_set(String*);
 

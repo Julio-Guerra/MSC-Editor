@@ -19,10 +19,10 @@ namespace msc
 
       /// \name Getters & Setters.
       /// \{
-      const pString     qualifier_get();
+      pString           qualifier_get();
       void              qualifier_set(String*);
 
-      const pString     name_get();
+      pString           name_get();
       void              name_set(String*);
       /// \}
 

@@ -14,7 +14,8 @@ namespace msc
 
   inline void BasicMsc::statements_set(const std::vector<Statement*>& v)
   {
-    msc::pv_to_spv(v, statements_);
+    //msc::pv_to_spv(v, statements_);
+    statements_ = v;
   }
 } // namespace
 

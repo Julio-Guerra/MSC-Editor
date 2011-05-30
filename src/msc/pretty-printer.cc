@@ -37,7 +37,7 @@ namespace msc
     if (n.kind_get() != 0)
       ostr_ << " " << n.kind_get();
 
-    if (n.identifier_get().get() != 0)
+    if (n.identifier_get() != 0)
     {
       ostr_ << " ";
       super_type::operator()(n);
@@ -61,7 +61,7 @@ namespace msc
 
   void PrettyPrinter::operator()(Message&       n)
   {
-    bool out = (n.from_get().get() == current_instance_);
+    bool out = (n.from_get() == current_instance_);
     const pInstance instance = out ? n.to_get() : n.from_get();
 
     ostr_ << (out ? "out " : "in ")

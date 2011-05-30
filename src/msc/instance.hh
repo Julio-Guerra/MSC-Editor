@@ -30,6 +30,8 @@ namespace msc
       std::vector<pEvent>&      events_get();
       /// \}
 
+      void remove(Event*);
+
       /// \name Visitor entry point.
       /// \{
       virtual void accept(Visitor&);

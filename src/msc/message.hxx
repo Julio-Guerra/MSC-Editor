@@ -7,7 +7,7 @@ namespace msc
 {
   inline void Message::from_set(Instance*       from)
   {
-    from_.reset(from);
+    from_ = from;
   }
 
   inline pInstance Message::from_get() const
@@ -17,7 +17,7 @@ namespace msc
 
   inline void Message::to_set(Instance*          to)
   {
-    to_.reset(to);
+    to_ = to;
   }
 
   inline pInstance Message::to_get() const

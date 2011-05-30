@@ -24,12 +24,15 @@ namespace view
         void paint(QPainter*, const QStyleOptionGraphicsItem*, QWidget*);
         void label_set(const msc::Label&);
 
-        //TODO: Remove this
-        Instance*               from_;
-        Instance*               to_;
+        inline QPointF from_pos_get() const { return from_pos_; };
+        inline void from_pos_set(QPointF p) { from_pos_ = p; };
+
+        inline QPointF to_pos_get() const { return to_pos_; };
+        inline void to_pos_set(QPointF p) { to_pos_ = p; }
+
+      private:
         QPointF                 from_pos_;
         QPointF                 to_pos_;
-      private:
         QGraphicsTextItem*      textItem_;
         QGraphicsRectItem*      rectItem_;
         QGraphicsPolygonItem*   extremity_;
