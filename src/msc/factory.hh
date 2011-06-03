@@ -39,10 +39,15 @@ namespace msc
       /// Instance "forward declaration".
       Instance* make_Instance(const String&);
 
-      /// Instance definition.
+      /// MSC 92 - Instance definition.
       Instance* make_Instance(const String&,
                               InstanceHead*,
+                              std::vector<Event*>&);
+
+      /// > MSC 92 - Instance definition.
+      Instance* make_Instance(const String&,
                               const std::vector<Event*>&);
+
 
       Identifier* make_Identifier(String*, String*);
       /** \} */

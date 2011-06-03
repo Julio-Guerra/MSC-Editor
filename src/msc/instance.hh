@@ -19,7 +19,6 @@ namespace msc
       Instance(const String&);
 
       Instance(const String&,
-               InstanceHead*,
                const std::vector<Event*>&);
 
       virtual ~Instance();
@@ -29,9 +28,6 @@ namespace msc
       /// \{
       void                      events_set(const std::vector<Event*>&);
       std::vector<pEvent>&      events_get();
-
-      InstanceHead&             head_get();
-      void                      head_set(InstanceHead*);
       /// \}
 
       void remove(Event*);
@@ -42,8 +38,6 @@ namespace msc
       /// \}
 
     private:
-      pInstanceHead             head_;
-
       /// Vector of events ordered by declaration order.
       std::vector<pEvent>       events_;
   };

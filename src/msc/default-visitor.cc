@@ -31,8 +31,6 @@ namespace msc
 
   void DefaultVisitor::operator()(Instance& instance)
   {
-    instance.head_get().accept(*this);
-
     std::vector<pEvent>::iterator i;
     std::vector<pEvent>& v = instance.events_get();
 

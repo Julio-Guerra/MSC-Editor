@@ -94,9 +94,18 @@ namespace msc
     return instance;
   }
 
-  Instance* Factory::make_Instance(const String&                label,
-                                   InstanceHead*                head,
-                                   const std::vector<Event*>&   events)
+  Instance*
+  Factory::make_Instance(const String&          label,
+                         InstanceHead*          head,
+                         std::vector<Event*>&   events)
+  {
+    events.insert(events.begin(), head);
+    return make_Instance(label, events);
+  }
+
+  Instance*
+  Factory::make_Instance(const String&                  label,
+                         const std::vector<Event*>&     events)
   {
     instances_map::iterator     it = instances_.find(label);
 
@@ -106,11 +115,12 @@ namespace msc
       return it->second;
     }
 
-    Instance* instance = new Instance(label, head, events);
+    Instance* instance = new Instance(label, events);
     instances_.insert(std::pair<String, Instance*>(label, instance));
 
     return instance;
   }
+
 
   Document*  Factory::make_Document(DocumentHead*               head,
                                     MessageSequenceChart*       msc)

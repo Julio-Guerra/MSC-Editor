@@ -460,9 +460,9 @@ msc92InstanceHeadStatement returns [msc::InstanceHead* n = 0]:
 ;
 
 eventDefinition returns [msc::Instance* n = 0]:
-  (instanceName ':' instanceHeadStatement instanceEventList) => in = instanceName ':' ieh = instanceHeadStatement iel = instanceEventList
+  (instanceName ':'  instanceEventList) => (in = instanceName ':' iel = instanceEventList)
   {
-    $n = MAKE(Instance, *$in.n, $ieh.n, $iel.n);
+    $n = MAKE(Instance, *$in.n, $iel.n);
   }
   | instanceNameList ':' multiInstanceEventList
 ;
@@ -541,6 +541,7 @@ nonOrderableEvent returns [msc::Event* n = 0]:
   | sharedInlineExpr
   | instanceEndStatement
   | stop
+  | instanceHeadStatement { $n = $instanceHeadStatement.n; }
 ;
 
 instanceNameList:
@@ -556,13 +557,21 @@ multiInstanceEvent:
   condition | mscReference | inlineExpr
 ;
 
-instanceHeadStatement returns [msc::InstanceHead* n = 0]:
-  'instance' instanceKind? decomposition? end
+instanceHeadStatement returns [msc::InstanceHead* n = 0]
+@init
+{
+  msc::String* kind = 0;
+  msc::Identifier* identifier = 0;
+}:
+  'instance'
+  (
+    instanceKind
+    {
+      kind = $instanceKind.kindDenominator;
+      identifier = $instanceKind.identifier;
+    }
+  )? decomposition? end
   {
-    msc::String* kind = $instanceKind.text ? $instanceKind.kindDenominator : 0;
-    msc::Identifier* identifier = $instanceKind.text ?
-                                    $instanceKind.identifier : 0;
-
     $n = new msc::InstanceHead(kind,
                                identifier,
                                $decomposition.n);
@@ -571,9 +580,8 @@ instanceHeadStatement returns [msc::InstanceHead* n = 0]:
 
 instanceKind returns [msc::String* kindDenominator = 0,
                       msc::Identifier* identifier = 0]:
-  ((kindDenominator identifier) => k = kindDenominator)? id = identifier
+  (k = kindDenominator { $kindDenominator = $k.n; })? id = identifier
   {
-    $kindDenominator = $k.n;
     $identifier = $id.n;
   }
 ;
