@@ -1,5 +1,6 @@
 #include "parse/parser.hh"
 #include "parse/exception.hh"
+#include "msc/ast.hh"
 
 /// Global variable used by the (C) parser informing about the input
 /// standard.

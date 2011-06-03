@@ -1,5 +1,11 @@
 #include "gui/qt/window.hh"
 #include "view/qt/gmsc/all.hh"
+#include "view/qt/decorator.hh"
+
+#undef emit
+
+#include "parse/parser.hh"
+#include "parse/exception.hh"
 
 
 using namespace gui;
@@ -39,16 +45,40 @@ void Window::open_msc_file()
       if (ret == QMessageBox::Save)
         save_msc_file();
     }
+
+    delete scene_;
   }
 
   filename_ = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("MSC Files (*.mpr);; All files (*)"));
 
-  // Create a new scene
+  // Create and set a new scene
   scene_ = new Scene();
-
-  // Set the new scene
   config_.graphics_view->setScene(scene_);
 
+  // Parse the file
+  try
+  {
+    parse::Parser   p((pANTLR3_UINT8)filename_.toStdString().c_str());
+    msc::Ast*       ast = p.parse();
+    view::Decorator decorator(this->scene_);
+
+    /*if (p.error_count_get() != 0)
+    {
+      QMessageBox msgBox;
+
+      msgBox.setText("Parse error.");
+      msgBox.exec();
+    }*/
+
+    ast->accept(decorator);
+  }
+  catch (parse::Exception& e)
+  {
+    QMessageBox msgBox;
+
+    msgBox.setText(e.what());
+    msgBox.exec();
+  }
 }
 
 void Window::save_msc_file()
