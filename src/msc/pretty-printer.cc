@@ -1,6 +1,8 @@
 #include "msc/pretty-printer.hh"
 #include "msc/all.hh"
 
+extern bool __msc96;
+
 namespace msc
 {
   PrettyPrinter::PrettyPrinter(std::ostream& o)
@@ -10,6 +12,25 @@ namespace msc
 
   PrettyPrinter::~PrettyPrinter()
   {
+  }
+
+  void PrettyPrinter::operator()(Document&  n)
+  {
+    ostr_ << "mscdocument ";
+    super_type::operator()(n);
+    if (__msc96)
+      ostr_ << "endmscdocument;";
+    ostr_ << std::endl;
+  }
+
+  void PrettyPrinter::operator()(DocumentHead&  n)
+  {
+    if (n.kind_get())
+      ostr_ << *n.kind_get() << " ";
+
+    n.identifier_get()->accept(*this);
+
+    ostr_ << ";" << std::endl;
   }
 
   void PrettyPrinter::operator()(MessageSequenceChart&  n)
@@ -25,7 +46,7 @@ namespace msc
 
     ostr_ << n.label_get() << ": ";
     super_type::operator()(n);
-    ostr_ << n.label_get() << "endinstance;" << std::endl;
+    ostr_ << "endinstance;" << std::endl;
 
     current_instance_ = 0;
   }
@@ -43,8 +64,8 @@ namespace msc
       accept(n.identifier_get());
     }
 
-    // if (n.is_decomposed())
-    //   ostr_ << " " << n.substructure_get();
+    if (n.is_decomposed())
+      ostr_ << " " << *n.substructure_get();
 
     ostr_ << ";" << std::endl;
   }

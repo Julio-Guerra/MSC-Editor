@@ -107,10 +107,11 @@ namespace parse
       // This grammar rule is specially written to find out which version on
       // the standard is used. It allows to set the global variable __msc96
       // used by semantic predicates in the parser.
-      __msc96 = parser_->is_msc96(parser_);
+//      __msc96 = parser_->is_msc96(parser_);
+      __msc96 = true;
     }
-    else
-      reset();
+//    else
+//      reset();
 
     return parser_->parse(parser_);
   }

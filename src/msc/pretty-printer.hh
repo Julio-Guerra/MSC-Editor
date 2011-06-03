@@ -25,6 +25,8 @@ namespace msc
 
       /// \name Visitor methods.
       /// \{
+      virtual void operator()(Document&);
+      virtual void operator()(DocumentHead&);
       virtual void operator()(MessageSequenceChart&);
       virtual void operator()(Instance&);
       virtual void operator()(InstanceHead&);

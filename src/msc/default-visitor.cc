@@ -4,6 +4,22 @@
 
 namespace msc
 {
+  void DefaultVisitor::operator()(Document& document)
+  {
+    document.head_get()->accept(*this);
+
+    Document::mscs_type::iterator i;
+    Document::mscs_type& v = document.mscs_get();
+
+    for (i = v.begin(); i != v.end(); ++i)
+      (*i)->accept(*this);
+  }
+
+  void DefaultVisitor::operator()(DocumentHead& dh)
+  {
+    dh.identifier_get()->accept(*this);
+  }
+
   void DefaultVisitor::operator()(BasicMsc& bmsc)
   {
     std::vector<pStatement>::iterator i;
@@ -15,6 +31,8 @@ namespace msc
 
   void DefaultVisitor::operator()(Instance& instance)
   {
+    instance.head_get().accept(*this);
+
     std::vector<pEvent>::iterator i;
     std::vector<pEvent>& v = instance.events_get();
 

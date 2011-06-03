@@ -20,6 +20,15 @@ namespace msc
 
       /** AST node creators.
        * \{ */
+      /// Well formed MSC Document, i.e. with its header.
+      Document* make_Document(DocumentHead*, MessageSequenceChart*);
+
+      /// Non-standard MSC Document where the header is missing.
+      Document* make_Document(const std::vector<MessageSequenceChart*>&);
+
+      /// MSC Document header
+      DocumentHead*     make_DocumentHead(String*, Identifier*);
+
       MessageSequenceChart*
       make_MessageSequenceChart(const String&,
                                 MessageSequenceChart::virtuality_enum,
@@ -34,6 +43,8 @@ namespace msc
       Instance* make_Instance(const String&,
                               InstanceHead*,
                               const std::vector<Event*>&);
+
+      Identifier* make_Identifier(String*, String*);
       /** \} */
 
       /** Ctor & Dtor.

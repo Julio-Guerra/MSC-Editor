@@ -112,5 +112,30 @@ namespace msc
     return instance;
   }
 
+  Document*  Factory::make_Document(DocumentHead*               head,
+                                    MessageSequenceChart*       msc)
+  {
+    Document::mscs_type v;
+    v.push_back(msc);
+    return new Document(head, v);
+  }
+
+  Document*
+  Factory::make_Document(const std::vector<MessageSequenceChart*>& mscs)
+  {
+    Identifier* id = make_Identifier(0, new String(String::fresh("document")));
+    return new Document(make_DocumentHead(0, id), mscs);
+  }
+
+  DocumentHead*
+  Factory::make_DocumentHead(String* kind, Identifier* identifier)
+  {
+    return new DocumentHead(kind, identifier);
+  }
+
+  Identifier*   Factory::make_Identifier(String* qualifier, String* name)
+  {
+    return new msc::Identifier(qualifier, name);
+  }
 } // namespace msc
 

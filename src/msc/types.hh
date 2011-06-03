@@ -8,11 +8,23 @@
 
 namespace msc
 {
+  // These typedefs were created to switch to a smart pointer
+  // class transparent enough to be considered as a normal pointer
+  // by the rest of the code.
+
+  // TODO : replace the pointers by "garbage collected" smart pointers.
+
   typedef misc::Symbol                          String;
 
   typedef String                                Label;
 
   typedef String*                               pString;
+
+  typedef MessageSequenceChart*                 pMessageSequenceChart;
+
+  typedef Document*                             pDocument;
+
+  typedef DocumentHead*                         pDocumentHead;
 
   typedef Msc*                                  pMsc;
 

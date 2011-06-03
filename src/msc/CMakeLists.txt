@@ -1,6 +1,8 @@
 add_library(msc gen-visitor.cc
                 default-visitor.cc
                 labelable.cc
+                document.cc
+                document-head.cc
                 message-sequence-chart.cc
                 basic-msc.cc
                 instance.cc

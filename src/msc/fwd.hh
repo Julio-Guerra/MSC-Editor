@@ -1,6 +1,8 @@
 namespace msc
 {
   class Ast;
+  class Document;
+  class DocumentHead;
   class MessageSequenceChart;
   class Msc;
   class BasicMsc;
@@ -12,5 +14,4 @@ namespace msc
   class Event;
   class Message;
   class Labelable;
-
 } // namespace msc

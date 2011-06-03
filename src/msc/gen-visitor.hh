@@ -19,6 +19,8 @@ namespace msc
 
       /** Basic MSC visitor's pure abstract methods.
        * \{ */
+      virtual void operator()(Document&) = 0;
+      virtual void operator()(DocumentHead&) = 0;
       virtual void operator()(MessageSequenceChart&) = 0;
       virtual void operator()(BasicMsc&) = 0;
       virtual void operator()(Instance&) = 0;

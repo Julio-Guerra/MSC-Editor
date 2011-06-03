@@ -18,20 +18,16 @@ externalproject_add(
   BUILD_COMMAND make
   BUILD_IN_SOURCE 1
 )
+link_libraries(${CMAKE_CURRENT_SOURCE_DIR}/lib/libantlr3c-3.1.3/lib/libantlr3c.a)
 
-find_library(
-  antlr3c
-  libantlr3c.a
-  HINTS ${CMAKE_CURRENT_SOURCE_DIR}/lib/libantlr3c-3.1.3/.libs
-)
-
+# Boost
 find_package(Boost REQUIRED)
 
-# Qt4 package
-FIND_PACKAGE(Qt4 REQUIRED)
+# Qt4
+find_package(Qt4 REQUIRED)
 
 # Qt modules
-INCLUDE(${QT_USE_FILE})
+include(${QT_USE_FILE})
 
 add_subdirectory(src)
 add_subdirectory(lib)
@@ -40,5 +36,5 @@ add_subdirectory(tests)
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
 # add the executable
-ADD_EXECUTABLE(msce src/msce.cc)
-TARGET_LINK_LIBRARIES(msce gui view ${QT_LIBRARIES} parse msc misc ${antlr3c})
+add_executable(msce src/msce.cc)
+target_link_libraries(msce gui view ${QT_LIBRARIES} parse msc misc)

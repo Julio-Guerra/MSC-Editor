@@ -30,7 +30,7 @@ namespace msc
       void                      events_set(const std::vector<Event*>&);
       std::vector<pEvent>&      events_get();
 
-      const InstanceHead&       head_get() const;
+      InstanceHead&             head_get();
       void                      head_set(InstanceHead*);
       /// \}
 

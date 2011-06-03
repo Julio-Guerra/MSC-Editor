@@ -10,26 +10,26 @@ options
 
 @parser::includes
 {
-  #include <vector>
+  # include <vector>
 
-  #include "msc/types.hh"
-  #include "msc/all.hh"
-  #include "msc/factory.hh"
+  # include "msc/types.hh"
+  # include "msc/all.hh"
+  # include "msc/factory.hh"
 
-  #define MAKE(Node, ...)                                   \
+  # define MAKE(Node, ...)                                   \
       msc::Factory::instance().make_ ## Node(__VA_ARGS__)
+
+  # if defined __GNUC__
+  #  pragma GCC system_header
+  # elif defined __SUNPRO_CC
+  #  pragma disable_warn
+  # elif defined _MSC_VER
+  #  pragma warning(push, 1)
+  # endif
 }
 
 @members
 {
-#if defined __GNUC__
-# pragma GCC system_header
-#elif defined __SUNPRO_CC
-# pragma disable_warn
-#elif defined _MSC_VER
-# pragma warning(push, 1)
-#endif
-
 // Thank you ANTLR for not providing C++ target and make my code unsafe.
 extern bool __msc96;
 }
@@ -176,7 +176,8 @@ parse returns [msc::Ast* n = 0]:
  * We can determine it with the documentHead rule.
  */
 is_msc96 returns [bool result]:
-  'mscdocument' .* ('related' 'to' .*)?
+  'msc' .* { return true; }
+  | 'mscdocument' .* ('related' 'to' .*)?
   (
     /* The following rules are MSC 2000, containingClause is mandatory */
     (inheritance? ';'
@@ -194,12 +195,43 @@ is_msc96 returns [bool result]:
   ) .*
 ;
 
-mscTextualFile returns [msc::Ast* n = 0]:
-  { __msc96 }? textualMSCDocument messageSequenceChart ('endmscdocument' ';')?
+mscTextualFile returns [msc::Ast* n = 0]
+@init { std::vector<msc::MessageSequenceChart*> mscs; }:
+  { __msc96 }? ('mscdocument' instanceKind textualMSCDocument
+                messageSequenceChart ('endmscdocument' ';')?)
   {
-    // FIXME
+    $n = MAKE(Document,
+              MAKE(DocumentHead,
+                   $instanceKind.kindDenominator,
+                   $instanceKind.identifier),
+              // TODO : textualMSCDocument.n,
+              $messageSequenceChart.n);
   }
-  | { !__msc96 }? (textualMSCDocument messageSequenceChart*)+
+  | { __msc96 }? (msc = messageSequenceChart { mscs.push_back($msc.n); })+
+    {
+      $n = MAKE(Document, mscs);
+    }
+  | { !__msc96 }? ('mscdocument' instanceKind ('related' 'to' sdlReference)?
+                    textualMSCDocument messageSequenceChart*)+
+;
+
+textualMSCDocument:
+  { __msc96 }? documentHead textualDefiningPart ((textualUtilityPart) => textualUtilityPart)?
+  |  { !__msc96 }? documentHead textualDefiningPart textualUtilityPart
+;
+
+documentHead:
+  ('related' 'to' sdlReference)?
+  (
+    { __msc96 }? ';'
+    | inheritance? ';'
+      parenthesisDeclaration?
+      dataDefinition
+      usingClause
+      containingClause
+      messageDeclClause
+      timerDeclClause
+  )
 ;
 
 /* [Z.120] 1.4.1	-- Lexical Rules
@@ -222,28 +254,6 @@ textDefinition:
    [Z.120] 1.4.5	-- Paging of MSCs
    [Z.120] 1.5		-- Message Sequence Chart document */
 
-textualMSCDocument returns [msc::Ast* n = 0]:
-  { __msc96 }? documentHead textualDefiningPart ((textualUtilityPart) => textualUtilityPart)?
-  {
-    // FIXME
-  }
-  |  { !__msc96 }? documentHead textualDefiningPart textualUtilityPart
-;
-
-documentHead:
-  'mscdocument' instanceKind ('related' 'to' sdlReference)?
-  (
-    { __msc96 }? ';'
-    | inheritance? ';'
-      parenthesisDeclaration?
-      dataDefinition
-      usingClause
-      containingClause
-      messageDeclClause
-      timerDeclClause
-  )
-;
-
 textualDefiningPart:
   (definingMscReference)*
 ;
@@ -251,7 +261,6 @@ textualDefiningPart:
 textualUtilityPart:
   ('utilities' (containingClause)? (definingMscReference)*)?
 ;
-
 
 definingMscReference:
   'reference' (virtuality)? mscName
@@ -301,7 +310,7 @@ identifier returns [msc::Identifier* n = 0]:
     msc::String* q = $qlf ?
                         new msc::String((char*) $qlf.text->chars)
                         : 0;
-    $n = new msc::Identifier(q, new msc::String((char*) $Name.text->chars));
+    $n = MAKE(Identifier, q, new msc::String((char*) $Name.text->chars));
   }
 ;
 
@@ -426,8 +435,9 @@ mscBody returns [std::vector<msc::Statement*> n]:
 ;
 
 mscStatement returns [msc::Statement* n = 0]:
-  textDefinition | eventDefinition
-  | { __msc96 }? e = msc92EventDefinition { $n = $e.n; }
+  { __msc96 }? e = msc92EventDefinition { $n = $e.n; }
+  | textDefinition
+  | e = eventDefinition { $n = $e.n; }
 ;
 
 msc92EventDefinition returns [ msc::Instance* n = 0; ]:
@@ -450,7 +460,10 @@ msc92InstanceHeadStatement returns [msc::InstanceHead* n = 0]:
 ;
 
 eventDefinition returns [msc::Instance* n = 0]:
-  (instanceName ':' instanceEventList) => instanceName ':' instanceEventList
+  (instanceName ':' instanceHeadStatement instanceEventList) => in = instanceName ':' ieh = instanceHeadStatement iel = instanceEventList
+  {
+    $n = MAKE(Instance, *$in.n, $ieh.n, $iel.n);
+  }
   | instanceNameList ':' multiInstanceEventList
 ;
 
@@ -497,7 +510,6 @@ orderableEvent returns [msc::Event* n = 0]:
 
 orderDestList:
   orderDest (',' orderDest)*
-
 ;
 
 timeDestList:
@@ -527,7 +539,6 @@ nonOrderableEvent returns [msc::Event* n = 0]:
   | sharedCondition
   | sharedMSCReference
   | sharedInlineExpr
-  | instanceHeadStatement { $n = $instanceHeadStatement.n; }
   | instanceEndStatement
   | stop
 ;

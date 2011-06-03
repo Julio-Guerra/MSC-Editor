@@ -11,6 +11,8 @@ namespace msc
     public:
       using Visitor::operator();
 
+      virtual void operator()(Document&);
+      virtual void operator()(DocumentHead&);
       virtual void operator()(MessageSequenceChart&);
       virtual void operator()(BasicMsc&);
       virtual void operator()(Instance&);

@@ -12,17 +12,17 @@ namespace msc
     events_ = events;
   }
 
-  inline std::vector<pEvent>& Instance::events_get()
+  inline std::vector<pEvent>&   Instance::events_get()
   {
     return events_;
   }
 
-  inline const InstanceHead&       Instance::head_get() const
+  inline InstanceHead&          Instance::head_get()
   {
     return *head_;
   }
 
-  inline void                      Instance::head_set(InstanceHead* head)
+  inline void                   Instance::head_set(InstanceHead* head)
   {
     head_ = head;
   }
