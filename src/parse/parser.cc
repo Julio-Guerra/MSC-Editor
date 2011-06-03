@@ -1,5 +1,6 @@
 #include "parse/parser.hh"
 #include "parse/exception.hh"
+#include "msc/ast.hh"
 
 namespace parse
 {
