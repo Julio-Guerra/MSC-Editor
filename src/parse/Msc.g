@@ -146,21 +146,21 @@ Alphanumeric:
 
 /* Parser */
 
+{
+  bool msc96 = true;
+}
+
 /* Root rule called by the parser. */
 parse returns [msc::Ast* n = 0]:
   r = messageSequenceChart { $n = $r.n; }
 ;
 
 mscTextualFile:
-  (
-    textualMSCDocument
-    (
-      messageSequenceChart
-    )*
-  )+
+  { msc96 }? textualMSCDocument messageSequenceChart ('endmscdocument' ';')?
   {
-
+    // FIXME
   }
+  | { !msc96 }? (textualMSCDocument messageSequenceChart*)+
 ;
 
 /* [Z.120] 1.4.1	-- Lexical Rules
@@ -184,20 +184,24 @@ textDefinition:
    [Z.120] 1.5		-- Message Sequence Chart document */
 
 textualMSCDocument:
-  documentHead textualDefiningPart textualUtilityPart
+  { msc96 }? documentHead textualDefiningPart textualUtilityPart?
   {
   }
+  | { !msc96 }? documentHead textualDefiningPart textualUtilityPart
 ;
 
 documentHead:
   'mscdocument' instanceKind ('related' 'to' sdlReference)?
-  ((inheritance)? ';'
-  (parenthesisDeclaration)?
-  dataDefinition
-  usingClause
-  containingClause
-  messageDeclClause
-  timerDeclClause)?
+  (
+    { msc96 }? ';'
+    | inheritance? ';'
+      parenthesisDeclaration?
+      dataDefinition
+      usingClause
+      containingClause
+      messageDeclClause
+      timerDeclClause
+  )
   {
 
   }
@@ -208,7 +212,7 @@ textualDefiningPart:
 ;
 
 textualUtilityPart:
-  'utilities' (containingClause)? (definingMscReference)*
+  ('utilities' (containingClause)? (definingMscReference)*)?
   {
 
   }
@@ -395,6 +399,7 @@ mscBody returns [std::vector<msc::Statement*> n]:
 ;
 
 mscStatement returns [msc::Statement* n = 0]:
+ ////////////////////////// YOU ARE HERE ><
   textDefinition
   | eventDefinition { $n = $eventDefinition.n; }
 ;
@@ -405,15 +410,15 @@ eventDefinition returns [msc::Instance* n = 0]:
     $n = MAKE(Instance, *$instanceName.n, $instanceEventList.n);
   }
   | instanceNameList ':' multiInstanceEventList
-  {
-  }
 ;
 
 instanceEventList returns [std::vector<msc::Event*> n]:
-  head = instanceEvent
-  {
-    $n.push_back($head.n);
-  }
+  (
+    head = instanceEvent
+    {
+      $n.push_back($head.n);
+    }
+  )
   (
     tail = instanceEvent
     {
@@ -423,7 +428,7 @@ instanceEventList returns [std::vector<msc::Event*> n]:
 ;
 
 instanceEvent returns [msc::Event* n = 0]:
-  (orderableEvent | e = nonOrderableEvent)
+  (e = orderableEvent | e = nonOrderableEvent)
   {
     $n = $e.n;
   }

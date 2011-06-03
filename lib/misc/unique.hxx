@@ -1,6 +1,7 @@
 #ifndef MISC_UNIQUE_HXX
 # define MISC_UNIQUE_HXX
 
+# include <ostream>
 # include "misc/unique.hh"
 
 namespace misc
@@ -87,9 +88,10 @@ namespace misc
 
   template <typename T, class C>
   inline std::ostream&
-  operator<< (std::ostream& ostr, const Unique<T, C>& the)
+  operator<<(std::ostream& ostr, const Unique<T, C>& the)
   {
-    return ostr << the.object_get ();
+    ostr << "heeeeeeeeeeeeeeeeeee\n";
+    return ostr << the.object_get();
   }
 }
 
