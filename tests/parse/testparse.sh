@@ -1,10 +1,22 @@
-#!/bin/sh
+#!/bin/bash
 
-for i in `find . -not -name "*.cc" -not -name "*.txt"`; do
-    ./testparse $i 2>/dev/null;
+total=0;
+passed=0;
+for i in `find ./files/ -not -name "*.cc" -not -name "*.txt" -not -name "*.sh"`; do
+    echo -n "$i ";
+    ./../../build/tests/parse/testparse $i;
     if [ $? -eq 0 ]; then
-        printf '%s%*s\n' $f $((`tput cols` - ${#f})) "\e[00;32mKO\e[00m";
+        echo -e "\e[00;32mOK\e[00m";
+        passed=$(($passed + 1));
     else
-        printf '%s%*s\n' $f $((`tput cols` - ${#f})) "$i \e[00;31mKO\e[00m";
+        echo -e "\e[00;31mKO\e[00m";
     fi;
-done
+    total=$(($total + 1));
+done;
+
+if [ $passed -eq $total ]; then
+  echo -en "\e[00;32m";
+else
+    echo -en "\e[00;31m";
+fi;
+echo "-- Summary : $(($passed * 100 / $total))% passed | $passed / $total";

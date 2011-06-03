@@ -1,0 +1,17 @@
+mscdocument automade;
+  msc recorded;
+    instance mygui_GUI : PROCESS;
+      condition Startup shared all;
+      out router_put_tc(tc: {destination displayer, action '616263'H}) to mygui_GUI;
+      in gui_send_tm(tm: '616263'H) from mygui_GUI;
+      in gui_send_tm(tm: '616263'H) from mygui_GUI;
+      in gui_send_tm(tm: '616263'H) from mygui_GUI;
+      out router_put_tc(tc: {destination displayer, action '61626364'H}) to mygui_GUI;
+      in gui_send_tm(tm: '61626364'H) from mygui_GUI;
+      in gui_send_tm(tm: '61626364'H) from mygui_GUI;
+      out router_put_tc(tc: {destination displayer, action '47656f726765'H}) to mygui_GUI;
+      in gui_send_tm(tm: '47656f726765'H) from mygui_GUI;
+      in gui_send_tm(tm: '47656f726765'H) from mygui_GUI;
+    endinstance;
+  endmsc;
+endmscdocument;

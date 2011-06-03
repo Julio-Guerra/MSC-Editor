@@ -20,6 +20,20 @@ options
       msc::Factory::instance().make_ ## Node(__VA_ARGS__)
 }
 
+@members
+{
+#if defined __GNUC__
+# pragma GCC system_header
+#elif defined __SUNPRO_CC
+# pragma disable_warn
+#elif defined _MSC_VER
+# pragma warning(push, 1)
+#endif
+
+// Thank you ANTLR for not providing C++ target and make my code unsafe.
+extern bool __msc96;
+}
+
 Qualifier:
   '<<'
   (
@@ -146,21 +160,46 @@ Alphanumeric:
 
 /* Parser */
 
-{
-  bool msc96 = true;
-}
+// TODO : since the AST is not finished, we check returned
+// nodes are not null before adding them to lists, etc. This can be
+// deleted once the AST is done.
+
 
 /* Root rule called by the parser. */
 parse returns [msc::Ast* n = 0]:
-  r = messageSequenceChart { $n = $r.n; }
+  r = mscTextualFile { $n = $r.n; }
 ;
 
-mscTextualFile:
-  { msc96 }? textualMSCDocument messageSequenceChart ('endmscdocument' ';')?
+/*
+ * Rule used by the parser to start parsing to determine which standard is
+ * used by the file.
+ * We can determine it with the documentHead rule.
+ */
+is_msc96 returns [bool result]:
+  'mscdocument' .* ('related' 'to' .*)?
+  (
+    /* The following rules are MSC 2000, containingClause is mandatory */
+    (inheritance? ';'
+    parenthesisDeclaration?
+    dataDefinition
+    usingClause
+    containingClause) => inheritance? ';'
+    parenthesisDeclaration?
+    dataDefinition
+    usingClause
+    containingClause
+    /* This rule cannot be empty, if passed, this is MSC 2000 */
+    { return false; }
+    | ';' { return true; }
+  ) .*
+;
+
+mscTextualFile returns [msc::Ast* n = 0]:
+  { __msc96 }? textualMSCDocument messageSequenceChart ('endmscdocument' ';')?
   {
     // FIXME
   }
-  | { !msc96 }? (textualMSCDocument messageSequenceChart*)+
+  | { !__msc96 }? (textualMSCDocument messageSequenceChart*)+
 ;
 
 /* [Z.120] 1.4.1	-- Lexical Rules
@@ -183,17 +222,18 @@ textDefinition:
    [Z.120] 1.4.5	-- Paging of MSCs
    [Z.120] 1.5		-- Message Sequence Chart document */
 
-textualMSCDocument:
-  { msc96 }? documentHead textualDefiningPart textualUtilityPart?
+textualMSCDocument returns [msc::Ast* n = 0]:
+  { __msc96 }? documentHead textualDefiningPart ((textualUtilityPart) => textualUtilityPart)?
   {
+    // FIXME
   }
-  | { !msc96 }? documentHead textualDefiningPart textualUtilityPart
+  |  { !__msc96 }? documentHead textualDefiningPart textualUtilityPart
 ;
 
 documentHead:
   'mscdocument' instanceKind ('related' 'to' sdlReference)?
   (
-    { msc96 }? ';'
+    { __msc96 }? ';'
     | inheritance? ';'
       parenthesisDeclaration?
       dataDefinition
@@ -202,9 +242,6 @@ documentHead:
       messageDeclClause
       timerDeclClause
   )
-  {
-
-  }
 ;
 
 textualDefiningPart:
@@ -213,16 +250,11 @@ textualDefiningPart:
 
 textualUtilityPart:
   ('utilities' (containingClause)? (definingMscReference)*)?
-  {
-
-  }
 ;
 
 
 definingMscReference:
   'reference' (virtuality)? mscName
-  {
-  }
 ;
 
 virtuality returns [msc::MessageSequenceChart::virtuality_enum n]:
@@ -237,7 +269,7 @@ usingClause:
 
 containingClause:
   (
-    'inst' instanceItem
+    ('inst' instanceItem) => 'inst' instanceItem
   )+
 ;
 
@@ -253,16 +285,10 @@ inheritance:
 
 messageDeclClause:
   ('msg' messageDecl ';')*
-  {
-
-  }
 ;
 
 timerDeclClause:
   ('timer' timerDecl ';')*
-  {
-
-  }
 ;
 
 sdlReference:
@@ -339,9 +365,6 @@ instanceParameterName:
 
 messageParameterDecl:
   'msg' messageParmDeclList
-  {
-
-  }
 ;
 
 messageParmDeclList:
@@ -350,9 +373,6 @@ messageParmDeclList:
 
 timerParameterDecl:
   'timer' timerParmDeclList
-  {
-
-  }
 ;
 
 timerParmDeclList:
@@ -368,20 +388,27 @@ mscGateInterface:
 ;
 
 mscGateDef:
-  'gate' (mscGate | methodCallGate | replyGate | createGate | orderGate) end
+  'gate'
+  (
+    (gateName? ('in' | 'out')) => mscGate
+    | ((gateName)? ('call' | 'receive')) => methodCallGate
+    | replyGate
+    | createGate
+    | orderGate
+  ) end
 ;
 
 mscGate:
-  defInGate | defOutGate
+  (gateName? 'out') => defInGate | (gateName? 'in') => defOutGate
 ;
 
 methodCallGate:
-  defOutCallGate | defInCallGate
+  (gateName? 'receive') => defOutCallGate | (gateName? 'call') => defInCallGate
 ;
 
 replyGate:
-  defOutReplyGate
-  | defInReplyGate
+  (gateName? 'replyin') => defOutReplyGate
+  | (gateName? 'replyout') => defInReplyGate
 ;
 
 createGate:
@@ -394,21 +421,36 @@ orderGate:
 
 mscBody returns [std::vector<msc::Statement*> n]:
   (
-    mscStatement { $n.push_back($mscStatement.n); }
+    mscStatement { if ($mscStatement.n) $n.push_back($mscStatement.n); }
   )*
 ;
 
 mscStatement returns [msc::Statement* n = 0]:
- ////////////////////////// YOU ARE HERE ><
-  textDefinition
-  | eventDefinition { $n = $eventDefinition.n; }
+  textDefinition | eventDefinition
+  | { __msc96 }? e = msc92EventDefinition { $n = $e.n; }
+;
+
+msc92EventDefinition returns [ msc::Instance* n = 0; ]:
+  'instance' in = instanceName ieh = msc92InstanceHeadStatement iel = instanceEventList
+  {
+    $n = MAKE(Instance, *$in.n, $ieh.n, $iel.n);
+  }
+;
+
+msc92InstanceHeadStatement returns [msc::InstanceHead* n = 0]:
+  i = (':'? instanceKind)? decomposition? end
+  {
+    msc::String* kind = $i ? $instanceKind.kindDenominator : 0;
+    msc::Identifier* identifier = $i ? $instanceKind.identifier : 0;
+
+    $n = new msc::InstanceHead(kind,
+                               identifier,
+                               $decomposition.n);
+  }
 ;
 
 eventDefinition returns [msc::Instance* n = 0]:
   (instanceName ':' instanceEventList) => instanceName ':' instanceEventList
-  {
-    $n = MAKE(Instance, *$instanceName.n, $instanceEventList.n);
-  }
   | instanceNameList ':' multiInstanceEventList
 ;
 
@@ -416,13 +458,15 @@ instanceEventList returns [std::vector<msc::Event*> n]:
   (
     head = instanceEvent
     {
-      $n.push_back($head.n);
+      if ($head.n)
+        $n.push_back($head.n);
     }
   )
   (
-    tail = instanceEvent
+    (instanceEvent) => tail = instanceEvent
     {
-      $n.push_back($tail.n);
+      if ($tail.n)
+        $n.push_back($tail.n);
     }
   )*
 ;
@@ -435,7 +479,7 @@ instanceEvent returns [msc::Event* n = 0]:
 ;
 
 orderableEvent returns [msc::Event* n = 0]:
-  ('label' eventName end)?
+  (({ __msc96 }? | 'label') eventName ({ __msc96 }? | end))?
   (
     (messageEvent) => messageEvent { $n = $messageEvent.n; }
     | incompleteMessageEvent
@@ -449,9 +493,6 @@ orderableEvent returns [msc::Event* n = 0]:
   ('after' orderDestList)?
   end
   ('time' timeDestList ';')?
-  {
-
-  }
 ;
 
 orderDestList:
@@ -465,9 +506,6 @@ timeDestList:
 
 timeDestination:
   (timeDest)? timeInterval
-  {
-
-  }
 ;
 
 timeDest:
@@ -522,9 +560,9 @@ instanceHeadStatement returns [msc::InstanceHead* n = 0]:
 
 instanceKind returns [msc::String* kindDenominator = 0,
                       msc::Identifier* identifier = 0]:
-  k = kindDenominator? id = identifier
+  ((kindDenominator identifier) => k = kindDenominator)? id = identifier
   {
-    $kindDenominator = $k.text ? $k.n : 0;
+    $kindDenominator = $k.n;
     $identifier = $id.n;
   }
 ;
@@ -579,10 +617,10 @@ incompleteMessageInput:
 ;
 
 msgIdentification returns [msc::String* n = 0]:
-  messageName (',' messageInstanceName)?
-  ('(' parameterList ')')?
+  (messageName (',' messageInstanceName)? ('(' parameterList ')')?)
   {
     $n = $messageName.n;
+    // FIXME
   }
 ;
 
@@ -627,74 +665,44 @@ incompleteMethodCallEvent:
 
 incompleteCallOut:
   'call' msgIdentification 'to' 'lost' (inputAddress)?
-  {
-
-  }
 ;
 
 incompleteCallIn:
   'receive' msgIdentification 'from' 'found' (outputAddress)?
-  {
-
-  }
 ;
 
 incompleteReplyOut:
   'replyout' msgIdentification 'to' 'lost' (inputAddress)?
-  {
-
-  }
 ;
 
 incompleteReplyIn:
   'replyin' msgIdentification 'from' 'found' (outputAddress)?
-  {
-
-  }
 ;
 
 startMethod:
   'method' end
-  {
-
-  }
 ;
 
 endMethod:
   'endmethod' end
-  {
-
-  }
 ;
 
 startSuspension:
   'suspension' end
-  {
-
-  }
 ;
 
 endSuspension:
   'endsuspension' end
-  {
-
-  }
 ;
 
 
 
 actualOutGate:
   (gateName)? 'out' msgIdentification 'to' inputDest
-  {
-
-  }
 ;
 
 actualInGate:
   (gateName)? 'in' msgIdentification 'from' outputDest
-  {
-
-  }
 ;
 
 inputDest:
@@ -707,23 +715,14 @@ outputDest:
 
 defInGate:
   (gateName)? 'out' msgIdentification 'to' inputDest
-  {
-
-  }
 ;
 
 defOutGate:
   (gateName)? 'in' msgIdentification 'from' outputDest
-  {
-
-  }
 ;
 
 actualOrderOutGate:
   gateName 'before' orderDest
-  {
-
-  }
 ;
 
 orderDest:
@@ -732,37 +731,22 @@ orderDest:
 
 actualOrderInGate:
   gateName ('after' orderDest)?
-  {
-
-  }
 ;
 
 defOrderInGate:
   gateName 'before' orderDest
-  {
-
-  }
 ;
 
 defOrderOutGate:
   gateName ('after' orderDestList)?
-  {
-
-  }
 ;
 
 actualCreateOutGate:
   'create' 'out' createGateIdentification 'create' createTarget
-  {
-
-  }
 ;
 
 actualCreateInGate:
   'create' 'in' createGateIdentification
-  { //code
-
-  }
 ;
 
 createTarget:
@@ -772,73 +756,43 @@ createTarget:
 defCreateInGate:
   'create' 'out' (createGateIdentification)?
   'create' createTarget
-  {
-
-  }
 ;
 
 defCreateOutGate:
   'create' 'in' createGateIdentification
-  {
-
-  }
 ;
 
 inlineOutGate:
   defOutGate ('external' 'out' msgIdentification 'to' inputDest)?
-  {
-
-  }
 ;
 
 inlineInGate:
   defInGate	('external' 'in' msgIdentification  outputDest)?
-  {
-
-  }
 ;
 
 inlineOutCallGate:
   defOutCallGate ('external' 'call' msgIdentification 'to' inputDest)?
-  {
-
-  }
 ;
 
 inlineInCallGate:
   defInCallGate ('external' 'receive' msgIdentification 'from' outputDest)?
-  {
-
-  }
 ;
 
 inlineOutReplyGate:
   defOutReplyGate ('external' 'replyout' msgIdentification 'to' inputDest)?
-  {
-
-  }
 ;
 
 inlineInReplyGate:
   defInReplyGate ('external' 'replyin' msgIdentification 'from' outputDest)?
-  {
-
-  }
 ;
 
 inlineCreateOutGate:
   defCreateOutGate ('external' create)?
-  {
-
-  }
 ;
 
 inlineCreateInGate:
   defCreateInGate
   ('external' 'create' 'fromt' createSource)?
-  {
-
-  }
 ;
 
 createSource:
@@ -848,73 +802,43 @@ createSource:
 
 inlineOrderOutGate:
   gateName (('after' orderDestList)? 'external' 'before' orderDest)?
-  {
-
-  }
 ;
 
 inlineOrderInGate:
   gateName 'before' orderDest
   ('external' ('after' orderDestList)?)?
-  {
-
-  }
 ;
 
 actualOutCallGate:
   gateName? 'call' msgIdentification 'to' inputDest
-  {
-
-  }
 ;
 
 actualInCallGate:
   gateName 'receive' msgIdentification 'from' outputDest
-  {
-
-  }
 ;
 
 defInCallGate:
   gateName? 'call' msgIdentification 'tp' inputDest
-  {
-
-  }
 ;
 
 defOutCallGate:
   gateName? 'receive' msgIdentification 'from' outputDest
-  {
-
-  }
 ;
 
 actualOutReplyGate:
   gateName? 'replyout' msgIdentification 'to' inputDest
-  {
-
-  }
 ;
 
 actualInReplyGate:
   gateName? 'replyin' msgIdentification 'from' outputDest
-  {
-
-  }
 ;
 
 defInReplyGate:
   gateName? 'replyout' msgIdentification 'to' inputDest
-  {
-
-  }
 ;
 
 defOutReplyGate:
   gateName? 'replyin' msgIdentification 'from' outputDest
-  {
-
-  }
 ;
 
 /* [Z.120] 1.6.6	-- General ordering defined in 1.6.1
@@ -922,9 +846,6 @@ defOutReplyGate:
 
 sharedCondition:
   shared? conditionIdentification shared end
-  {
-
-  }
 ;
 
 conditionIdentification:
@@ -956,89 +877,63 @@ sharedInstanceList:
 
 condition:
   (shared)? conditionIdentification end
-  {
-
-  }
 ;
 
-
-
+/* [Z.120] 1.6.8	-- Timer */
 timerStatement:
-  starttimer | stoptimer | timeout
+  { __msc96 }? (msc96set | msc96reset)
+  | starttimer | stoptimer | timeout
+;
+
+/* only in MSC96*/
+msc96set:
+  { __msc96 }? 'set' timerName (',' timerInstanceName)? ('(' durationName ')')?
+;
+
+/* only in MSC96 */
+msc96reset:
+  { __msc96 }? 'reset' timerName (',' timerInstanceName)?
 ;
 
 starttimer:
   'starttimer' timerName (',' timerInstanceName)? (duration)? ('(' parameterList ')')?
-  {
-
-  }
 ;
 
 duration:
   '[' (minDurationlimit)? (',' maxDurationlimit)? ']'
-  {
-
-  }
 ;
 
 durationlimit:
   (expressionString | 'inf')
-  {
-
-  }
 ;
 
 stoptimer:
   'stoptimer' timerName (',' timerInstanceName)?
-  {
-
-  }
 ;
 
 timeout:
   'timeout' timerName (',' timerInstanceName)?
   ('(' parameterList ')')?
-  {
-
-  }
 ;
-
-
 
 action:
   'action' actionStatement
-  {
-
-  }
 ;
 
 actionStatement:
   (informalAction | dataStatementList)
-  {
-
-  }
 ;
 
 informalAction:
   CharacterString
 ;
 
-
-
 create:
   'create' instanceName ('(' parameterList ')')?
-  {
-
-  }
 ;
-
-
 
 stop:
   'stop' end
-  {
-
-  }
 ;
 
 /* [Z.120] 1.7		-- Data Concepts
@@ -1047,9 +942,6 @@ stop:
 
 parenthesisDeclaration:
   'parenthesis' parDeclList end
-  {
-
-  }
 ;
 
 parDeclList:
@@ -1059,31 +951,19 @@ parDeclList:
 
 nestableParPair:
   'nestable' pairParList end
-  {
-
-  }
 ;
 
 nonNestableParPair:
   'nonnestable' pairParList end
-  {
-
-  }
 ;
 
 
 equalParDecl:
   'equalpar' equalParList end
-  {
-
-  }
 ;
 
 escapeDecl:
   'escape' escapechar
-  {
-
-  }
 ;
 
 pairParList:
@@ -1118,20 +998,9 @@ equalPar:
   par
 ;
 
-
-
-
-
-
 par:
   Name | National | Special | Misc
 ;
-
-
-
-
-
-
 
 escapechar:
   delim (Name | National | Special | Misc ) delim
@@ -1146,9 +1015,6 @@ messageDeclList:
 
 messageDecl:
   messageNameList (':' '(' typeRefList ')')?
-  {
-
-  }
 ;
 
 messageNameList:
@@ -1161,9 +1027,6 @@ timerDeclList:
 
 timerDecl:
   timerNameList (duration)? (':' '(' typeRefList ')')?
-  {
-
-  }
 ;
 
 timerNameList:
@@ -1176,9 +1039,6 @@ typeRefList:
 
 dynamicDeclList:
   'variables' variableDeclList end
-  {
-
-  }
 ;
 
 variableDeclList:
@@ -1197,16 +1057,11 @@ dataDefinition:
   ('language' dataLanguageName end)?
   (wildcardDecl)?
   ('data' dataDefinitionString end)?
-  {
-
-  }
 ;
 
 wildcardDecl:
   'wildcards' variableDeclList
 ;
-
-
 
 dataParameterDecl:
   ('variables')? variableDeclList
@@ -1255,13 +1110,8 @@ wildcard:
   wildcardString
 ;
 
-
-
 parameterList:
   parameterDefn (',' parameterDefn)*
-  {
-
-  }
 ;
 
 parameterDefn:
@@ -1298,22 +1148,14 @@ undefineStatement:
 
 timeOffset:
   'offset' timeExpression
-  {
-
-  }
 ;
 
 /* [Z.120] 1.8.7	-- Time Points, Measurements, and Intervals
    [Z.120] 1.8.8	-- Time Points */
 
 timePoint:
-  ('@')? timeExpression
-  {
-
-  }
+  '@'? timeExpression
 ;
-
-
 
 measurement:
   relMeasurement
@@ -1322,16 +1164,10 @@ measurement:
 
 relMeasurement:
   '&' timePattern
-  {
-
-  }
 ;
 
 absMeasurement:
   '@' timePattern
-  {
-
-  }
 ;
 
 
@@ -1348,22 +1184,16 @@ intervalLabel:
 
 singularTime:
   '[' timePoint ']'
-  {
-
-  }
   | measurement
 ;
 
 boundedTime:
   '@'?
   ('(' )
-  (timePoint  )?
+  (timePoint)?
   ','
-  (timePoint  )?
+  (timePoint)?
   (')'  )
-  {
-
-  }
 ;
 
 /* [Z.120] 1.9		-- Structural Concepts
@@ -1371,16 +1201,10 @@ boundedTime:
 
 startCoregion:
   'concurrent' end
-  {
-
-  }
 ;
 
 endCoregion:
   'endconcurrent' end
-  {
-
-  }
 ;
 
 
@@ -1390,25 +1214,13 @@ sharedInlineExpr:
   | sharedParExpr | sharedExcExpr)
   (
     'time' timeInterval end
-    {
-
-    }
   )?
   (
     'top' timeDestList end
-    {
-
-    }
   )?
   (
     'bottom' timeDestList end
-    {
-
-    }
   )?
-  {
-
-  }
 ;
 
 extraGlobal:
@@ -1419,14 +1231,8 @@ sharedLoopExpr:
   (inlineGateInterface)?
   (
     instanceEventList
-    {
-
-    }
   )?
   'loop' 'end' end
-  {
-
-  }
 ;
 
 sharedOptExpr:
@@ -1434,14 +1240,8 @@ sharedOptExpr:
   (inlineGateInterface)?
   (
     instanceEventList
-    {
-
-    }
   )?
   'opt' 'end' end
-  {
-
-  }
 ;
 
 sharedExcExpr:
@@ -1449,14 +1249,8 @@ sharedExcExpr:
   (inlineGateInterface)?
   (
     instanceEventList
-    {
-
-    }
   )?
   'exc' 'end' end
-  {
-
-  }
 ;
 
 sharedAltExpr:
@@ -1464,23 +1258,14 @@ sharedAltExpr:
   (inlineGateInterface)?
   (
     instanceEventList
-    {
-
-    }
   )?
   (
     'alt' end (inlineGateInterface)?
 	(
       instanceEventList
-      {
-
-      }
     )?
   )*
   'alt' 'end' end
-  {
-
-  }
 ;
 
 sharedSeqExpr:
@@ -1488,23 +1273,14 @@ sharedSeqExpr:
   (inlineGateInterface)?
   (
     instanceEventList
-    {
-
-    }
   )?
   (
     'seq' end (inlineGateInterface)?
     (
       instanceEventList
-      {
-
-      }
     )?
   )*
   'seq' 'end' end
-  {
-
-  }
 ;
 
 sharedParExpr:
@@ -1512,23 +1288,14 @@ sharedParExpr:
   (inlineGateInterface)?
   (
     instanceEventList
-    {
-
-    }
   )?
   (
     'par' end (inlineGateInterface)?
     (
       instanceEventList
-      {
-
-      }
     )?
   )*
   'par' 'end' end
-  {
-
-  }
 ;
 
 inlineExpr:
@@ -1536,9 +1303,6 @@ inlineExpr:
   ('time' timeInterval end )?
   ('top' timeDestList end )?
   ('bottom' timeDestList end )?
-  {
-
-  }
 ;
 
 loopExpr:
@@ -1546,27 +1310,18 @@ loopExpr:
   (inlineExprIdentification)? end
   (inlineGateInterface)? mscBody
   'loop' 'end' end
-  {
-
-  }
 ;
 
 optExpr:
   'opt' 'begin' (inlineExprIdentification)? end
   (inlineGateInterface)? mscBody
   'opt' 'end' end
-  {
-
-  }
 ;
 
 excExpr:
   'exc' 'begin' (inlineExprIdentification)? end
   (inlineGateInterface)? mscBody
   'exc' 'end' end
-  {
-
-  }
 ;
 
 
@@ -1575,9 +1330,6 @@ altExpr:
   (inlineGateInterface)? mscBody
   ('alt' end (inlineGateInterface)? mscBody)*
   'alt' 'end' end
-  {
-
-  }
 ;
 
 seqExpr:
@@ -1585,9 +1337,6 @@ seqExpr:
   (inlineGateInterface)? mscBody
   ('seq' end (inlineGateInterface)? mscBody)*
   'seq' 'end' end
-  {
-
-  }
 ;
 
 parExpr:
@@ -1595,16 +1344,10 @@ parExpr:
   (inlineGateInterface)? mscBody
   ('par' end (inlineGateInterface)? mscBody)*
   'par' 'end' end
-  {
-
-  }
 ;
 
 loopBoundary:
   '<' infNatural (',' infNatural)? '>'
-  {
-
-  }
 ;
 
 infNatural:
@@ -1617,9 +1360,6 @@ inlineExprIdentification:
 
 inlineGateInterface:
   ('gate' inlineGate end)+
-  {
-
-  }
 ;
 
 inlineGate:
@@ -1635,8 +1375,6 @@ inlineGate:
   | inlineOrderInGate
 ;
 
-
-
 sharedMSCReference:
   'reference' (mscReferenceIdentification ':')?
   mscRefExpr shared end
@@ -1644,9 +1382,6 @@ sharedMSCReference:
   ('top' timeDestList end )?
   ('bottom' timeDestList end )?
   referenceGateInterface
-  {
-
-  }
 ;
 
 mscReference:
@@ -1656,9 +1391,6 @@ mscReference:
   ('top' timeDestList end )?
   ('bottom' timeDestList end )?
   referenceGateInterface
-  {
-
-  }
 ;
 
 mscReferenceIdentification:
@@ -1667,23 +1399,14 @@ mscReferenceIdentification:
 
 mscRefExpr:
   mscRefParExpr ('alt' mscRefParExpr)*
-  {
-
-  }
 ;
 
 mscRefParExpr:
   mscRefSeqExpr ('par' mscRefSeqExpr)*
-  {
-
-  }
 ;
 
 mscRefSeqExpr:
   mscRefIdentExpr ('seq' mscRefIdentExpr)*
-  {
-
-  }
 ;
 
 mscRefIdentExpr:
@@ -1691,8 +1414,28 @@ mscRefIdentExpr:
   | 'exc' mscRefIdentExpr
   | 'opt' mscRefIdentExpr
   | 'empty'
-  | (parent)* mscName (actualParameters)?
+  | (parent)* mscName  ({ __msc96 }? parameterSubstitution | actualParameters)?
   | '(' mscRefExpr ')'
+;
+
+/* only used in msc96 */
+parameterSubstitution:
+  'subst' substitutionList
+;
+
+/* only used in msc96 */
+substitutionList:
+  substitution (',' substitution)*
+;
+
+/* only used in msc96 */
+substitution:
+  replaceMessageInstanceMsc
+;
+
+/* only used in msc96 */
+replaceMessageInstanceMsc:
+  ('msc' | 'inst' | 'msg')? Name 'by' Name
 ;
 
 actualParameters:
@@ -1712,9 +1455,6 @@ actualParametersBlock:
 
 actualInstanceParameters:
   'inst' actualInstanceParmList
-  {
-
-  }
 ;
 
 actualInstanceParmList:
@@ -1727,9 +1467,6 @@ actualInstanceParameter:
 
 actualMessageParameters:
   'msg' actualMessageList
-  {
-
-  }
 ;
 
 actualMessageList:
@@ -1738,9 +1475,6 @@ actualMessageList:
 
 actualTimerParameters:
   'timer' actualTimerList
-  {
-
-  }
 ;
 
 actualTimerList:
@@ -1778,9 +1512,6 @@ hmsc returns [msc::Msc* n = 0]:
 
 mscExpression:
   start (nodeExpression | textDefinition)*
-  {
-
-  }
 ;
 
 start:
@@ -1789,16 +1520,10 @@ start:
 
 nodeExpression:
   labelName ':' (((timeableNode | node) 'seq' '(' labelNameList ')') | 'end') end
-  {
-
-  }
 ;
 
 labelNameList:
   labelName ('alt' labelName)*
-  {
-
-  }
 ;
 
 timeableNode:
@@ -1814,7 +1539,8 @@ timeableNode:
 ;
 
 node:
-  conditionIdentification
+  ({ __msc96 }? ('empty' | mscName))
+  | conditionIdentification
   | 'connect'
 ;
 
@@ -1855,6 +1581,11 @@ gateName returns [msc::String* n = 0]:
 
 conditionName returns [msc::String* n = 0]:
   ( Name | CharacterString )
+;
+
+/* for MSC96 backward compat. */
+durationName returns [msc::String* n = 0]:
+  Name { $n = new msc::String((char*) $Name.text->chars); }
 ;
 
 timerName returns [msc::String* n = 0]:
@@ -1918,30 +1649,25 @@ maxDurationlimit:
 ;
 
 
-/* The Z.120 <_expression_ string> non-terminals
-   are named expressionString */
-expressionString
-	: (CharacterString | Name)
+/* The Z.120 <_expression_ string> non-terminals are named expressionString */
+expressionString:
+  CharacterString | Name
+;
 
-	;
+typeRefString:
+  CharacterString | Name
+;
 
-typeRefString
-	: (CharacterString | Name)
-
-    ;
-
-variableString
-	: (CharacterString | Name)
-
-    ;
+variableString:
+ CharacterString | Name
+;
 
 dataDefinitionString:
-  (CharacterString | Name)
-
-    ;
+ CharacterString | Name
+;
 
 wildcardString:
-  (CharacterString | Name)
+  CharacterString | Name
 ;
 
 createGateIdentification:

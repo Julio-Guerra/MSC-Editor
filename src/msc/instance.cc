@@ -3,13 +3,14 @@
 namespace msc
 {
   Instance::Instance(const String&      label)
-    : Labelable(label)
+    : Labelable(label), head_ (0), events_ ()
   {
   }
 
   Instance::Instance(const String&                      label,
+                     InstanceHead*                      head,
                      const std::vector<Event*>&         events)
-    : Labelable(label), events_()
+    : Labelable(label), head_ (head), events_()
   {
     events_set(events);
   }

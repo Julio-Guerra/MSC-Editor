@@ -95,6 +95,7 @@ namespace msc
   }
 
   Instance* Factory::make_Instance(const String&                label,
+                                   InstanceHead*                head,
                                    const std::vector<Event*>&   events)
   {
     instances_map::iterator     it = instances_.find(label);
@@ -105,7 +106,7 @@ namespace msc
       return it->second;
     }
 
-    Instance* instance = new Instance(label, events);
+    Instance* instance = new Instance(label, head, events);
     instances_.insert(std::pair<String, Instance*>(label, instance));
 
     return instance;

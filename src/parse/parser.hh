@@ -7,6 +7,7 @@
 
 namespace parse
 {
+  /// \brief Wrapper of ANTLR parsing functions.
   class Parser
   {
     public:
@@ -22,6 +23,9 @@ namespace parse
 
       /// Get the number of errors during the parsing.
       int       error_count_get() const;
+
+      /// Reset the parser to be able to execute the parser again.
+      void      reset();
 
     private:
       /// Name of the input file.  Note that we always use the
@@ -68,7 +72,12 @@ namespace parse
       /// return type from the rule you invoke when calling it. This
       /// is the ctx (CTX macro) pointer for your parser.
       pMscParser                        parser_;
+
+      /// Initialise variables.
+      void                              prepare() throw();
   };
 } // namespace parse
+
+# include "parse/parser.hxx"
 
 #endif /* !PARSER_HH_ */

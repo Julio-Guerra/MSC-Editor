@@ -1,6 +1,10 @@
 #include "parse/parser.hh"
 #include "parse/exception.hh"
 
+/// Global variable used by the (C) parser informing about the input
+/// standard.
+bool __msc96;
+
 namespace parse
 {
   Parser::Parser(pANTLR3_UINT8  filename)
@@ -23,7 +27,7 @@ namespace parse
     }
   }
 
-  msc::Ast*     Parser::parse() throw()
+  void Parser::prepare() throw()
   {
     // Create the input stream using the supplied file name (Use
     // antlr38BitFileStreamNew for UTF16 input).
@@ -33,7 +37,7 @@ namespace parse
     // enough memory and the file exists, etc.
     if (!input_)
       throw Exception((std::string("Unable to open file ")
-                      + std::string((char*) filename_)
+                       + std::string((char*) filename_)
                        + std::string(" due to malloc() failure.")).c_str());
 
     /// Our input stream is now open and all set to go, so we can
@@ -90,6 +94,33 @@ namespace parse
     // if you are using an IDE such as VS2005 that can do it that when
     // you type ->, you will see a list of all the methods the object
     // supports.
+  }
+
+  msc::Ast*     Parser::parse() throw()
+  {
+    if (!parser_)
+    {
+      // first use of parse()
+      prepare();
+
+      // This grammar rule is specially written to find out which version on
+      // the standard is used. It allows to set the global variable __msc96
+      // used by semantic predicates in the parser.
+      __msc96 = parser_->is_msc96(parser_);
+    }
+    else
+      reset();
+
     return parser_->parse(parser_);
+  }
+
+  void          Parser::reset()
+  {
+    if (!lexer_ || !parser_ || !input_)
+      return;
+
+    input_->reset(input_);
+    lexer_->reset(lexer_);
+    parser_->reset(parser_);
   }
 } // namespace msc

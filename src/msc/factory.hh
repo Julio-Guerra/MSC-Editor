@@ -32,6 +32,7 @@ namespace msc
 
       /// Instance definition.
       Instance* make_Instance(const String&,
+                              InstanceHead*,
                               const std::vector<Event*>&);
       /** \} */
 

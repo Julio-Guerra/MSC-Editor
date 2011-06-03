@@ -12,6 +12,6 @@ namespace parse
 
     return parser_->pParser->rec->state->errorCount;
   }
-}
+} // namespace parser
 
 #endif /* !PARSER_HXX_ */

@@ -2,12 +2,10 @@
 
 int main(int argc, char* argv[])
 {
-  parse::Parser parser((pANTLR3_UINT8) argv[1]);
-
-  msc::Ast*     ast = parser.parse();
-
-  if (!ast)
+  if (!argc)
     return 1;
 
-  return 0;
+  parse::Parser parser((pANTLR3_UINT8) argv[1]);
+  parser.parse();
+  return parser.error_count_get();
 }

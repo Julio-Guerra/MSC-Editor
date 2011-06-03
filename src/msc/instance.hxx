@@ -16,6 +16,16 @@ namespace msc
   {
     return events_;
   }
+
+  inline const InstanceHead&       Instance::head_get() const
+  {
+    return *head_;
+  }
+
+  inline void                      Instance::head_set(InstanceHead* head)
+  {
+    head_ = head;
+  }
 } // namespace msc
 
 #endif /* !MSC_INSTANCE_HXX_ */
