@@ -1,4 +1,4 @@
-find_package(Doxygen)
+find_package(Doxygen REQUIRED)
 if(DOXYGEN_FOUND)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/doxyfile @ONLY)
 add_custom_target(
