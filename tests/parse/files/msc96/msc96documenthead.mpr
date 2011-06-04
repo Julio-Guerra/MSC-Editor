@@ -1,8 +1,8 @@
-mscdocument connection96document related to <<c:/quali/djfhasd/dsafsd>> someSDLdocument;
+mscdocument connection96document related to someSDLdocument;
 
 msc connection;
 inst calling_party: process digite;
-inst called_party: process digite; 
+inst called_party: process digite;
 gate out off_hook to calling_party;
 gate in dial_tone_on from calling_party;
 gate out digit to calling_party;

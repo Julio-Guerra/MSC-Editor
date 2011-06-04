@@ -36,11 +36,23 @@ done;
 passed=$(($passed00 + $passed96));
 total=$(($total00 + $total96));
 
-if [ $passed -eq $total ]; then
+if [ $passed96 -eq $total96 ]; then
   echo -en "\e[00;32m";
 else
     echo -en "\e[00;31m";
 fi;
 echo "** Summary MSC96 : $(($passed96 * 100 / $total96))% passed | $passed96 / $total96";
+
+if [ $passed00 -eq $total00 ]; then
+  echo -en "\e[00;32m";
+else
+    echo -en "\e[00;31m";
+fi;
 echo "** Summary MSC2000 : $(($passed00 * 100 / $total00))% passed | $passed00 / $total00";
+
+if [ $passed -eq $total ]; then
+  echo -en "\e[00;32m";
+else
+    echo -en "\e[00;31m";
+fi;
 echo "* Summary : $(($passed * 100 / $total))% passed | $passed / $total";

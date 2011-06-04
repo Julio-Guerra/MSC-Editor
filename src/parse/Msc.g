@@ -164,8 +164,8 @@ parse returns [msc::Ast* n = 0]:
 
 mscTextualFile returns [msc::Ast* n = 0]
 @init { std::vector<msc::MessageSequenceChart*> mscs; }:
-  { __msc96 }? ('mscdocument' instanceKind textualMSCDocument
-                messageSequenceChart ('endmscdocument' ';')?)
+  { __msc96 }? ('mscdocument' instanceKind
+  textualMSCDocument messageSequenceChart ('endmscdocument' ';')?)
   {
     $n = MAKE(Document,
               MAKE(DocumentHead,
@@ -178,7 +178,7 @@ mscTextualFile returns [msc::Ast* n = 0]
     {
       $n = MAKE(Document, mscs);
     }
-  | { !__msc96 }? ('mscdocument' instanceKind ('related' 'to' sdlReference)?
+  | { !__msc96 }? ('mscdocument' instanceKind
                     textualMSCDocument messageSequenceChart*)+
 ;
 
@@ -276,7 +276,7 @@ identifier returns [msc::Identifier* n = 0]
 {
   msc::String*  qualifier = 0;
 }:
-  (Qualifier { qualifier = new msc::String((char*) $Qualifier.text->chars); })?
+  ((Qualifier) => Qualifier { qualifier = new msc::String((char*) $Qualifier.text->chars); })?
   Name
   {
     $n = MAKE(Identifier,
@@ -767,7 +767,7 @@ inlineOutGate:
 ;
 
 inlineInGate:
-  defInGate	('external' 'in' msgIdentification  outputDest)?
+  defInGate	('external' 'in' msgIdentification 'from' outputDest)?
 ;
 
 inlineOutCallGate:

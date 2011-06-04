@@ -1,6 +1,6 @@
-msc very_advanced; 
+msc very_advanced;
 inst Initiator;
-inst Responder; 
+inst Responder;
 
 gate out ICONreq to Initiator;
 gate in ICONind from Responder;
@@ -17,18 +17,17 @@ out ICONind to env;
 in ICONresp from env;
 out ICONF to inline altref via g1;
 Initiator: alt begin altref;
-gate g1 out ICONF to Initiator 
+gate g1 out ICONF to Initiator
 external in ICONF from Responder;
 Initiator: timeout T;
 out IDISind to env;
 in ICONF from env via g1;
 alt;
-gate g1 out ICONF to Initiator; 
+gate g1 out ICONF to Initiator;
 Initiator: in ICONF from env via g1;
 stoptimer T;
 out ICONconf to env;
 alt end;
 Initiator: endinstance;
 Responder:endinstance;
-endmsc; 
-
+endmsc;
