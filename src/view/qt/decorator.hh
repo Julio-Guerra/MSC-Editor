@@ -39,6 +39,7 @@ namespace view
       std::map<msc::pStatement, msc::pStatement>        decoratedStatements_;
       std::map<msc::pEvent, msc::pEvent>                decoratedEvents_;
       unsigned int                                      instance_x;
+      std::list<gmsc::Message*>                         update_me;
   };
 }
 
