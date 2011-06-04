@@ -20,12 +20,15 @@ namespace parse
   Parser::~Parser()
   {
     if (parser_)
-    {
-      parser_->free(parser_);
-      token_stream_->free(token_stream_);
-      lexer_->free(lexer_);
-      input_->close(input_);
-    }
+      free();
+  }
+
+  void Parser::free()
+  {
+    parser_->free(parser_);
+    token_stream_->free(token_stream_);
+    lexer_->free(lexer_);
+    input_->close(input_);
   }
 
   void Parser::prepare() throw()
@@ -97,32 +100,25 @@ namespace parse
     // supports.
   }
 
-  msc::Ast*     Parser::parse() throw()
+  msc::Ast*     Parser::parse(bool msc96) throw()
   {
-    if (!parser_)
-    {
-      // first use of parse()
-      prepare();
+    __msc96 = msc96;
 
-      // This grammar rule is specially written to find out which version on
-      // the standard is used. It allows to set the global variable __msc96
-      // used by semantic predicates in the parser.
-//      __msc96 = parser_->is_msc96(parser_);
-      __msc96 = true;
-    }
-//    else
-//      reset();
+    if (parser_)
+      reset();
 
-    return parser_->parse(parser_);
+    prepare();
+    return parser_->parse(parser_);;
   }
 
   void          Parser::reset()
   {
-    if (!lexer_ || !parser_ || !input_)
+    if (!parser_)
       return;
 
-    input_->reset(input_);
+    // TODO: what is missing ? This does not work.
     lexer_->reset(lexer_);
     parser_->reset(parser_);
+    input_->reset(input_);
   }
 } // namespace msc

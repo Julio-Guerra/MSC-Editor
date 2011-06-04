@@ -1,0 +1,31 @@
+mscdocument mytimerdocument;
+inst foo;
+utilities reference foo
+
+msc mytimer;
+  inst Initiator: process ISAP_Manager_Ini;
+  inst Responder;
+  gate out ICONreq to Initiator;
+  gate in ICONind from Responder;
+  gate in IDISind from Initiator;
+
+  Initiator: instance process ISAP_Manager_Ini;
+    condition when Disconnected shared all;
+    in ICONreq from env comment 'bla';
+    out ICON to Responder;
+    action 'setting_counter';
+    set T (5);
+    condition wait shared;
+    timeout T;
+    reset T;
+    out IDISind to env;
+    condition disconnected shared;
+  endinstance;
+
+  Responder: instance;
+    condition when Disconnected shared all;
+    in ICON from Initiator;
+    out ICONind to env;
+    condition wait shared;
+  endinstance;
+endmsc;

@@ -59,7 +59,7 @@ void Window::open_msc_file()
   try
   {
     parse::Parser   p((pANTLR3_UINT8)filename_.toStdString().c_str());
-    msc::Ast*       ast = p.parse();
+    msc::Ast*       ast = p.parse(true);
     view::Decorator decorator(this->scene_);
 
     /*if (p.error_count_get() != 0)

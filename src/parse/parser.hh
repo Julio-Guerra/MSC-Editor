@@ -19,7 +19,7 @@ namespace parse
       /// \}
 
       /// Parse the input and return a pointer to the created AST.
-      msc::Ast* parse() throw();
+      msc::Ast* parse(bool) throw();
 
       /// Get the number of errors during the parsing.
       int       error_count_get() const;
@@ -75,6 +75,9 @@ namespace parse
 
       /// Initialise variables.
       void                              prepare() throw();
+
+      /// Free the allocated memory.
+      void                              free();
   };
 } // namespace parse
 

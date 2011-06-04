@@ -18,14 +18,6 @@ options
 
   # define MAKE(Node, ...)                                   \
       msc::Factory::instance().make_ ## Node(__VA_ARGS__)
-
-  # if defined __GNUC__
-  #  pragma GCC system_header
-  # elif defined __SUNPRO_CC
-  #  pragma disable_warn
-  # elif defined _MSC_VER
-  #  pragma warning(push, 1)
-  # endif
 }
 
 @members
@@ -170,31 +162,6 @@ parse returns [msc::Ast* n = 0]:
   r = mscTextualFile { $n = $r.n; }
 ;
 
-/*
- * Rule used by the parser to start parsing to determine which standard is
- * used by the file.
- * We can determine it with the documentHead rule.
- */
-is_msc96 returns [bool result]:
-  'msc' .* { return true; }
-  | 'mscdocument' .* ('related' 'to' .*)?
-  (
-    /* The following rules are MSC 2000, containingClause is mandatory */
-    (inheritance? ';'
-    parenthesisDeclaration?
-    dataDefinition
-    usingClause
-    containingClause) => inheritance? ';'
-    parenthesisDeclaration?
-    dataDefinition
-    usingClause
-    containingClause
-    /* This rule cannot be empty, if passed, this is MSC 2000 */
-    { return false; }
-    | ';' { return true; }
-  ) .*
-;
-
 mscTextualFile returns [msc::Ast* n = 0]
 @init { std::vector<msc::MessageSequenceChart*> mscs; }:
   { __msc96 }? ('mscdocument' instanceKind textualMSCDocument
@@ -304,13 +271,17 @@ sdlReference:
   sdlDocumentIdentifier
 ;
 
-identifier returns [msc::Identifier* n = 0]:
-  qlf = Qualifier? Name
+identifier returns [msc::Identifier* n = 0]
+@init
+{
+  msc::String*  qualifier = 0;
+}:
+  (Qualifier { qualifier = new msc::String((char*) $Qualifier.text->chars); })?
+  Name
   {
-    msc::String* q = $qlf ?
-                        new msc::String((char*) $qlf.text->chars)
-                        : 0;
-    $n = MAKE(Identifier, q, new msc::String((char*) $Name.text->chars));
+    $n = MAKE(Identifier,
+              qualifier,
+              new msc::String((char*) $Name.text->chars));
   }
 ;
 
@@ -447,15 +418,24 @@ msc92EventDefinition returns [ msc::Instance* n = 0; ]:
   }
 ;
 
-msc92InstanceHeadStatement returns [msc::InstanceHead* n = 0]:
-  i = (':'? instanceKind)? decomposition? end
+msc92InstanceHeadStatement returns [msc::InstanceHead* n = 0]
+@init
+{
+  msc::String*          kind = 0;
+  msc::Identifier*      identifier = 0;
+  msc::String*          decomp = 0;
+}:
+  (
+    ':'? instanceKind
+    {
+      kind = $instanceKind.kindDenominator;
+      identifier = $instanceKind.identifier;
+    }
+  )? (decomposition { decomp = $decomposition.n; })? end
   {
-    msc::String* kind = $i ? $instanceKind.kindDenominator : 0;
-    msc::Identifier* identifier = $i ? $instanceKind.identifier : 0;
-
     $n = new msc::InstanceHead(kind,
                                identifier,
-                               $decomposition.n);
+                               decomp);
   }
 ;
 
@@ -560,8 +540,9 @@ multiInstanceEvent:
 instanceHeadStatement returns [msc::InstanceHead* n = 0]
 @init
 {
-  msc::String* kind = 0;
-  msc::Identifier* identifier = 0;
+  msc::String*          kind = 0;
+  msc::Identifier*      identifier = 0;
+  msc::String*          decomp = 0;
 }:
   'instance'
   (
@@ -570,11 +551,11 @@ instanceHeadStatement returns [msc::InstanceHead* n = 0]
       kind = $instanceKind.kindDenominator;
       identifier = $instanceKind.identifier;
     }
-  )? decomposition? end
+  )? (decomposition { decomp = $decomposition.n; } )? end
   {
     $n = new msc::InstanceHead(kind,
                                identifier,
-                               $decomposition.n);
+                               decomp);
   }
 ;
 

@@ -5,8 +5,11 @@
 
 int main(int argc, char* argv[])
 {
-  parse::Parser parser((pANTLR3_UINT8) argv[1]);
-  msc::Ast*     ast = parser.parse();
+  if (argc != 3)
+    return 1;
+
+  parse::Parser parser((pANTLR3_UINT8) argv[2]);
+  msc::Ast*     ast = parser.parse(argv[1][0] == '1');
 
   if (parser.error_count_get())
     return 1;
