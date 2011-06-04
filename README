@@ -1,6 +1,7 @@
 This software was suggested by Julien Delange and was realised by two
 EPITA students, Julio Guerra and Patrick Samy.
 
+# Purpose #
 MSC is a graphical and textual language for the description and
 specification of the interactions between system components. The main
 area of application for Message Sequence Charts is as an overview
@@ -11,3 +12,22 @@ validation, test-case specification and documentation of real-time
 systems. MSCs are often used in combination with SDL, in particular
 the ITU specification and description language.
 
+# Project Layout #
+lib:                    Independent Tools.
+lib/misc:               Project Independent Tools.
+lib/libantlr3c-3.1.3:   ANTLR3 C Library.
+src:                    Project Dependant Sources.
+src/parse:              Parsing.
+src/msc:                MSC's Abstract Syntax Tree.
+src/gui:                GUI Front-Ends & User Flow Logic.
+src/gui/qt:             Qt Front-End.
+src/view:               MSC Abstrat Syntax Tree Decorator.
+src/view/qt:            Qt Decorator.
+tests:                  Unit & Functional Tests.
+tests/parse:            Parser Tests.
+
+# Project Architecture #
+
+# Test Suite #
+Run the testsuite.sh script in the directory tests/ with the project
+fully compiled.

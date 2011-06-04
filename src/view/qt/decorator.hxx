@@ -22,22 +22,24 @@ namespace view
   template<typename T>
   void Decorator::recurseList(std::vector<T>& vector, std::map<T, T>& map)
   {
-    typename std::vector<T>::iterator it;
+    std::vector<T>                      gv;
+    typename std::vector<T>::iterator   it;
 
     for (it = vector.begin(); it != vector.end(); ++it)
     {
       typename std::map<T, T>::iterator  decorated = map.find(*it);
 
       if (decorated != map.end())
-        vector.insert(it, decorated->second);
+        gv.push_back(decorated->second);
       else
       {
         T decoratedEvent = this->recurse(**it);
 
-        vector.insert(it, decoratedEvent);
+        gv.push_back(decoratedEvent);
         map.insert(std::pair<T, T>(*it, decoratedEvent));
       }
     }
+    vector = gv;
   }
 }
 

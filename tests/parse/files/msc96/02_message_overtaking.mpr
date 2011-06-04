@@ -1,12 +1,10 @@
+mscdocument document_2;
 msc message_overtaking;
-  inst inst1;
-  inst inst2;
-
-  inst1: instance process digite;
-    in message1 from inst2;
-  endinstance;
-
-  inst2: instance process digite;
-    out message1 to inst1;
-  endinstance;
+inst1: instance process digite;
+in message1 from inst2;
+endinstance;
+inst2: instance process digite;
+out message1 to inst1;
+endinstance;
 endmsc;
+endmscdocument;

@@ -1,12 +1,13 @@
+#include <fstream>
 #include "gui/qt/window.hh"
 #include "view/qt/gmsc/all.hh"
 #include "view/qt/decorator.hh"
 
-#undef emit
+#undef emit // Avoid the Qt's define to replace our emit vars/funs.
 
 #include "parse/parser.hh"
 #include "parse/exception.hh"
-
+#include "msc/pretty-printer.hh"
 
 using namespace gui;
 
@@ -53,7 +54,6 @@ void Window::open_msc_file()
 
   // Create and set a new scene
   scene_ = new Scene();
-  config_.graphics_view->setScene(scene_);
 
   // Parse the file
   try
@@ -64,7 +64,7 @@ void Window::open_msc_file()
     if (p.error_count_get() != 0)
     {
       parse::Parser   p2k((pANTLR3_UINT8)filename_.toLocal8Bit().data());
-      msc::Ast*       ast = p2k.parse(false);
+      ast = p2k.parse(false);
 
       if (p2k.error_count_get() != 0)
       {
@@ -76,10 +76,10 @@ void Window::open_msc_file()
         return;
       }
     }
-
+    config_.graphics_view->setScene(scene_);
     view::Decorator decorator(this->scene_);
-
-    decorator.recurse(*ast);
+    ast = decorator.recurse(*ast);
+    scene_->root_set(decorator.recurse(*ast));
   }
   catch (std::exception e)
   {
@@ -98,7 +98,11 @@ void Window::save_msc_file()
     return;
   }
 
-
+  std::ofstream o;
+  o.open(filename_.toStdString().c_str());
+  msc::PrettyPrinter printer(o);
+  printer(*scene_->root_get());
+  o.close();
 }
 
 void Window::save_msc_file_as()

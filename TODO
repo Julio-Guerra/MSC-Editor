@@ -1,22 +1,27 @@
-04-05-2011:
+4th of June, 2011:
+Todo, order by priority desc:
 
-* Replace msc/types.hh pointers typedefs with "garbage collected"
+1 Complete the AST. Only a subset has been considered. The MSC
+  language is much more rich than what we offer right now.
+
+2 Finish the Qt front-end.
+
+3 Replace msc/types.hh pointers typedefs with "garbage collected"
   pointers, and make it transparent enough with normal pointers to be
   able to write as if it was normal pointers. e.g. cast into bool (if
   (ptr)), operator= (ptr = new_ptr) with a pointer, comparison
   operators (shared_ptr == normal_ptr), etc.
 
-* Complete the AST. Only a subset has been considered. The MSC
-  language is much more rich than what we offer right now.
+4 Handle parsing errors in the Front-End. For now, it prints on cout.
 
-* Detect if the input is MSC96 or MSC2000. For now, it is MSC96 by
-  default.
+5 Implement new front-ends (visio, etc.).
 
-* Finish the Qt front-end.
-
-* Implement other front-ends (visio, etc.).
-
-* Test to compile the project on Windows...
-
-* Add a CMake option to choose which front-end to compile. By default,
+6 Add a CMake option to choose which front-end to compile. By default,
   compile every thing.
+
+7 Make the grammar context free and use Bison instead of ANTLR.
+
+8 Test to compile the project on Windows...
+
+9 Find out how to reset antlr parser without freeing everything and
+  start again.

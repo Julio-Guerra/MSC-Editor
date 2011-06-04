@@ -1,22 +1,23 @@
-* Step 1: Create directory build/ cd <tarball directory> && mkdir
-build && cd build
+** Step 1: Create directory build/
+$cd <tarball directory> && mkdir build && cd build
 
-* Step 2: Generate CMake files cmake ..
+** Step 2: Generate CMake files
+$cmake ..
 
-If you need to compile the project in Debug mode, use instead: cmake
--D CMAKE_BUILD_TYPE=Debug ..
+If you need to compile the project in Debug mode, use instead:
+$cmake -D CMAKE_BUILD_TYPE=Debug ..
 
 CMake will exit printing an error message if you do not have every
 packages needed. Install it, and restart the process.
 
-* Step 3: Compile
+** Step 3: Compile
 make
 
-* Step 4: run the binary msce located in the build directory
+** Step 4: run the binary msce located in the build directory
 ./msce
 
-In case of problems, it probably comes from retro compatibility
+If you get errors, it probably comes from retro compatibility
 errors. We used the following settings:
 * C++ Standard : C++03.
 * CMake 2.8.3.
-* Antlr 3.3.
+* Antlr 3.3 - only needed if you re-generate the grammar.

@@ -16,8 +16,15 @@ namespace view
     typedef msc::DefaultVisitor super_type;
 
     public:
+      using super_type::operator();
+
       Decorator(QGraphicsScene*);
 
+      virtual void operator()(msc::Document&);
+      virtual void operator()(msc::DocumentHead&);
+      virtual void operator()(msc::MessageSequenceChart&);
+      virtual void operator()(msc::InstanceHead&);
+      virtual void operator()(msc::Identifier&);
       virtual void operator()(msc::BasicMsc&);
       virtual void operator()(msc::Instance&);
       virtual void operator()(msc::Message&);

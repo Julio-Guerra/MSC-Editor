@@ -19,12 +19,15 @@ void Decorator::operator()(msc::BasicMsc& node)
   result_ = &node;
 }
 
+#include <iostream>
 void Decorator::operator()(msc::Instance& node)
 {
+  std::cout << node.label_get() << std::endl;
   gmsc::Instance* instance = new gmsc::Instance(node);
 
   this->recurseList(node.events_get(), decoratedEvents_);
 
+  scene_->addItem(instance);
   result_ = instance;
 }
 
@@ -32,5 +35,36 @@ void Decorator::operator()(msc::Message& node)
 {
   gmsc::Message* message = new gmsc::Message(node);
 
+  scene_->addItem(message);
   result_ = message;
+}
+
+void Decorator::operator()(msc::Document& n)
+{
+  super_type::operator()(n);
+  result_ = &n;
+}
+
+void Decorator::operator()(msc::DocumentHead& n)
+{
+  super_type::operator()(n);
+  result_ = &n;
+}
+
+void Decorator::operator()(msc::MessageSequenceChart& n)
+{
+  super_type::operator()(n);
+  result_ = &n;
+}
+
+void Decorator::operator()(msc::InstanceHead& n)
+{
+  super_type::operator()(n);
+  result_ = &n;
+}
+
+void Decorator::operator()(msc::Identifier& n)
+{
+  super_type::operator()(n);
+  result_ = &n;
 }
