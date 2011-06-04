@@ -1,0 +1,22 @@
+04-05-2011:
+
+* Replace msc/types.hh pointers typedefs with "garbage collected"
+  pointers, and make it transparent enough with normal pointers to be
+  able to write as if it was normal pointers. e.g. cast into bool (if
+  (ptr)), operator= (ptr = new_ptr) with a pointer, comparison
+  operators (shared_ptr == normal_ptr), etc.
+
+* Complete the AST. Only a subset has been considered. The MSC
+  language is much more rich than what we offer right now.
+
+* Detect if the input is MSC96 or MSC2000. For now, it is MSC96 by
+  default.
+
+* Finish the Qt front-end.
+
+* Implement other front-ends (visio, etc.).
+
+* Test to compile the project on Windows...
+
+* Add a CMake option to choose which front-end to compile. By default,
+  compile every thing.

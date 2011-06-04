@@ -1,0 +1,13 @@
+This software was suggested by Julien Delange and was realised by two
+EPITA students, Julio Guerra and Patrick Samy.
+
+MSC is a graphical and textual language for the description and
+specification of the interactions between system components. The main
+area of application for Message Sequence Charts is as an overview
+specification of the communication behaviour of real-time systems, in
+particular telecommunication switching systems. Message Sequence
+Charts may be used for requirement specification, simulation and
+validation, test-case specification and documentation of real-time
+systems. MSCs are often used in combination with SDL, in particular
+the ITU specification and description language.
+
