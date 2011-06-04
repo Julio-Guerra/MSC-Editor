@@ -18,6 +18,7 @@ namespace gui
 
     public:
       Window ();
+      void create_new_msc();
 
     private slots:
       void buttonGroupClicked(int id);

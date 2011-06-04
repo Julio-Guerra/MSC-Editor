@@ -69,9 +69,10 @@ void Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* mouseEvent)
 
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent*  mouseEvent)
 {
-  float   x = mouseEvent->scenePos().x();
-  float   y = mouseEvent->scenePos().y();
-  QString q;
+  msc::pStatement   node = NULL;
+  float             x = mouseEvent->scenePos().x();
+  float             y = mouseEvent->scenePos().y();
+  QString           q;
 
   if (mouseEvent->button() != Qt::LeftButton)
     return;
@@ -89,6 +90,9 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent*  mouseEvent)
 
     case MODE_ITEM_INSERTION:
       item_ = view::gmsc::Factory::instance().create_node(item_type_);
+      node = dynamic_cast<msc::pStatement> (item_);
+      if (node != NULL)
+        statements_->push_back(node);
       item_->setPos(x, 5);
       this->addItem(item_);
       emit itemInserted(item_);

@@ -29,10 +29,11 @@ namespace gui
 
       Scene();
 
-      void set_mode(Mode);
-      void set_type(view::gmsc::Factory::ItemType);
+      void              set_mode(Mode);
+      void              set_type(view::gmsc::Factory::ItemType);
       inline msc::Ast*  root_get() const { return root_; }
       inline void       root_set(msc::Ast* ast) { root_ = ast; }
+      inline void       statements_set(std::vector<msc::Statement*>* statements) { statements_ = statements; };
 
     signals:
      void itemInserted(QGraphicsPolygonItem *item);
@@ -45,6 +46,7 @@ namespace gui
       view::gmsc::Message*          message_;
       msc::Labelable*               labelable_;
       msc::Ast*                     root_;
+      std::vector<msc::Statement*>* statements_;
 
       void mouseDoubleClickEvent(QGraphicsSceneMouseEvent*);
       void mousePressEvent(QGraphicsSceneMouseEvent*);

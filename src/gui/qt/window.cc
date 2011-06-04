@@ -1,4 +1,5 @@
 #include <fstream>
+
 #include "gui/qt/window.hh"
 #include "view/qt/gmsc/all.hh"
 #include "view/qt/decorator.hh"
@@ -26,6 +27,26 @@ Window::Window()
   config_.actionSave->setShortcut(tr("Ctrl+S"));
   connect(config_.actionSave, SIGNAL(triggered()), this, SLOT(save_msc_file()));
   connect(config_.actionSave_as, SIGNAL(triggered()), this, SLOT(save_msc_file_as()));
+
+  create_new_msc();
+}
+
+void Window::create_new_msc()
+{
+  if (scene_ != NULL)
+  {
+    std::vector<msc::Statement*>* statements = new std::vector<msc::Statement*> ();
+    msc::DocumentHead*            documentHead = new msc::DocumentHead(new msc::String(misc::Symbol::fresh("document")),
+                                                                       NULL);
+    msc::BasicMsc*                basicMsc = new msc::BasicMsc(*statements);
+    msc::MessageSequenceChart*    messageSequenceChart = new msc::MessageSequenceChart(misc::Symbol::fresh("msc"),
+                                                                                     msc::MessageSequenceChart::UNKNOWN,
+                                                                                     basicMsc);
+    msc::Document*              document = new msc::Document(documentHead, messageSequenceChart);
+
+    scene_->root_set(document);
+    scene_->statements_set(statements);
+  }
 }
 
 void Window::open_msc_file()
