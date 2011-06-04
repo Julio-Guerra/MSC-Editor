@@ -35,17 +35,17 @@ void Window::create_new_msc()
 {
   if (scene_ != NULL)
   {
-    std::vector<msc::Statement*>* statements = new std::vector<msc::Statement*> ();
-    msc::DocumentHead*            documentHead = new msc::DocumentHead(new msc::String(misc::Symbol::fresh("document")),
-                                                                       NULL);
-    msc::BasicMsc*                basicMsc = new msc::BasicMsc(*statements);
+    std::vector<msc::Statement*>  statements;
+    msc::DocumentHead*            documentHead = new msc::DocumentHead(NULL,
+                                                                       new msc::Identifier(NULL, new msc::String(misc::Symbol::fresh("document"))));
+    msc::BasicMsc*                basicMsc = new msc::BasicMsc(statements);
     msc::MessageSequenceChart*    messageSequenceChart = new msc::MessageSequenceChart(misc::Symbol::fresh("msc"),
                                                                                      msc::MessageSequenceChart::UNKNOWN,
                                                                                      basicMsc);
-    msc::Document*              document = new msc::Document(documentHead, messageSequenceChart);
+    msc::Document*                document = new msc::Document(documentHead, messageSequenceChart);
 
     scene_->root_set(document);
-    scene_->statements_set(statements);
+    scene_->statements_set(&basicMsc->statements_get());
   }
 }
 
@@ -73,43 +73,46 @@ void Window::open_msc_file()
 
   filename_ = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("MSC Files (*.mpr);; All files (*)"));
 
-  // Create and set a new scene
-  scene_ = new Scene();
-  config_.graphics_view->setScene(scene_);
-
-  // Parse the file
-  try
+  if (filename_ != "")
   {
-    parse::Parser     p((pANTLR3_UINT8)filename_.toLocal8Bit().data());
-    msc::Ast*         ast = p.parse(true);
+    // Create and set a new scene
+    scene_ = new Scene();
+    config_.graphics_view->setScene(scene_);
 
-    if (p.error_count_get() != 0)
+    // Parse the file
+    try
     {
-      parse::Parser   p2k((pANTLR3_UINT8)filename_.toLocal8Bit().data());
-      ast = p2k.parse(false);
+      parse::Parser     p((pANTLR3_UINT8)filename_.toLocal8Bit().data());
+      msc::Ast*         ast = p.parse(true);
 
-      if (p2k.error_count_get() != 0)
+      if (p.error_count_get() != 0)
       {
-        QMessageBox msgBox;
+        parse::Parser   p2k((pANTLR3_UINT8)filename_.toLocal8Bit().data());
+        ast = p2k.parse(false);
 
-        msgBox.setText("Parse error.");
-        msgBox.exec();
+        if (p2k.error_count_get() != 0)
+        {
+          QMessageBox msgBox;
 
-        return;
+          msgBox.setText("Parse error.");
+          msgBox.exec();
+
+          return;
+        }
       }
+
+      view::Decorator decorator;
+      msc::Ast* gmsc = decorator.recurse(*ast);
+      scene_->root_set(gmsc);
+      (*config_.graphics_view)(*gmsc);
     }
+    catch (std::exception e)
+    {
+      QMessageBox msgBox;
 
-    view::Decorator decorator;
-    msc::Ast* gmsc = decorator.recurse(*ast);
-    scene_->root_set(gmsc);
-    (*config_.graphics_view)(*gmsc);
-  }
-  catch (std::exception e)
-  {
-    QMessageBox msgBox;
-
-    msgBox.setText(e.what());
-    msgBox.exec();
+      msgBox.setText(e.what());
+      msgBox.exec();
+    }
   }
 }
 

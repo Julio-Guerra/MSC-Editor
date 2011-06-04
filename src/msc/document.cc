@@ -10,7 +10,7 @@ namespace msc
 
   Document::Document(DocumentHead*              head,
                      MessageSequenceChart*      msc)
-    : head_ (head), mscs_ (1)
+    : head_ (head), mscs_ (0)
   {
     if (msc)
       mscs_.push_back(msc);

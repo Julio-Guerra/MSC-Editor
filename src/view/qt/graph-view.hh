@@ -10,6 +10,8 @@ namespace view
   class GraphView : public QGraphicsView, msc::DefaultVisitor
   {
     public:
+      typedef msc::DefaultVisitor super_type;
+
       using msc::DefaultVisitor::operator();
 
       GraphView(QWidget*&);

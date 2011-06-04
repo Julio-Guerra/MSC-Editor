@@ -192,8 +192,8 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent*  mouseEvent)
               message_->to_set(endInstance);
               message_->to_pos_set(QPointF(-endInstance->x() + message_->line().p2().x(),
                                            -endInstance->y() + message_->line().p2().y()));
-              startInstance->events_get().push_back(msc::pEvent(message_));
-              endInstance->events_get().push_back(msc::pEvent(message_));
+              startInstance->events_get().push_back(message_);
+              endInstance->events_get().push_back(message_);
               emit itemInserted(item_);
             }
           }

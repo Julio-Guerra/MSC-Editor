@@ -11,11 +11,15 @@ GraphView::GraphView(QWidget*& widget)
 void GraphView::operator()(msc::Instance& n)
 {
   gmsc::Instance*       gn = dynamic_cast<gmsc::Instance*> (&n);
+
+  super_type::operator()(n);
+
   scene()->addItem(gn);
 }
 
 void GraphView::operator()(msc::Message& n)
 {
   gmsc::Message*       gn = dynamic_cast<gmsc::Message*> (&n);
+
   scene()->addItem(gn);
 }
