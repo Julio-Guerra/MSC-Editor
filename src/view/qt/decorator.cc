@@ -25,7 +25,7 @@ void Decorator::operator()(msc::Instance& node)
   instance->setPos(instance_x, 30);
   instance_x += 250;
 
-  this->recurseList(node.events_get(), decoratedEvents_);
+  this->recurseList(instance->events_get(), decoratedEvents_);
 
   result_ = instance;
 }

@@ -20,6 +20,13 @@ void GraphView::operator()(msc::Instance& n)
 void GraphView::operator()(msc::Message& n)
 {
   gmsc::Message*       gn = dynamic_cast<gmsc::Message*> (&n);
+  gmsc::Instance*      startInstance = dynamic_cast<gmsc::Instance*> (gn->from_get());
+  gmsc::Instance*      endInstance = dynamic_cast<gmsc::Instance*> (gn->to_get());
+
+  gn->from_pos_set(QPointF(-startInstance->x() + gn->line().p1().x(),
+                                 -startInstance->y() + gn->line().p1().y()));
+  gn->to_pos_set(QPointF(-endInstance->x() + gn->line().p2().x(),
+                               -endInstance->y() + gn->line().p2().y()));
 
   scene()->addItem(gn);
 }
