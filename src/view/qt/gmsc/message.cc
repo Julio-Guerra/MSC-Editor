@@ -69,8 +69,8 @@ QPixmap& Message::to_image()
 void Message::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
   QLineF    line = this->line();
-  Instance* from = static_cast<Instance*> (this->from_get());
-  Instance* to = static_cast<Instance*> (this->to_get());
+  Instance* from = dynamic_cast<Instance*> (this->from_get());
+  Instance* to = dynamic_cast<Instance*> (this->to_get());
 
   if (this->from_get() != NULL)
   {

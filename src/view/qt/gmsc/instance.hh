@@ -22,6 +22,7 @@ namespace view
         virtual ~Instance();
 
         void label_set(const msc::Label&);
+        QPointF startLine();
 
         // QT helper methods
         QPixmap& to_image();

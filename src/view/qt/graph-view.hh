@@ -18,9 +18,13 @@ namespace view
 
       /// \name msc::DefaultVisitor interface.
       /// \{
+      virtual void operator()(msc::BasicMsc&);
       virtual void operator()(msc::Instance&);
       virtual void operator()(msc::Message&);
       /// \}
+
+    private:
+      int message_no_;
   };
 }
 

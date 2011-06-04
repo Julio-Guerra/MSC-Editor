@@ -36,6 +36,11 @@ Instance::~Instance()
 {
 }
 
+QPointF Instance::startLine()
+{
+  return lineItem_->line().p1();
+}
+
 QPixmap& Instance::to_image()
 {
   QPixmap*  pixmap = new QPixmap(250, 250);
