@@ -8,7 +8,8 @@ using namespace view;
 
 Decorator::Decorator()
   : result_ (0),
-    instance_x (20)
+    instance_x (20),
+    update_me ()
 {
 }
 
@@ -33,13 +34,29 @@ void Decorator::operator()(msc::Instance& node)
 void Decorator::operator()(msc::Message& node)
 {
   gmsc::Message* message = new gmsc::Message(node);
-
+  update_me.push_back(message);
   result_ = message;
 }
 
 void Decorator::operator()(msc::Document& n)
 {
   super_type::operator()(n);
+
+  std::list<gmsc::Message*>::iterator   i;
+  for (i = update_me.begin(); i != update_me.end(); ++i)
+  {
+    std::map<msc::pStatement, msc::pStatement>::iterator from;
+    std::map<msc::pStatement, msc::pStatement>::iterator to;
+    from = decoratedStatements_.find((*i)->from_get());
+    to = decoratedStatements_.find((*i)->to_get());
+
+    if (from != decoratedStatements_.end())
+      (*i)->from_set((msc::Instance*) from->second);
+
+    if (to != decoratedStatements_.end())
+      (*i)->to_set((msc::Instance*) to->second);
+  }
+
   result_ = &n;
 }
 
