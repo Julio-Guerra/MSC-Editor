@@ -1,0 +1,20 @@
+mscdocument document_2;
+msc msc_3;
+Instance_4: instance;
+out message_7 to Instance_5;
+in message_10 from Instance_6;
+out message_11 to Instance_5;
+endinstance;
+Instance_5: instance;
+in message_7 from Instance_4;
+out message_8 to Instance_6;
+in message_9 from Instance_6;
+in message_11 from Instance_4;
+endinstance;
+Instance_6: instance;
+in message_8 from Instance_5;
+out message_9 to Instance_5;
+out message_10 to Instance_4;
+endinstance;
+endmsc;
+
