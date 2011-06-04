@@ -32,6 +32,7 @@ include(${QT_USE_FILE})
 add_subdirectory(src)
 add_subdirectory(lib)
 add_subdirectory(tests)
+add_subdirectory(doc)
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
