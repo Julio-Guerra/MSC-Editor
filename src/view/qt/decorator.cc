@@ -6,9 +6,9 @@
 
 using namespace view;
 
-Decorator::Decorator(QGraphicsScene* scene)
-  : scene_ (scene),
-    result_ (NULL)
+Decorator::Decorator()
+  : result_ (0),
+    instance_x (20)
 {
 }
 
@@ -19,15 +19,14 @@ void Decorator::operator()(msc::BasicMsc& node)
   result_ = &node;
 }
 
-#include <iostream>
 void Decorator::operator()(msc::Instance& node)
 {
-  std::cout << node.label_get() << std::endl;
   gmsc::Instance* instance = new gmsc::Instance(node);
+  instance->setPos(instance_x, 30);
+  instance_x += 250;
 
   this->recurseList(node.events_get(), decoratedEvents_);
 
-  scene_->addItem(instance);
   result_ = instance;
 }
 
@@ -35,7 +34,6 @@ void Decorator::operator()(msc::Message& node)
 {
   gmsc::Message* message = new gmsc::Message(node);
 
-  scene_->addItem(message);
   result_ = message;
 }
 

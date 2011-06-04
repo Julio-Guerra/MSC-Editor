@@ -13,12 +13,12 @@ namespace view
 {
   class Decorator : public msc::DefaultVisitor
   {
-    typedef msc::DefaultVisitor super_type;
-
     public:
+      typedef msc::DefaultVisitor       super_type;
+
       using super_type::operator();
 
-      Decorator(QGraphicsScene*);
+      Decorator();
 
       virtual void operator()(msc::Document&);
       virtual void operator()(msc::DocumentHead&);
@@ -35,10 +35,10 @@ namespace view
       void recurseList(std::vector<T>&, std::map<T, T>&);
 
     private:
-      QGraphicsScene*                             scene_;
-      msc::Ast*                                   result_;
-      std::map<msc::pStatement, msc::pStatement>  decoratedStatements_;
-      std::map<msc::pEvent, msc::pEvent>          decoratedEvents_;
+      msc::Ast*                                         result_;
+      std::map<msc::pStatement, msc::pStatement>        decoratedStatements_;
+      std::map<msc::pEvent, msc::pEvent>                decoratedEvents_;
+      unsigned int                                      instance_x;
   };
 }
 
