@@ -54,6 +54,7 @@ void Window::open_msc_file()
 
   // Create and set a new scene
   scene_ = new Scene();
+  config_.graphics_view->setScene(scene_);
 
   // Parse the file
   try
@@ -76,10 +77,11 @@ void Window::open_msc_file()
         return;
       }
     }
-    config_.graphics_view->setScene(scene_);
-    view::Decorator decorator(this->scene_);
-    ast = decorator.recurse(*ast);
-    scene_->root_set(decorator.recurse(*ast));
+
+    view::Decorator decorator;
+    msc::Ast* gmsc = decorator.recurse(*ast);
+    scene_->root_set(gmsc);
+    (*config_.graphics_view)(*gmsc);
   }
   catch (std::exception e)
   {
