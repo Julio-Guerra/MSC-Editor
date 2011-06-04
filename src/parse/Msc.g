@@ -580,7 +580,7 @@ instanceEndStatement:
 ;
 
 messageEvent returns [msc::Event* n = 0]:
-  m = messageOutput | m = messageInput
+  (m = messageOutput | m = messageInput)
   {
     $n = $m.n;
   }

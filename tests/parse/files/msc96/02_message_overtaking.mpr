@@ -3,12 +3,10 @@ msc message_overtaking;
   inst inst2;
 
   inst1: instance process digite;
-    out message1, a to inst2;
-    out message1, b to inst2;
+    in message1 from inst2;
   endinstance;
 
   inst2: instance process digite;
-    in message1, b from inst1;
-    in message1, a from inst1;
+    out message1 to inst1;
   endinstance;
 endmsc;
