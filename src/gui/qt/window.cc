@@ -58,21 +58,30 @@ void Window::open_msc_file()
   // Parse the file
   try
   {
-    parse::Parser   p((pANTLR3_UINT8)filename_.toStdString().c_str());
-    msc::Ast*       ast = p.parse(true);
+    parse::Parser     p((pANTLR3_UINT8)filename_.toLocal8Bit().data());
+    msc::Ast*         ast = p.parse(true);
+
+    if (p.error_count_get() != 0)
+    {
+      parse::Parser   p2k((pANTLR3_UINT8)filename_.toLocal8Bit().data());
+      msc::Ast*       ast = p2k.parse(false);
+
+      if (p2k.error_count_get() != 0)
+      {
+        QMessageBox msgBox;
+
+        msgBox.setText("Parse error.");
+        msgBox.exec();
+
+        return;
+      }
+    }
+
     view::Decorator decorator(this->scene_);
 
-    /*if (p.error_count_get() != 0)
-    {
-      QMessageBox msgBox;
-
-      msgBox.setText("Parse error.");
-      msgBox.exec();
-    }*/
-
-    ast->accept(decorator);
+    decorator.recurse(*ast);
   }
-  catch (parse::Exception& e)
+  catch (std::exception e)
   {
     QMessageBox msgBox;
 
