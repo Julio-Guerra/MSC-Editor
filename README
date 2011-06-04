@@ -27,6 +27,41 @@ tests:                  Unit & Functional Tests.
 tests/parse:            Parser Tests.
 
 # Project Architecture #
+MSC Editor is simply composed of two layers: the back-end and the
+front-end. The front-end uses back-end's features. So the back-end is
+absolutely abstracted from any usage.
+
+## Back-End
+The back-end provides everything required to handle a MSC document: an
+abstract syntax tree (AST), a lexer, a parser and AST's visitors.
+
+
+### Parser
+The parser takes an input and the standard it follows (MSC96 or
+MSC2000) to generate the MSC's AST. The AST is represented in the
+technical documentation (make doc) of `msc::Ast` class.
+
+A DefaultVisitor provides the default traversal behavior of the
+AST. Its first usage is the `PrettyPrinter` visitor thats prints an
+AST without caring of how to traverse the AST, this is delegated to
+the `DefaultVisitor` super class. So many other Visitors can be
+imagined and they simply have to inherit from `DefaultVisitor`.
+
+## Front-End
+The front-end's first goal is to make the AST drawable by the target
+GUI. The decorator design pattern should be used for that purpose,
+making the drawable AST, a normal AST, i.e. compatible with every
+back-end feature.
+
+Many front-ends can be implemented, using this same back-end.
+
+### View
+This can be considered as the border between the back-end and the
+front-end. It simply defines graphical AST nodes for the target.
+
+
+### GUI
+The GUI simply handles the graphical interface and user interactions.
 
 # Test Suite #
 Run the testsuite.sh script in the directory tests/ with the project
