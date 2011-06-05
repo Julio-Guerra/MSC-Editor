@@ -105,7 +105,6 @@ void Message::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, Q
     arrowP2 = this->line().p2() - QPointF(sin(angle + Pi - Pi / 3) * arrowSize, cos(angle + Pi - Pi / 3) * arrowSize);
     p << this->line().p2() << arrowP1 << arrowP2;
     extremity_->setPolygon(p);
-    extremity_->update(extremity_->boundingRect());
   }
 
   extremity_->paint(painter, option, widget);
