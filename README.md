@@ -13,17 +13,17 @@ systems. MSCs are often used in combination with SDL, in particular
 the ITU specification and description language.
 
 # Project Layout #
-lib:                    Independent Tools.
-lib/misc:               Project Independent Tools.
-lib/libantlr3c-3.1.3:   ANTLR3 C Library.
-src:                    Project Dependant Sources.
-src/parse:              Parsing.
-src/msc:                MSC's Abstract Syntax Tree.
-src/gui:                GUI Front-Ends & User Flow Logic.
-src/gui/qt:             Qt Front-End.
-src/view:               MSC Abstrat Syntax Tree Decorator.
-src/view/qt:            Qt Decorator.
-tests:                  Unit & Functional Tests.
+lib:                    Independent Tools.  
+lib/misc:               Project Independent Tools.  
+lib/libantlr3c-3.1.3:   ANTLR3 C Library.  
+src:                    Project Dependant Sources.  
+src/parse:              Parsing.  
+src/msc:                MSC's Abstract Syntax Tree.  
+src/gui:                GUI Front-Ends & User Flow Logic.  
+src/gui/qt:             Qt Front-End.  
+src/view:               MSC Abstrat Syntax Tree Decorator.  
+src/view/qt:            Qt Decorator.  
+tests:                  Unit & Functional Tests.  
 tests/parse:            Parser Tests.
 
 # Project Architecture #
